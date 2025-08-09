@@ -26,12 +26,7 @@ namespace Core.Board
         public bool TryPlaceShip(GridPos root, int length, Orientation o)
         {
             // validate
-            for (int i = 0; i < length; i++)
-            {
-                var p = o == Orientation.Horizontal ? new GridPos(root.x + i, root.y)
-                    : new GridPos(root.x, root.y + i);
-                if (!InBounds(p) || Get(p) != CellState.Empty) return false;
-            }
+            if (!ValidateShipPlacement(root, length, o)) return false;
             // commit
             for (int i = 0; i < length; i++)
             {
@@ -39,6 +34,18 @@ namespace Core.Board
                     : new GridPos(root.x, root.y + i);
                 _cells[p.x, p.y] = CellState.Ship;
             }
+            return true;
+        }
+
+        public bool ValidateShipPlacement(GridPos root, int length, Orientation o)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                var p = o == Orientation.Horizontal ? new GridPos(root.x + i, root.y)
+                    : new GridPos(root.x, root.y + i);
+                if (!InBounds(p) || Get(p) != CellState.Empty) return false;
+            }
+
             return true;
         }
 
