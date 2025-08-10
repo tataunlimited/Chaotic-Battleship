@@ -7,7 +7,7 @@ namespace Core.Board
         public readonly BoardSide Side;
         public readonly int Width;
         public readonly int Height;
-
+        
         private readonly CellState[,] _cells;
 
         public BoardModel(BoardSide side, int width, int height)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Core.GridSystem;
+using Core.Ship;
 using UnityEngine;
 
 namespace Core.Board
@@ -8,6 +9,7 @@ namespace Core.Board
     {
         [Header("Config")]
         public BoardSide side = BoardSide.Player;
+        public bool revealShips;
         public int width = 10;
         public int height = 10;
         public float cellSize = 1f;
@@ -72,6 +74,16 @@ namespace Core.Board
                 var a = origin + new Vector3(0, 0, y * cellSize);
                 var b = a + new Vector3(width * cellSize, 0, 0);
                 Gizmos.DrawLine(a, b);
+            }
+        }
+
+        public void TryPlaceShip(ShipModel shipModel)
+        {
+            bool success = Model.TryPlaceShip(shipModel.root, shipModel.length, shipModel.orientation);
+            if (!success || !revealShips) return;
+            foreach (var gridPos in shipModel.EnumerateCells())
+            {
+                Tint(gridPos, Color.green);
             }
         }
     }

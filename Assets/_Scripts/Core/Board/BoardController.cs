@@ -1,4 +1,5 @@
 using Core.GridSystem;
+using Core.Ship;
 using UnityEngine;
 
 namespace Core.Board
@@ -11,11 +12,33 @@ namespace Core.Board
         void Start()
         {
             // Example placements (pure logic via Model)
-            playerView.Model.TryPlaceShip(new GridPos(0,0), 5, Orientation.Horizontal);
-            playerView.Model.TryPlaceShip(new GridPos(3,2), 4, Orientation.Vertical);
-
-            enemyView.Model.TryPlaceShip (new GridPos(1,1), 3, Orientation.Horizontal);
-            enemyView.Model.TryPlaceShip (new GridPos(6,4), 2, Orientation.Vertical);
+            
+            playerView.TryPlaceShip(new ShipModel
+            {
+                root = new GridPos(0,0),
+                length = 5,
+                orientation = Orientation.Horizontal,
+                
+            });
+            playerView.TryPlaceShip(new ShipModel
+            {
+                root = new GridPos(3,2),
+                length = 4,
+                orientation = Orientation.Horizontal,
+            });
+            
+            enemyView.TryPlaceShip(new ShipModel
+            {
+                root = new GridPos(1,1),
+                length = 3,
+                orientation = Orientation.Horizontal,
+            });
+            enemyView.TryPlaceShip(new ShipModel
+            {
+                root = new GridPos(6,4),
+                length = 2,
+                orientation = Orientation.Horizontal,
+            });
         }
 
         void Update()
