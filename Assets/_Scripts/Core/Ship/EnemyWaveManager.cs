@@ -13,7 +13,7 @@ using Unity.VisualScripting;
 
 namespace Core.Ship
 {
-    [System.Serializable]
+
     public class EnemyWaveManager
     {
         public const int DEFAULT_NUM_SHIPS = 4;
@@ -24,26 +24,7 @@ namespace Core.Ship
         private Random rnd = new Random();
 
 
-        // instantiate this as a singleton
-        private static readonly EnemyWaveManager instance = new EnemyWaveManager();
-
-        static EnemyWaveManager()
-        {
-        }
-
-        private EnemyWaveManager()
-        {
-        }
-
-        public static EnemyWaveManager Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
-
-        public List<ShipModel> createDefaultWaveOfShips()
+        public List<ShipModel> CreateDefaultWaveOfShips()
         {
             List<ShipModel> ships = new List<ShipModel>();
 
@@ -68,7 +49,7 @@ namespace Core.Ship
         // Returns: true - all ships are in valid locations
         //          false - at least one of the ships could not be placed in a valid location
         //
-        public bool randomlySetShipsLocations(BoardView board, List<ShipModel> ships)
+        public bool RandomlySetShipsLocations(BoardView board, List<ShipModel> ships)
         {
             List<GridPos> validLocations = new List<GridPos>();     // valid GridPos cells that the ship can fit
             bool haveBeenSuccessfullyPlaced = true;

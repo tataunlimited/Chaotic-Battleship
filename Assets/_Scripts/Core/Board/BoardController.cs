@@ -34,11 +34,13 @@ namespace Core.Board
             // uncomment next line for testing purposes to show where the enemy ships are placed
             //enemyView.revealShips = true;
 
+            EnemyWaveManager enemyWaveManager = new EnemyWaveManager();
+
             // create a list of enemy ships with given lengths
-            List<ShipModel> ships = EnemyWaveManager.Instance.createDefaultWaveOfShips();
+            List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
 
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            EnemyWaveManager.Instance.randomlySetShipsLocations(enemyView, ships);
+            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
 
         }
 
