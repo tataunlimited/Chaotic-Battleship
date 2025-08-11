@@ -16,7 +16,7 @@ namespace Core.Board
         {
             // Example placements (pure logic via Model)
             
-            playerView.TryPlaceShip(new ShipModel
+            playerView.TryPlaceShip( new ShipModel
             {
                 root = new GridPos(0,0),
                 length = 5,
