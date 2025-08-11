@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   side: 0
+  revealShips: 0
   width: 10
   height: 10
   cellSize: 1
@@ -503,6 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   side: 1
+  revealShips: 0
   width: 10
   height: 10
   cellSize: 1
