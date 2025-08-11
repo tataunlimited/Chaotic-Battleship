@@ -86,5 +86,32 @@ namespace Core.Board
                 Tint(gridPos, Color.green);
             }
         }
+
+        public List<GridPos> GetRandomPositions( int count)
+        {
+            return new List<GridPos>(count);
+        }
+        public List<GridPos> GetRow(int rowIndex)
+        {
+            var row = new List<GridPos>();
+            for (int i = 0; i < width; i++)
+            {
+                row.Add(new GridPos(i, rowIndex));
+            }
+            return row;
+        }
+        public List<GridPos> GetColumn( int colIndex)
+        {
+            var col = new List<GridPos>();
+            for (int i = 0; i < height; i++)
+            {
+                col.Add(new GridPos(colIndex, i));
+            }
+            return col;
+        }
+
+
+
+
     }
 }
