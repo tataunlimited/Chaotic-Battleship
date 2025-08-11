@@ -1,6 +1,9 @@
+
 using Core.GridSystem;
 using Core.Ship;
+
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Core.Board
 {
@@ -26,19 +29,19 @@ namespace Core.Board
                 length = 4,
                 orientation = Orientation.Horizontal,
             });
-            
-            enemyView.TryPlaceShip(new ShipModel
-            {
-                root = new GridPos(1,1),
-                length = 3,
-                orientation = Orientation.Horizontal,
-            });
-            enemyView.TryPlaceShip(new ShipModel
-            {
-                root = new GridPos(6,4),
-                length = 2,
-                orientation = Orientation.Horizontal,
-            });
+
+
+            // uncomment next line for testing purposes to show where the enemy ships are placed
+            //enemyView.revealShips = true;
+
+            EnemyWaveManager enemyWaveManager = new EnemyWaveManager();
+
+            // create a list of enemy ships with given lengths
+            List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
+
+            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
+
         }
 
         void Update()
@@ -68,5 +71,6 @@ namespace Core.Board
                 return false;
             return view.WorldToGrid(hit.point, out cell);
         }
+
     }
 }
