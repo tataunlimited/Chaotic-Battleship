@@ -1,7 +1,7 @@
 namespace Core.GridSystem
 {
     public enum CellState { Empty, Ship, Hit, Miss }
-    public enum Orientation { Horizontal, Vertical }
+    public enum Orientation { North, East , South, West }
     
     public enum BoardSide { Player, Enemy }
 

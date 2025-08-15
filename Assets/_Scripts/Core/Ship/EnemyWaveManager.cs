@@ -54,7 +54,7 @@ namespace Core.Ship
             List<GridPos> validLocations = new List<GridPos>();     // valid GridPos cells that the ship can fit
             bool haveBeenSuccessfullyPlaced = true;
 
-            foreach (ShipModel ship in ships)
+            /*foreach (ShipModel ship in ships)
             {
                 validLocations.Clear();
 
@@ -92,7 +92,7 @@ namespace Core.Ship
                     ship.root = validLocations[index];
                     board.TryPlaceShip(ship);
                 }
-            }
+            }*/
 
             return haveBeenSuccessfullyPlaced;
         }

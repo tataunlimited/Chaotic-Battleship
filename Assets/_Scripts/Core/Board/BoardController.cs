@@ -4,6 +4,7 @@ using Core.Ship;
 
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 namespace Core.Board
 {
@@ -11,25 +12,20 @@ namespace Core.Board
     {
         public BoardView playerView;
         public BoardView enemyView;
+        public MovementCellManager movementCellManager;
+
+        public List<ShipView> shipPrefabs;
+        private ShipView _selectedShip;
+        
 
         void Start()
         {
             // Example placements (pure logic via Model)
             
-            playerView.TryPlaceShip( new ShipModel
-            {
-                root = new GridPos(0,0),
-                length = 5,
-                orientation = Orientation.Horizontal,
-                
-            });
-            playerView.TryPlaceShip(new ShipModel
-            {
-                root = new GridPos(3,2),
-                length = 4,
-                orientation = Orientation.Horizontal,
-            });
-
+            SpawnShip(ShipType.Cruiser, new GridPos(0,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Destroyer, new GridPos(1,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Battleship, new GridPos(2,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Submarine, new GridPos(3,0), Orientation.North, playerView);
 
             // uncomment next line for testing purposes to show where the enemy ships are placed
             //enemyView.revealShips = true;
@@ -44,22 +40,32 @@ namespace Core.Board
 
         }
 
+        private void SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
+        {
+            var shipPrefab = shipPrefabs.Find((ship)=>ship.shipModel.type == shipType);
+            if (shipPrefab == null)
+            {
+                Debug.LogError($"Ship type {shipType} not found");
+                return;
+            }
+
+            board.TryPlaceShip(shipPrefab, pos, orientation);
+        }
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1))
             {
                 if (TryHitBoard(enemyView, out var eCell))  // left-click fires at enemy
                 {
                     if (enemyView.Model.TryFire(eCell, out bool hit))
-                        enemyView.Tint(eCell, hit ? Color.red : Color.blue);
+                        enemyView.Tint(eCell);
                 }
             }
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(0))
             {
-                if (TryHitBoard(playerView, out var pCell)) // right-click to test on player
+                if (TrySelectShip(out var shipView)) // right-click to test on player
                 {
-                    if (playerView.Model.TryFire(pCell, out bool hit))
-                        playerView.Tint(pCell, hit ? Color.red : Color.blue);
+                    
                 }
             }
         }
@@ -71,6 +77,36 @@ namespace Core.Board
                 return false;
             return view.WorldToGrid(hit.point, out cell);
         }
+
+        bool TrySelectShip(out ShipView shipView)
+        {
+            shipView = null;
+            if (!Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit, 500f))
+                return false;
+            shipView = hit.collider.GetComponentInParent<ShipView>();
+            if (shipView != null && shipView.IsPlayer)
+            {
+                if (_selectedShip == shipView)
+                {
+                    _selectedShip.DeselectShip();
+                    movementCellManager.ClearCells();
+                    _selectedShip = null;
+                    return false;
+                }
+                shipView.SelectShip(movementCellManager);
+                
+                if (_selectedShip != null)
+                {
+                    _selectedShip.DeselectShip();
+                }
+                
+                _selectedShip = shipView;
+                return true;
+            }
+
+            return false;
+        }
+
 
     }
 }
