@@ -1,4 +1,6 @@
+using System.Linq;
 using Core.GridSystem;
+using Core.Ship;
 
 namespace Core.Board
 {
@@ -23,30 +25,30 @@ namespace Core.Board
 
         public CellState Get(GridPos p) => _cells[p.x, p.y];
 
-        public bool TryPlaceShip(GridPos root, int length, Orientation o)
+        public bool TryPlaceShip(ShipModel shipModel)
         {
             // validate
-            if (!ValidateShipPlacement(root, length, o)) return false;
+            if (!ValidateShipPlacement(shipModel)) return false;
             // commit
-            for (int i = 0; i < length; i++)
+            foreach (var c in shipModel.GetCells())
             {
-                var p = o == Orientation.Horizontal ? new GridPos(root.x + i, root.y)
-                    : new GridPos(root.x, root.y + i);
-                _cells[p.x, p.y] = CellState.Ship;
+                _cells[c.x, c.y] = CellState.Ship;
             }
+
             return true;
         }
 
-        public bool ValidateShipPlacement(GridPos root, int length, Orientation o)
+        public bool ValidateShipPlacement(ShipModel shipModel)
         {
-            for (int i = 0; i < length; i++)
-            {
-                var p = o == Orientation.Horizontal ? new GridPos(root.x + i, root.y)
-                    : new GridPos(root.x, root.y + i);
-                if (!InBounds(p) || Get(p) != CellState.Empty) return false;
-            }
+            return shipModel.GetCells().All(cell => InBounds(cell) && Get(cell) == CellState.Empty);
+        }
 
-            return true;
+        public void ResetShipCells(ShipModel shipModel)
+        {
+            foreach (var c in shipModel.GetCells())
+            {
+                _cells[c.x, c.y] = CellState.Empty;
+            }
         }
 
         public bool TryFire(GridPos p, out bool hit)
