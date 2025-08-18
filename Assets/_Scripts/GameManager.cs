@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
         switch (phaseState)
         {
             case PHASE_STATE.START_ENCOUNTER:
-                StartEncounter();
+                StartCoroutine(StartEncounterCoroutine(1f));
                 break;
 
             case PHASE_STATE.ENEMY_PLACING_SHIPS:
@@ -75,6 +76,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator StartEncounterCoroutine(float wait_time)
+    {
+        yield return new WaitForSeconds(wait_time);
+    }
     private void StartEncounter()
     {
         // Initialize wave-specific parameters
@@ -197,6 +202,7 @@ public class GameManager : MonoBehaviour
 
             waveNumber++; // Increment wave number
             winConditionMet = false; // Reset win condition
+            phaseState = PHASE_STATE.START_ENCOUNTER;
         }
         else
         {
@@ -204,12 +210,10 @@ public class GameManager : MonoBehaviour
 
             waveNumber = 0; // Reset wave number
             loseConditionMet = false; // Reset lose condition
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
 
         //TODO: remove all player/enemy ship instances
-
-
-        phaseState = PHASE_STATE.START_ENCOUNTER;
         Debug.Log("Phase changed to: START_ENCOUNTER");
     }
 }
