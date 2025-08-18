@@ -16,7 +16,9 @@ namespace Core.Board
 
         public List<ShipView> shipPrefabs;
         private ShipView _selectedShip;
-        
+
+        EnemyWaveManager enemyWaveManager;
+        List<ShipModel> enemyShips; 
 
         void Start()
         {
@@ -27,17 +29,16 @@ namespace Core.Board
             SpawnShip(ShipType.Battleship, new GridPos(2,0), Orientation.North, playerView);
             SpawnShip(ShipType.Submarine, new GridPos(3,0), Orientation.North, playerView);
 
-            // uncomment next line for testing purposes to show where the enemy ships are placed
-            //enemyView.revealShips = true;
 
-            EnemyWaveManager enemyWaveManager = new EnemyWaveManager();
-
-            // create a list of enemy ships with given lengths
-            List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
+            enemyWaveManager = new EnemyWaveManager();
+            enemyShips = enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
+            enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
 
+            // uncomment next line for testing purposes to show where the enemy ships are placed
+            if (enemyView.revealShips)
+                enemyView.RevealShips(enemyShips);
         }
 
         private void SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
@@ -107,6 +108,16 @@ namespace Core.Board
             return false;
         }
 
+        public void DoEnemyMovementPhase()
+        {
+            Debug.Log("DoEnemyMovementPhase");
+
+            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+            enemyWaveManager.RandomlyMoveShips(enemyView, enemyShips);
+
+            // uncomment next line for testing purposes to show where the enemy ships are placed
+            //enemyView.RevealShips(enemyShips);
+        }
 
     }
 }

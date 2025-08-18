@@ -20,6 +20,7 @@ namespace Core.Ship
         public int length = 3;
         public Orientation orientation = Orientation.North;
         public GridPos root;               // starting cell (leftmost/topmost)
+        public bool isDestroyed = false;
 
         public List<GridPos> GetCells()
         {
@@ -132,24 +133,8 @@ namespace Core.Ship
 
         public List<GridPos> GetMovablePositions(BoardView playerView)
         {
-            var movablePositions = new List<GridPos>();
-            for (int i = -2; i < 3; i++)
-            {
-                for (int j = -2; j < 3; j++)
-                {
-                    if (i == 0 && j == 0)
-                    {
-                        continue;
-                    }
-
-                    var pos = new GridPos(root.x + i, root.y + j);
-                    if (playerView.Model.InBounds(pos))
-                    {
-                        movablePositions.Add(pos);
-                    }
-                }
-            }
-            return movablePositions;
+            ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(type);
+            return pattern.GetAllPossibleMovePositions(playerView, this);
         }
     }
 

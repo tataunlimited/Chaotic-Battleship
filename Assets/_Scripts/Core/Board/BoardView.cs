@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 using Random = UnityEngine.Random;
 
 namespace Core.Board
@@ -37,13 +38,13 @@ namespace Core.Board
             parent.SetParent(transform, false);
 
             for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-            {
-                var p = new GridPos(x, y);
-                var go = Instantiate(cellPrefab, GridToWorld(p), Quaternion.identity, parent);
-                go.name = $"{side}_Cell_{x}_{y}";
-                if (go.TryGetComponent(out Renderer r)) _tiles[p] = r;
-            }
+                for (int y = 0; y < height; y++)
+                {
+                    var p = new GridPos(x, y);
+                    var go = Instantiate(cellPrefab, GridToWorld(p), Quaternion.identity, parent);
+                    go.name = $"{side}_Cell_{x}_{y}";
+                    if (go.TryGetComponent(out Renderer r)) _tiles[p] = r;
+                }
 
             UpdateBoard();
         }
@@ -109,18 +110,18 @@ namespace Core.Board
                 Gizmos.DrawLine(a, b);
             }
         }
-        
+
         public bool TryPlaceShip(ShipView prefab, GridPos pos, Orientation orientation)
         {
-            
+
             string id = name + _lastShipId;
             var shipModel = prefab.shipModel.Copy();
             shipModel.id = id;
             shipModel.orientation = orientation;
             shipModel.root = pos;
-            
+
             bool success = Model.TryPlaceShip(shipModel);
-            if(success)
+            if (success)
             {
                 var shipView = Instantiate(prefab, Vector3.zero, Quaternion.identity);
                 shipView.Init(this, shipModel, isPlayer);
@@ -146,13 +147,13 @@ namespace Core.Board
             }
         }
 
-        public List<GridPos> GetRandomPositions( int count)
+        public List<GridPos> GetRandomPositions(int count)
         {
             var randomPositions = new List<GridPos>();
             for (int i = 0; i < count; i++)
             {
                 randomPositions.Add(new GridPos(
-                    Random.Range(0, width), 
+                    Random.Range(0, width),
                     Random.Range(0, height)
                     ));
             }
@@ -166,19 +167,19 @@ namespace Core.Board
                 Debug.LogError("Cannot return a row for North or South orientation");
                 return row;
             }
-            if(orientaion is Orientation.East)
+            if (orientaion is Orientation.East)
                 for (int i = 0; i < height; i++)
                 {
                     row.Add(new GridPos(i, rowIndex));
                 }
             else
-                for (int i = width -1; i > -1; i--)
+                for (int i = width - 1; i > -1; i--)
                 {
                     row.Add(new GridPos(i, rowIndex));
                 }
             return row;
         }
-        public List<GridPos> GetColumn( int colIndex, Orientation orientaion)
+        public List<GridPos> GetColumn(int colIndex, Orientation orientaion)
         {
             var col = new List<GridPos>();
             if (orientaion is Orientation.East or Orientation.West)
@@ -186,21 +187,51 @@ namespace Core.Board
                 Debug.LogError("Cannot return a column for East or West orientation");
                 return col;
             }
-            if(orientaion is Orientation.North)
+            if (orientaion is Orientation.North)
                 for (int i = 0; i < height; i++)
                 {
                     col.Add(new GridPos(colIndex, i));
                 }
             else
-                for (int i = height -1; i > -1; i--)
+                for (int i = height - 1; i > -1; i--)
                 {
                     col.Add(new GridPos(colIndex, i));
                 }
-                
+
             return col;
         }
 
 
+        public void RevealShips(List<ShipModel> ships)
+        {
+            foreach (var shipModel in ships)
+            {
+                RevealAShip(shipModel);
+            }
+        }
+
+        public void RevealAShip(ShipModel shipModel)
+        {
+            foreach (var gridPos in shipModel.GetCells())
+            {
+                Tint(gridPos, Color.green);
+            }
+        }
+
+        public void HideShips(List<ShipModel> ships)
+        {
+            foreach (var shipModel in ships)
+            {
+                HideAShip(shipModel);
+            }
+        }
+
+        public void HideAShip(ShipModel shipModel)
+        {
+            Tint(shipModel.GetCells());
+        }
+
 
     }
 }
+
