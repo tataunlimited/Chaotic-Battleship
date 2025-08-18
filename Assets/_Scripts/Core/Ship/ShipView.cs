@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Core.Board;
 using Core.GridSystem;
@@ -11,7 +12,6 @@ namespace Core.Ship
         public ShipModel shipModel;
         public BoardView playerView;
         public BoardView enemyBoard;
-        public Canvas canvas;
         public bool IsPlayer {private set; get;}
 
         
@@ -27,7 +27,6 @@ namespace Core.Ship
             }
             SetPosition();
 
-            canvas.gameObject.SetActive(false);
         }
 
         private void Hide()
@@ -99,7 +98,6 @@ namespace Core.Ship
         public void SelectShip(MovementCellManager movementCellManager)
         {
             movementCellManager.ClearCells();
-            canvas.gameObject.SetActive(true);
             var cellPositions = shipModel.GetMovablePositions(playerView);
 
             foreach (var cell in cellPositions)
@@ -114,7 +112,6 @@ namespace Core.Ship
         
         public void DeselectShip()
         {
-            canvas.gameObject.SetActive(false);
         }
         
         
@@ -145,14 +142,25 @@ namespace Core.Ship
 
         public void RotateLeft()
         {
-           
-            UpdatePosition(shipModel.root,  shipModel.RotateLeft());
+            var targetOrientation = shipModel.RotateLeft();
+            
+            if(ValidateRotation(targetOrientation))
+                UpdatePosition(shipModel.root,  targetOrientation);
         }
 
         public void RotateRight()
         {
+            var targetOrientation = shipModel.RotateRight();
             
-            UpdatePosition(shipModel.root,  shipModel.RotateRight());
+            if(ValidateRotation(targetOrientation))
+                UpdatePosition(shipModel.root, targetOrientation);
+        }
+
+        private bool ValidateRotation(Orientation orientation)
+        {
+            var shipModelCopy = shipModel.Copy();
+            shipModelCopy.orientation = orientation;
+            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos>{ shipModelCopy.root});
         }
     }
 }

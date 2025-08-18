@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Core.GridSystem;
 using Core.Ship;
@@ -9,6 +10,8 @@ namespace Core.Board
         public readonly BoardSide Side;
         public readonly int Width;
         public readonly int Height;
+        
+        
         
         private readonly CellState[,] _cells;
 
@@ -38,9 +41,19 @@ namespace Core.Board
             return true;
         }
 
-        public bool ValidateShipPlacement(ShipModel shipModel)
+        public bool ValidateShipPlacement(ShipModel shipModel, List<GridPos> positionsToIgnore = null)
         {
-            return shipModel.GetCells().All(cell => InBounds(cell) && Get(cell) == CellState.Empty);
+            foreach (var c in shipModel.GetCells())
+            {
+                if (positionsToIgnore != null && positionsToIgnore.Contains(c))
+                {
+                    continue;
+                }
+
+                if (!InBounds(c) || _cells[c.x, c.y] != CellState.Empty)
+                    return false;
+            }
+            return true;
         }
 
         public void ResetShipCells(ShipModel shipModel)
@@ -48,6 +61,17 @@ namespace Core.Board
             foreach (var c in shipModel.GetCells())
             {
                 _cells[c.x, c.y] = CellState.Empty;
+            }
+        }
+
+        public void ResetAllCells()
+        {
+            for (int i = 0; i < _cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < _cells.GetLength(1); j++)
+                {
+                    _cells[i, j] = CellState.Empty;
+                }
             }
         }
 
