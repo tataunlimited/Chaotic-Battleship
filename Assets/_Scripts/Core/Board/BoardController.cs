@@ -162,5 +162,10 @@ namespace Core.Board
             playerView.ResetIndicators();
             enemyView.ResetIndicators();
         }
+
+        public void UpdateBoards()
+        {
+            playerView.UpdateBoard();
+        }
     }
 }

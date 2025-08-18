@@ -143,8 +143,12 @@ namespace Core.Board
             return true;
         }
 
-        void UpdateBoard()
+        public void UpdateBoard()
         {
+            foreach (var ship in _spawnedShips)
+            {
+                Model.TryPlaceShip(ship.Value.shipModel);
+            }
             foreach (var tile in _tiles)
             {
                 Tint(tile.Key, GetColor(tile.Key));
