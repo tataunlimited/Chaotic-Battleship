@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Player Ship placement confirmed");
         Debug.Log("Starting Battle...");
+        boardController.UpdateBoards();
         phaseState = PHASE_STATE.PLAYER_FIRING;
         Debug.Log("Phase changed to: PLAYER_FIRING");
         StartCoroutine(AttackingPhase());
