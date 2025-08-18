@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Core.GridSystem;
 using Core.Ship;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 using Random = UnityEngine.Random;
@@ -21,9 +23,12 @@ namespace Core.Board
         public GameObject cellPrefab;
 
         public BoardModel Model { get; private set; }
+        public Dictionary<string, ShipView> SpawnedShipes => _spawnedShips;
 
         private readonly Dictionary<GridPos, Renderer> _tiles = new();
         private readonly Dictionary<string, ShipView> _spawnedShips = new();
+        
+        
         int _lastShipId = 0;
 
         void Awake()
@@ -139,8 +144,12 @@ namespace Core.Board
             return true;
         }
 
-        void UpdateBoard()
+        public void UpdateBoard()
         {
+            foreach (var ship in _spawnedShips)
+            {
+                Model.TryPlaceShip(ship.Value.shipModel);
+            }
             foreach (var tile in _tiles)
             {
                 Tint(tile.Key, GetColor(tile.Key));
@@ -201,6 +210,11 @@ namespace Core.Board
             return col;
         }
 
+        public List<GridPos> CruiserAttack(List<GridPos> shipCells, Orientation orientaion)
+        {
+            var attackCells = new List<GridPos>();
+
+            // Loop through a 3x3 area centered on the "center" position
 
         public void RevealShips(List<ShipModel> ships)
         {
@@ -232,6 +246,55 @@ namespace Core.Board
         }
 
 
+            if (orientaion is Orientation.North or Orientation.South)
+            {
+                for (int i = 0; i < shipCells.Count; i++)
+                {
+                    var pos1 = new GridPos(shipCells[i].x-1, shipCells[i].y);
+                    var pos3 = new GridPos(shipCells[i].x+1, shipCells[i].y);
+                    if(Model.InBounds(pos1))
+                        attackCells.Add(pos1);
+                    if(Model.InBounds(shipCells[i]))
+                        attackCells.Add(shipCells[i]);
+                    if(Model.InBounds(pos3))
+                        attackCells.Add(pos3);
+                    
+                }
+            }
+            else
+            {
+                for (int i = 0; i < shipCells.Count; i++)
+                {
+                    var pos1 = new GridPos(shipCells[i].x, shipCells[i].y-1);
+                    var pos3 = new GridPos(shipCells[i].x, shipCells[i].y+1);
+                    if(Model.InBounds(pos1))
+                        attackCells.Add(pos1);
+                    if(Model.InBounds(shipCells[i]))
+                        attackCells.Add(shipCells[i]);
+                    if(Model.InBounds(pos3))
+                        attackCells.Add(pos3);
+                    
+                }
+            }
+
+            var randomCells = new List<GridPos>();
+            for (int i = 0; i < 3; i++)
+            {
+                if(attackCells.Count == 0)
+                    break;
+                int rndCellIndex = Random.Range(0, attackCells.Count);
+                randomCells.Add(attackCells[rndCellIndex]);
+                attackCells.RemoveAt(rndCellIndex);
+                
+            }
+            return randomCells;
+        }
+
+        public void ResetIndicators()
+        {
+            Model.ResetAllCells();
+            UpdateBoard();
+        }
     }
 }
 

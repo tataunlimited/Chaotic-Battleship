@@ -67,6 +67,9 @@ namespace Core.Ship
                     coords = orientation is Orientation.West or Orientation.East
                     ? boardView.GetRow(root.y, orientation): boardView.GetColumn(root.x, orientation);
                     break;
+                case ShipType.Cruiser:
+                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
+                    break;
 
             }
             return coords;
@@ -79,7 +82,8 @@ namespace Core.Ship
                 id = id,
                 type = type,
                 length = length,
-                root = root
+                root = root, 
+                orientation = orientation
             };
             return copy;
         }

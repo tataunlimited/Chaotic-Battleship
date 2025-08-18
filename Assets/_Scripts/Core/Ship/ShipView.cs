@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Board;
 using Core.GridSystem;
@@ -11,7 +13,8 @@ namespace Core.Ship
         public ShipModel shipModel;
         public BoardView playerView;
         public BoardView enemyBoard;
-        public Canvas canvas;
+        
+        private MovementCellManager _movementCellManager;
         public bool IsPlayer {private set; get;}
 
         
@@ -27,7 +30,6 @@ namespace Core.Ship
             }
             SetPosition();
 
-            canvas.gameObject.SetActive(false);
         }
 
         private void Hide()
@@ -53,11 +55,20 @@ namespace Core.Ship
 
         public void Attack()
         {
+            StartCoroutine(AttackSequence());
+        }
+
+        private IEnumerator AttackSequence()
+        {
             var coords = shipModel.GetAttackCoordinates(enemyBoard);
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
+                {
                     enemyBoard.Tint(gridPos);
+                }
+                VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
@@ -79,6 +90,8 @@ namespace Core.Ship
             playerView.Model.TryPlaceShip(shipModel);
             playerView.Tint(shipModel.GetCells());
             SetPosition();
+            _movementCellManager.ClearCells();
+            BoardController.SelectedShip = null;
         }
 
         private void SetPosition()
@@ -98,13 +111,13 @@ namespace Core.Ship
 
         public void SelectShip(MovementCellManager movementCellManager)
         {
-            movementCellManager.ClearCells();
-            canvas.gameObject.SetActive(true);
+            _movementCellManager = movementCellManager;
+            _movementCellManager.ClearCells();
             var cellPositions = shipModel.GetMovablePositions(playerView);
 
             foreach (var cell in cellPositions)
             {
-                movementCellManager.SpawnCell(cell, () =>
+                _movementCellManager.SpawnCell(cell, () =>
                 {
                     UpdatePosition(shipModel.MoveTo(cell), shipModel.orientation);
                 });
@@ -114,7 +127,6 @@ namespace Core.Ship
         
         public void DeselectShip()
         {
-            canvas.gameObject.SetActive(false);
         }
         
         
@@ -145,14 +157,25 @@ namespace Core.Ship
 
         public void RotateLeft()
         {
-           
-            UpdatePosition(shipModel.root,  shipModel.RotateLeft());
+            var targetOrientation = shipModel.RotateLeft();
+            
+            if(ValidateRotation(targetOrientation))
+                UpdatePosition(shipModel.root,  targetOrientation);
         }
 
         public void RotateRight()
         {
+            var targetOrientation = shipModel.RotateRight();
             
-            UpdatePosition(shipModel.root,  shipModel.RotateRight());
+            if(ValidateRotation(targetOrientation))
+                UpdatePosition(shipModel.root, targetOrientation);
+        }
+
+        private bool ValidateRotation(Orientation orientation)
+        {
+            var shipModelCopy = shipModel.Copy();
+            shipModelCopy.orientation = orientation;
+            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos>{ shipModelCopy.root});
         }
     }
 }
