@@ -56,7 +56,10 @@ namespace Core.Ship
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
+                {
                     enemyBoard.Tint(gridPos);
+                }
+                VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
             }
         }
 
