@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using Core.Board;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public BoardController boardController;
     public enum PHASE_STATE
     {
         START_ENCOUNTER, ENEMY_PLACING_SHIPS, PLAYER_PLACING_SHIPS, PLAYER_FIRING, ENEMY_FIRING, ENEMY_MOVING, PLAYER_MOVING, ENDWAVE
@@ -61,10 +63,11 @@ public class GameManager : MonoBehaviour
 
             case PHASE_STATE.PLAYER_MOVING:
 
+                boardController.ResetGridIndicators();
                 Debug.Log("Player Movement Confirmed");
                 phaseState = PHASE_STATE.PLAYER_FIRING;
                 Debug.Log("Phase changed to: PLAYER_FIRING");
-                PlayerFires();
+                StartCoroutine(AttackingPhase());
                 break;
 
             case PHASE_STATE.ENDWAVE:
@@ -78,7 +81,12 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartEncounterCoroutine(float wait_time)
     {
+        phaseState = PHASE_STATE.ENEMY_PLACING_SHIPS;
+        boardController.SpawnEnemyShips();
         yield return new WaitForSeconds(wait_time);
+        
+        phaseState = PHASE_STATE.PLAYER_PLACING_SHIPS;
+        boardController.SpawnPlayerShips();
     }
     private void StartEncounter()
     {
@@ -114,21 +122,28 @@ public class GameManager : MonoBehaviour
         Debug.Log("Starting Battle...");
         phaseState = PHASE_STATE.PLAYER_FIRING;
         Debug.Log("Phase changed to: PLAYER_FIRING");
-        PlayerFires();
+        StartCoroutine(AttackingPhase());
     }
 
-    private void PlayerFires()
+    private IEnumerator AttackingPhase()
     {
         // Logic for player firing
 
         //TODO: deactivate / unhighlight player movement options
 
         //TODO: activate Fire function on all player ships, resolve hits
+
+        boardController.PlayerAttack();
         Debug.Log("Player Fired!");
         
+        yield return new WaitForSeconds(1f);
         phaseState = PHASE_STATE.ENEMY_FIRING;
-        Debug.Log("Phase changed to: ENEMY_FIRING");
-        EnemyFires();
+        boardController.EnemyAttack();
+        
+        yield return new WaitForSeconds(1f);
+
+       
+        CheckEndWaveConditions();
     }
 
     private void EnemyFires()
@@ -140,7 +155,7 @@ public class GameManager : MonoBehaviour
         //TODO: set Wave end conditions if met
 
         Debug.Log("Enemy Fired!");
-        CheckEndWaveConditions();
+
     }
 
     private void CheckEndWaveConditions()

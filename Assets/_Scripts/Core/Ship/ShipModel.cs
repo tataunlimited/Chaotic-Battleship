@@ -67,7 +67,7 @@ namespace Core.Ship
                     ? boardView.GetRow(root.y, orientation): boardView.GetColumn(root.x, orientation);
                     break;
                 case ShipType.Cruiser:
-                    coords.AddRange(boardView.CruiserAttack(root));
+                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
                     break;
 
             }
@@ -81,7 +81,8 @@ namespace Core.Ship
                 id = id,
                 type = type,
                 length = length,
-                root = root
+                root = root, 
+                orientation = orientation
             };
             return copy;
         }

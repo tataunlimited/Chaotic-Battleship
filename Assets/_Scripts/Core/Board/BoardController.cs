@@ -15,28 +15,27 @@ namespace Core.Board
         public MovementCellManager movementCellManager;
 
         public List<ShipView> shipPrefabs;
-        private ShipView _selectedShip;
+        public static ShipView SelectedShip;
+        private EnemyWaveManager enemyWaveManager;
+        
         
 
         void Start()
         {
             // Example placements (pure logic via Model)
             
-            SpawnShip(ShipType.Cruiser, new GridPos(0,0), Orientation.North, playerView);
-            SpawnShip(ShipType.Destroyer, new GridPos(1,0), Orientation.North, playerView);
-            SpawnShip(ShipType.Battleship, new GridPos(2,0), Orientation.North, playerView);
-            SpawnShip(ShipType.Submarine, new GridPos(3,0), Orientation.North, playerView);
+          
 
             // uncomment next line for testing purposes to show where the enemy ships are placed
             //enemyView.revealShips = true;
 
-            EnemyWaveManager enemyWaveManager = new EnemyWaveManager();
-
-            // create a list of enemy ships with given lengths
-            List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
-
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
+            // EnemyWaveManager enemyWaveManager = new EnemyWaveManager();
+            //
+            // // create a list of enemy ships with given lengths
+            // List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
+            //
+            // // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+            // enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
 
         }
 
@@ -86,21 +85,21 @@ namespace Core.Board
             shipView = hit.collider.GetComponentInParent<ShipView>();
             if (shipView != null && shipView.IsPlayer)
             {
-                if (_selectedShip == shipView)
+                if (SelectedShip == shipView)
                 {
-                    _selectedShip.DeselectShip();
+                    SelectedShip.DeselectShip();
                     movementCellManager.ClearCells();
-                    _selectedShip = null;
+                    SelectedShip = null;
                     return false;
                 }
                 shipView.SelectShip(movementCellManager);
                 
-                if (_selectedShip != null)
+                if (SelectedShip != null)
                 {
-                    _selectedShip.DeselectShip();
+                    SelectedShip.DeselectShip();
                 }
                 
-                _selectedShip = shipView;
+                SelectedShip = shipView;
                 return true;
             }
 
@@ -108,5 +107,60 @@ namespace Core.Board
         }
 
 
+        public void UpdateEnemyShips()
+        {
+          
+        }
+
+        public void SpawnEnemyShips()
+        {
+            enemyWaveManager = new EnemyWaveManager();
+
+            // create a list of enemy ships with given lengths
+            List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
+
+            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
+                
+            // test ship placement below
+                
+            SpawnShip(ShipType.Cruiser, new GridPos(0,0), Orientation.North, enemyView);
+            SpawnShip(ShipType.Destroyer, new GridPos(5,5), Orientation.North, enemyView);
+            SpawnShip(ShipType.Battleship, new GridPos(6,7), Orientation.South, enemyView);
+            SpawnShip(ShipType.Submarine, new GridPos(9,5), Orientation.East, enemyView);
+        }
+
+        public void SpawnPlayerShips()
+        {
+            SpawnShip(ShipType.Cruiser, new GridPos(0,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Destroyer, new GridPos(1,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Battleship, new GridPos(2,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Submarine, new GridPos(3,0), Orientation.North, playerView);
+        }
+
+        public void PlayerAttack()
+        {
+            Attack(playerView);
+
+            
+        }
+        public void EnemyAttack()
+        {
+            Attack(enemyView);
+        }
+
+        private void Attack(BoardView boardView)
+        {
+            foreach (var ship in boardView.SpawnedShipes)
+            {
+                ship.Value.Attack();
+            }
+        }
+
+        public void ResetGridIndicators()
+        {
+            playerView.ResetIndicators();
+            enemyView.ResetIndicators();
+        }
     }
 }
