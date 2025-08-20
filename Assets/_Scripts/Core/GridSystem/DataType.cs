@@ -1,3 +1,4 @@
+
 using System;
 
 namespace Core.GridSystem
@@ -26,6 +27,11 @@ namespace Core.GridSystem
         public override int GetHashCode()
         {
             return HashCode.Combine(x, y);
+
+
+        public override string ToString()
+        {
+            return "(" + x + "," + y + ")";
         }
     }
 }

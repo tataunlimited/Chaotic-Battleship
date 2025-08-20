@@ -50,7 +50,7 @@ namespace Core.Board
                     continue;
                 }
 
-                if (!InBounds(c) || _cells[c.x, c.y] != CellState.Empty)
+                if (!InBounds(c) || (_cells[c.x, c.y] != CellState.Empty && _cells[c.x, c.y] != CellState.Miss))
                     return false;
             }
             return true;

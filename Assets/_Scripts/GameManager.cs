@@ -191,7 +191,8 @@ public class GameManager : MonoBehaviour
     {
         // Logic for enemy movement
 
-        //TODO: move all enemy ships according to AI rules
+        //move all enemy ships according to AI rules
+        boardController.UpdateEnemyShips();
 
         Debug.Log("Enemy is moving...");
         phaseState = PHASE_STATE.PLAYER_MOVING;
