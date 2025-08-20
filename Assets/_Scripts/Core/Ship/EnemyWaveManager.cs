@@ -38,7 +38,9 @@ namespace Core.Ship
             {
                 isValid = ShipDatabase.DefaultShips.TryGetValue(DEFAULT_SHIP_TYPES[i], out ship);
                 if (isValid)
-                    ships.Add(ship);
+                {
+                    ships.Add(ship.Copy());
+                }
             }
 
             return ships;
@@ -112,28 +114,44 @@ namespace Core.Ship
                     index = rnd.Next(validLocations.Count);
                     ship.root = validLocations[index];
                     board.Model.TryPlaceShip(ship);
+
+                    Debug.Log("Placing ship: " + ship.id + ", orientation: " + ship.orientation + ", pos: " + ship.root);
                 }
             }
 
             return haveBeenSuccessfullyPlaced;
         }
 
-        public bool RandomlyMoveShips(BoardView board, List<ShipModel> ships)
+        //public bool RandomlyMoveShips(BoardView board, List<ShipModel> ships)
+        //{
+        //    bool haveBeenSuccessfullyMoved = true;
+
+        //    foreach (ShipModel ship in ships)
+        //    {
+        //        haveBeenSuccessfullyMoved &= RandomlyMoveAShip(board, ship);
+        //    }
+            
+        //    return haveBeenSuccessfullyMoved;
+        //}
+
+        public bool RandomlyMoveShips(BoardView board)
         {
             bool haveBeenSuccessfullyMoved = true;
 
-            foreach (ShipModel ship in ships)
+            foreach (ShipView shipView in board.SpawnedShipes.Values)
             {
-                haveBeenSuccessfullyMoved &= RandomlyMoveAShip(board, ship);
+                haveBeenSuccessfullyMoved &= RandomlyMoveAShip(board, shipView);
             }
-            
+
             return haveBeenSuccessfullyMoved;
+
         }
 
-        private bool RandomlyMoveAShip(BoardView board, ShipModel ship)
+        private bool RandomlyMoveAShip(BoardView board, ShipView shipView)
         {
-            ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(ship.type);
-            return pattern.RandomlyTurnAndMove(board, ship);
+            ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(shipView.shipModel.type);
+            return pattern.RandomlyTurnAndMove(board, shipView);
         }
+
     }
 }

@@ -18,23 +18,10 @@ namespace Core.Board
         public static ShipView SelectedShip;
 
         private EnemyWaveManager enemyWaveManager;
-        private List<ShipModel> enemyShips; 
         
         void Start()
         {
-            // Example placements (pure logic via Model)
-            
 
-
-            enemyWaveManager = new EnemyWaveManager();
-            enemyShips = enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
-
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
-
-            // use revealShips for testing purposes to show where the enemy ships are placed
-            if (enemyView.revealShips)
-                enemyView.RevealShips(enemyShips);
         }
 
         private void SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
@@ -109,28 +96,28 @@ namespace Core.Board
             Debug.Log("UpdateEnemyShips");
 
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            enemyWaveManager.RandomlyMoveShips(enemyView, enemyShips);
+            enemyWaveManager.RandomlyMoveShips(enemyView);
 
-            // uncomment next line for testing purposes to show where the enemy ships are placed
-            //enemyView.RevealShips(enemyShips);
+            // use revealShips for testing purposes to show where the enemy ships are placed
+            if (enemyView.revealShips)
+                enemyView.RevealShips();
         }
 
         public void SpawnEnemyShips()
         {
             enemyWaveManager = new EnemyWaveManager();
-
-            // create a list of enemy ships with given lengths
-            List<ShipModel> ships = enemyWaveManager.CreateDefaultWaveOfShips();
+            List<ShipModel> enemyShips = enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
-                
-            // test ship placement below
-                
-            SpawnShip(ShipType.Cruiser, new GridPos(0,0), Orientation.North, enemyView);
-            SpawnShip(ShipType.Destroyer, new GridPos(5,5), Orientation.North, enemyView);
-            SpawnShip(ShipType.Battleship, new GridPos(6,7), Orientation.South, enemyView);
-            SpawnShip(ShipType.Submarine, new GridPos(9,5), Orientation.East, enemyView);
+            enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
+
+            enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
+            foreach (ShipModel ship in enemyShips)
+                SpawnShip(ship.type, ship.root, ship.orientation, enemyView);
+
+            // use revealShips for testing purposes to show where the enemy ships are placed
+            if (enemyView.revealShips)
+                enemyView.RevealShips();
         }
 
         public void SpawnPlayerShips()
@@ -163,7 +150,7 @@ namespace Core.Board
         public void ResetGridIndicators()
         {
             playerView.ResetIndicators();
-            enemyView.ResetIndicators();
+            enemyView.ResetIndicators(enemyView.revealShips);
         }
 
         public void UpdateBoards()

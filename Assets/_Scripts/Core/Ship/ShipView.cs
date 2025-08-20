@@ -32,12 +32,12 @@ namespace Core.Ship
 
         }
 
-        private void Hide()
+        public void Hide()
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
 
-        private void Show()
+        public void Show()
         {
             transform.GetChild(0).gameObject.SetActive(true);
         }
@@ -81,16 +81,21 @@ namespace Core.Ship
         }
 
 
-        void UpdatePosition(GridPos newPos, Orientation newOrientation)
+        public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
             playerView.Model.ResetShipCells(shipModel);
-            playerView.Tint(shipModel.GetCells());
+            if (showCells)
+                playerView.Tint(shipModel.GetCells());
+
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
             playerView.Model.TryPlaceShip(shipModel);
-            playerView.Tint(shipModel.GetCells());
+            if (showCells)
+                playerView.Tint(shipModel.GetCells());
+
             SetPosition();
-            _movementCellManager.ClearCells();
+            if (_movementCellManager)
+                _movementCellManager.ClearCells();
             BoardController.SelectedShip = null;
         }
 

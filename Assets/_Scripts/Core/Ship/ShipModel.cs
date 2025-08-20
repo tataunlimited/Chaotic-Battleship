@@ -19,7 +19,7 @@ namespace Core.Ship
         public ShipType type;
         public int length = 3;
         public Orientation orientation = Orientation.North;
-        public GridPos root;               // starting cell (leftmost/topmost)
+        public GridPos root;               // tail position  // TODO: this should probably be the bow position since this is the position we rotate around
         public bool isDestroyed = false;
 
         public List<GridPos> GetCells()
@@ -149,7 +149,7 @@ namespace Core.Ship
             { ShipType.Battleship, new ShipModel { id = "battleship", type = ShipType.Battleship, length = 4 } },
             { ShipType.Submarine, new ShipModel { id = "submarine", type = ShipType.Submarine, length = 1} },
             { ShipType.Destroyer, new ShipModel { id = "destroyer", type = ShipType.Destroyer, length = 2 } },
-            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Destroyer, length = 3 } }
+            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3 } }
         };
     }
     

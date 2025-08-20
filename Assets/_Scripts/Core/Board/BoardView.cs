@@ -144,7 +144,7 @@ namespace Core.Board
             return true;
         }
 
-        public void UpdateBoard()
+        public void UpdateBoard(bool showShips = true)
         {
             foreach (var ship in _spawnedShips)
             {
@@ -153,6 +153,11 @@ namespace Core.Board
             foreach (var tile in _tiles)
             {
                 Tint(tile.Key, GetColor(tile.Key));
+            }
+
+            if (!showShips)
+            {
+                HideShips();
             }
         }
 
@@ -215,12 +220,63 @@ namespace Core.Board
             var attackCells = new List<GridPos>();
 
             // Loop through a 3x3 area centered on the "center" position
-
-        public void RevealShips(List<ShipModel> ships)
-        {
-            foreach (var shipModel in ships)
+            if (orientaion is Orientation.North or Orientation.South)
             {
-                RevealAShip(shipModel);
+                for (int i = 0; i < shipCells.Count; i++)
+                {
+                    var pos1 = new GridPos(shipCells[i].x - 1, shipCells[i].y);
+                    var pos3 = new GridPos(shipCells[i].x + 1, shipCells[i].y);
+                    if (Model.InBounds(pos1))
+                        attackCells.Add(pos1);
+                    if (Model.InBounds(shipCells[i]))
+                        attackCells.Add(shipCells[i]);
+                    if (Model.InBounds(pos3))
+                        attackCells.Add(pos3);
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < shipCells.Count; i++)
+                {
+                    var pos1 = new GridPos(shipCells[i].x, shipCells[i].y - 1);
+                    var pos3 = new GridPos(shipCells[i].x, shipCells[i].y + 1);
+                    if (Model.InBounds(pos1))
+                        attackCells.Add(pos1);
+                    if (Model.InBounds(shipCells[i]))
+                        attackCells.Add(shipCells[i]);
+                    if (Model.InBounds(pos3))
+                        attackCells.Add(pos3);
+
+                }
+            }
+
+            var randomCells = new List<GridPos>();
+            for (int i = 0; i < 3; i++)
+            {
+                if (attackCells.Count == 0)
+                    break;
+                int rndCellIndex = Random.Range(0, attackCells.Count);
+                randomCells.Add(attackCells[rndCellIndex]);
+                attackCells.RemoveAt(rndCellIndex);
+
+            }
+            return randomCells;
+        }
+
+
+        public void ResetIndicators(bool showShips = true)
+        {
+            Model.ResetAllCells();
+            UpdateBoard(showShips);
+        }
+
+        public void RevealShips()
+        {
+            foreach (ShipView shipView in SpawnedShipes.Values)
+            {
+                shipView.Show();
+                RevealAShip(shipView.shipModel);
             }
         }
 
@@ -232,69 +288,24 @@ namespace Core.Board
             }
         }
 
-        public void HideShips(List<ShipModel> ships)
+        public void HideShips()
         {
-            foreach (var shipModel in ships)
+            foreach (ShipView shipView in SpawnedShipes.Values)
             {
-                HideAShip(shipModel);
+                shipView.Hide();
+                HideAShip(shipView.shipModel);
             }
         }
 
         public void HideAShip(ShipModel shipModel)
         {
-            Tint(shipModel.GetCells());
+            foreach (GridPos gp in shipModel.GetCells())
+            {
+                if (Model.Get(gp) == CellState.Ship)
+                    Tint(gp, Color.cyan);
+            }
         }
 
-
-            if (orientaion is Orientation.North or Orientation.South)
-            {
-                for (int i = 0; i < shipCells.Count; i++)
-                {
-                    var pos1 = new GridPos(shipCells[i].x-1, shipCells[i].y);
-                    var pos3 = new GridPos(shipCells[i].x+1, shipCells[i].y);
-                    if(Model.InBounds(pos1))
-                        attackCells.Add(pos1);
-                    if(Model.InBounds(shipCells[i]))
-                        attackCells.Add(shipCells[i]);
-                    if(Model.InBounds(pos3))
-                        attackCells.Add(pos3);
-                    
-                }
-            }
-            else
-            {
-                for (int i = 0; i < shipCells.Count; i++)
-                {
-                    var pos1 = new GridPos(shipCells[i].x, shipCells[i].y-1);
-                    var pos3 = new GridPos(shipCells[i].x, shipCells[i].y+1);
-                    if(Model.InBounds(pos1))
-                        attackCells.Add(pos1);
-                    if(Model.InBounds(shipCells[i]))
-                        attackCells.Add(shipCells[i]);
-                    if(Model.InBounds(pos3))
-                        attackCells.Add(pos3);
-                    
-                }
-            }
-
-            var randomCells = new List<GridPos>();
-            for (int i = 0; i < 3; i++)
-            {
-                if(attackCells.Count == 0)
-                    break;
-                int rndCellIndex = Random.Range(0, attackCells.Count);
-                randomCells.Add(attackCells[rndCellIndex]);
-                attackCells.RemoveAt(rndCellIndex);
-                
-            }
-            return randomCells;
-        }
-
-        public void ResetIndicators()
-        {
-            Model.ResetAllCells();
-            UpdateBoard();
-        }
     }
 }
 

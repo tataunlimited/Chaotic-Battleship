@@ -22,7 +22,8 @@ namespace Core.Ship
         public float chanceToStayStill = 0.5f;
         public float chanceToRotate = 0.5f;
         public bool canMoveAfterRotating = false;
-
+        public int maxMovementPoints = 1;
+        public int movesRemaining = 1;
         public bool hasAlreadyRotated = false;
 
 
@@ -38,6 +39,11 @@ namespace Core.Ship
             }
         }
 
+        public void Reset()
+        {
+            movesRemaining = maxMovementPoints;
+            hasAlreadyRotated = false;
+        }
 
         // AI Movement Decision Rules:
         // Enemy ships have a 50/50 chance to act:
@@ -52,30 +58,34 @@ namespace Core.Ship
         //
         // returns  true - if doesn't move or successfully turns and/or moves
         //          false - if tried to turns and/or move but failed
-        public bool RandomlyTurnAndMove(BoardView board, ShipModel ship)
+        public bool RandomlyTurnAndMove(BoardView board, ShipView shipView)
         {
+            ShipModel ship = shipView.shipModel;
             Debug.Log("RandomlyTurnAndMove ship: " + ship.id + " starts with orientation: " + ship.orientation + ", pos: " + ship.root);
+
+            Reset();
+
             if (rnd.NextDouble() < chanceToStayStill)
                 return true;
 
-            int movesUsed = 0;
-            if (rnd.NextDouble() < chanceToRotate && RandomlyRotateLeftOrRight(board, ship))
+            if (rnd.NextDouble() < chanceToRotate && RandomlyRotateLeftOrRight(board, shipView))
             {
                 Debug.Log("rotated to " + ship.orientation);
                 if (!canMoveAfterRotating)
                     return true;
-                movesUsed++;
             }
 
-            bool isSuccess = MoveToARandomPosition(board, ship);
+            bool isSuccess = MoveToARandomPosition(board, shipView);
             Debug.Log("RandomlyTurnAndMove ship: " + ship.id + " ends at orientation: " + ship.orientation + ", pos: " + ship.root);
             return isSuccess;
         }
 
-        private bool RandomlyRotateLeftOrRight(BoardView board, ShipModel ship)
+        private bool RandomlyRotateLeftOrRight(BoardView board, ShipView shipView)
         {
+            ShipModel ship = shipView.shipModel;
             bool hasSuccessfullyTurned = true;
             Orientation originalOrientation = ship.orientation;
+            Orientation newOrientation = ship.orientation;
             List<Orientation> validOrientations = new List<Orientation>();     // valid Orientations that the ship can fit
 
             if (ship.isDestroyed)   // destroyed ships can't rotate
@@ -83,8 +93,8 @@ namespace Core.Ship
 
             // remove the current ship location so it doesn't block possible locations
             board.Model.ResetShipCells(ship);
-            if (board.revealShips)
-                board.HideAShip(ship);
+            //if (board.revealShips)
+            //    board.HideAShip(ship);
 
             ship.orientation = ship.RotateLeft();
             if (board.Model.ValidateShipPlacement(ship))
@@ -101,52 +111,53 @@ namespace Core.Ship
 
             if (validOrientations.Count == 0)
             {
-                ship.orientation = originalOrientation;
+                newOrientation = originalOrientation;
                 hasSuccessfullyTurned = false;
             }
             else
             {
-                ship.orientation = validOrientations[rnd.Next(validOrientations.Count)];
+                newOrientation = validOrientations[rnd.Next(validOrientations.Count)];
                 hasAlreadyRotated = true;
+                movesRemaining--;
             }
 
             // place the ship
-            board.Model.TryPlaceShip(ship);
-            if (board.revealShips)
-                board.RevealAShip(ship);
+            //
+            ship.orientation = originalOrientation;
+            shipView.UpdatePosition(ship.root, newOrientation, false);
 
             return hasSuccessfullyTurned;
         }
 
-        private bool MoveToARandomPosition(BoardView board, ShipModel ship)
+        private bool MoveToARandomPosition(BoardView board, ShipView shipView)
         {
+            ShipModel ship = shipView.shipModel;
             bool hasBeenSuccessfullyPlaced = true;
             GridPos originalPosition = ship.root;
+            GridPos newPosition = ship.root;
 
             // remove the current ship location so it doesn't block possible locations
             board.Model.ResetShipCells(ship);
-            if (board.revealShips)
-                board.HideAShip(ship);
+            //if (board.revealShips)
+            //    board.HideAShip(ship);
 
             // valid GridPos cells that the ship can fit
             List<GridPos> validLocations = GetAllPossibleMovePositions(board, ship);
 
             if (validLocations.Count == 0)
             {
-                ship.root = originalPosition;
+                newPosition = originalPosition;
                 hasBeenSuccessfullyPlaced = false;
             }
             else
             {
                 // randomly choose one of the validLocations to set as the ship's root 
                 int index = rnd.Next(validLocations.Count);
-                ship.root = validLocations[index];
+                newPosition = validLocations[index];
             }
-            
+
             // place the ship
-            board.Model.TryPlaceShip(ship);
-            if (board.revealShips)
-                board.RevealAShip(ship);
+            shipView.UpdatePosition(newPosition, ship.orientation, false);
 
             return hasBeenSuccessfullyPlaced;
         }
@@ -227,6 +238,8 @@ namespace Core.Ship
         public DestroyerMovementPattern()
         {
             canMoveAfterRotating = true;
+            maxMovementPoints = 2;
+            movesRemaining = 2;
         }
 
         public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
@@ -235,37 +248,58 @@ namespace Core.Ship
             if (ship.isDestroyed)   // destroyed ships can't move
                 return locations;
 
-            GridPos originalPosition = ship.root;
-
-            int movesRemaining = 2;     // can move up to 2 spaces
-            if (hasAlreadyRotated)      // minus 1 move if hasAlreadyRotated
-                movesRemaining--;       
+            GridPos originalPosition = ship.root;     
 
             // remove the current ship location so it doesn't block possible locations
             board.Model.ResetShipCells(ship);
 
+            // checking east and west moves
             for (int i = originalPosition.x - movesRemaining; i <= originalPosition.x + movesRemaining; i++)
             {
+                if (i == originalPosition.x) continue;
+
                 ship.root.x = i;
-
-                for (int j = originalPosition.y - movesRemaining; j <= originalPosition.y + movesRemaining; j++)
-                {
-                    ship.root.y = j;
-
-                    if (ship.root.Equals(originalPosition))
-                    {
-                        continue;
-                    }
-
-                    if (board.Model.ValidateShipPlacement(ship))
-                    {
-                        locations.Add(ship.root);
-                    }
-                }
+                if (board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
             }
+            ship.root = originalPosition;
+
+            // checking north and south moves
+            for (int i = originalPosition.y - movesRemaining; i <= originalPosition.y + movesRemaining; i++)
+            {
+                if (i == originalPosition.y) continue;
+
+                ship.root.y = i;
+                if (board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
+            }
+            ship.root = originalPosition;
+
+            // checking northeast and southwest diagonal moves
+            for (int i = -movesRemaining; i <= movesRemaining; i++)
+            {
+                if (i == 0) continue;
+
+                ship.root.x = originalPosition.x + i;
+                ship.root.y = originalPosition.y + i;
+                if (board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
+            }
+            ship.root = originalPosition;
+
+            // checking northeast and southwest diagonal moves
+            for (int i = -movesRemaining; i <= movesRemaining; i++)
+            {
+                if (i == 0) continue;
+
+                ship.root.x = originalPosition.x + i;
+                ship.root.y = originalPosition.y - i;
+                if (board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
+            }
+            ship.root = originalPosition;
 
             // place the ship back in its originalPosition
-            ship.root = originalPosition;
             board.Model.TryPlaceShip(ship);
 
             return locations;
@@ -278,6 +312,8 @@ namespace Core.Ship
         public SubmarineMovementPattern()
         {
             canMoveAfterRotating = true;
+            maxMovementPoints = 3;
+            movesRemaining = 3;
         }
 
         public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
@@ -288,35 +324,32 @@ namespace Core.Ship
 
             GridPos originalPosition = ship.root;
 
-            int movesRemaining = 3;     // can move up to 3 spaces
-            if (hasAlreadyRotated)      // minus 1 move if hasAlreadyRotated
-                movesRemaining--;
-
             // remove the current ship location so it doesn't block possible locations
             board.Model.ResetShipCells(ship);
 
+            // checking east and west moves
             for (int i = originalPosition.x - movesRemaining; i <= originalPosition.x + movesRemaining; i++)
             {
+                if (i == originalPosition.x) continue;
+
                 ship.root.x = i;
-
-                for (int j = originalPosition.y - movesRemaining; j <= originalPosition.y + movesRemaining; j++)
-                {
-                    ship.root.y = j;
-
-                    if (ship.root.Equals(originalPosition))
-                    {
-                        continue;
-                    }
-
-                    if (board.Model.ValidateShipPlacement(ship))
-                    {
-                        locations.Add(ship.root);
-                    }
-                }
+                if (board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
             }
+            ship.root = originalPosition;
+
+            // checking north and south moves
+            for (int i = originalPosition.y - movesRemaining; i <= originalPosition.y + movesRemaining; i++)
+            {
+                if (i == originalPosition.y) continue;
+
+                ship.root.y = i;
+                if (board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
+            }
+            ship.root = originalPosition;
 
             // place the ship back in its originalPosition
-            ship.root = originalPosition;
             board.Model.TryPlaceShip(ship);
 
             return locations;
