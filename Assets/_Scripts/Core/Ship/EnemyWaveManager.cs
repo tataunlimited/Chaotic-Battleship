@@ -138,7 +138,7 @@ namespace Core.Ship
         {
             bool haveBeenSuccessfullyMoved = true;
 
-            foreach (ShipView shipView in board.SpawnedShipes.Values)
+            foreach (ShipView shipView in board.SpawnedShips.Values)
             {
                 haveBeenSuccessfullyMoved &= RandomlyMoveAShip(board, shipView);
             }
