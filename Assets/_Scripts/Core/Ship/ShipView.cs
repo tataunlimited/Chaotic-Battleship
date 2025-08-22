@@ -103,15 +103,12 @@ namespace Core.Ship
         public void SelectShip()
         {
             _collider.enabled = false;
-            Debug.Log("Select Ship" + name);
-
         }
         
         
         public void DeselectShip()
         {
             _collider.enabled = true;
-            Debug.Log("Deselect Ship" + name);
         }
         
         public void RotateLeft()
