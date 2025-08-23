@@ -29,27 +29,16 @@ namespace Core.Ship
             {
                 cells.Add( orientation switch
                 {
-                    Orientation.North => new GridPos(root.x, root.y + i),
-                    Orientation.East => new GridPos(root.x + i, root.y),
-                    Orientation.South => new GridPos(root.x, root.y - i),
-                    Orientation.West => new GridPos(root.x - i, root.y),
+                    Orientation.North => new GridPos(root.x, root.y - i),
+                    Orientation.East => new GridPos(root.x - i, root.y),
+                    Orientation.South => new GridPos(root.x, root.y + i),
+                    Orientation.West => new GridPos(root.x + i, root.y),
                     _ => throw new ArgumentOutOfRangeException()
                 });
             }
             return cells;
         }
-
-        public GridPos GetBowPosition()
-        {
-            return orientation switch
-            {
-                Orientation.North => new GridPos(root.x, root.y + length - 1),
-                Orientation.East => new GridPos(root.x + length - 1, root.y),
-                Orientation.South => new GridPos(root.x, root.y  - length + 1),
-                Orientation.West => new GridPos(root.x - length + 1, root.y),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
+        
         internal List<GridPos> GetAttackCoordinates(BoardView boardView)
         {
             
@@ -58,7 +47,7 @@ namespace Core.Ship
             switch (type)
             {
                 case ShipType.Destroyer:
-                    coords.Add(GetBowPosition());
+                    coords.Add(root);
                     break;
                 case ShipType.Battleship:
                     coords.AddRange(boardView.GetRandomPositions(4));
