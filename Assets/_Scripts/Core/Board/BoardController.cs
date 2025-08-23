@@ -18,10 +18,23 @@ namespace Core.Board
         public static ShipView SelectedShip;
 
         private EnemyWaveManager enemyWaveManager;
-        
+
+        public static BoardController Get()
+        {
+            return GameObject.Find("BoardController").GetComponent<BoardController>();
+        }
+
         void Start()
         {
 
+        }
+
+        public void Reset()
+        {
+            playerView.Reset();
+            enemyView.Reset();
+            movementCellManager.ClearCells();
+            SelectedShip = null;
         }
 
         private void SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)

@@ -23,6 +23,26 @@ namespace Core.Board
             _cells = new CellState[width, height];
         }
 
+        public BoardModel Copy()
+        {
+            BoardModel board = new BoardModel(Side, Width, Height);
+
+            for ( int x = 0; x < Width; x++)
+            {
+                for (int y = 0; x < Width; x++)
+                {
+                    board._cells[x, y] = _cells[x, y];
+                }
+            }
+
+            return board;
+        }
+
+        public void Reset() 
+        {
+            ResetAllCells();
+        }
+
         public bool InBounds(GridPos p) =>
             p.x >= 0 && p.y >= 0 && p.x < Width && p.y < Height;
 
