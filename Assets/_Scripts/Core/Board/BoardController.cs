@@ -93,8 +93,18 @@ namespace Core.Board
                     movementCellManager.ClearCells();
                 });
             }
-        
         }
+
+        public void ClearSelectedShip()
+        {
+            if (BoardController.SelectedShip != null)
+            {
+                movementCellManager.ClearCells();
+                SelectedShip.DeselectShip();
+                SelectedShip = null;
+            }
+        }
+
 
         private bool TryHitBoard(BoardView view, out GridPos cell)
         {

@@ -26,11 +26,8 @@ namespace Core.Board
         public BoardModel Model { get; private set; }
         public Dictionary<string, ShipView> SpawnedShips { get; } = new();
 
-        private readonly Dictionary<GridPos, Renderer> _tiles = new();
-        private readonly Dictionary<string, ShipView> _spawnedShips = new();
-
         private Dictionary<string, ShipModel> previousShipPlacements = new();
-        
+        private readonly Dictionary<GridPos, Renderer> _tiles = new();
         private int _lastShipId = 0;
 
 
@@ -44,7 +41,7 @@ namespace Core.Board
         {
             //HideShips();
             DestroyShips();
-            _spawnedShips.Clear();
+            SpawnedShips.Clear();
             previousShipPlacements.Clear();
             ResetIndicators();
         }
@@ -53,7 +50,7 @@ namespace Core.Board
         {
             // TODO: might want to save the BoardModel _cells as well. Can use BoardModel.Copy(), but need to remove the previous ship locations 
             previousShipPlacements.Clear();
-            foreach (var pair in _spawnedShips)
+            foreach (var pair in SpawnedShips)
             {
                 previousShipPlacements.Add(pair.Key, pair.Value.shipModel.Copy());
             }
@@ -68,7 +65,7 @@ namespace Core.Board
             // need to remove ships so they don't interfere with placing them back where they were
             Model.ResetAllCells();
 
-            foreach (var pair in _spawnedShips)
+            foreach (var pair in SpawnedShips)
             {
                 wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
                 pair.Value.UpdatePosition(previousShipData.root, previousShipData.orientation);

@@ -19,6 +19,7 @@ namespace UI
         {
             // should this be changed to the class having a BoardController attribute that we set in the Unity Inspector?
             BoardController boardController = BoardController.Get();
+            boardController.ClearSelectedShip();
             boardController.playerView.ResetMovementPhase();
         }
 
