@@ -115,7 +115,7 @@ namespace Core.Ship
                     ship.root = validLocations[index];
                     board.Model.TryPlaceShip(ship);
 
-                    Debug.Log("Placing ship: " + ship.id + ", orientation: " + ship.orientation + ", pos: " + ship.root);
+                    Debug.Log("Placing enemy ship: " + ship.id + ", orientation: " + ship.orientation + ", pos: " + ship.root);
                 }
             }
 

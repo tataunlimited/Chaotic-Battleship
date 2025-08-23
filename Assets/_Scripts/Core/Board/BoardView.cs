@@ -27,14 +27,54 @@ namespace Core.Board
         public Dictionary<string, ShipView> SpawnedShips { get; } = new();
 
         private readonly Dictionary<GridPos, Renderer> _tiles = new();
+        private readonly Dictionary<string, ShipView> _spawnedShips = new();
 
+        private Dictionary<string, ShipModel> previousShipPlacements = new();
+        
+        private int _lastShipId = 0;
 
-        private int _lastShipId;
 
         void Awake()
         {
             Model = new BoardModel(side, width, height);
             if (cellPrefab) BuildGrid();
+        }
+
+        public void Reset()
+        {
+            //HideShips();
+            DestroyShips();
+            _spawnedShips.Clear();
+            previousShipPlacements.Clear();
+            ResetIndicators();
+        }
+
+        internal void SaveShipLocations()
+        {
+            // TODO: might want to save the BoardModel _cells as well. Can use BoardModel.Copy(), but need to remove the previous ship locations 
+            previousShipPlacements.Clear();
+            foreach (var pair in _spawnedShips)
+            {
+                previousShipPlacements.Add(pair.Key, pair.Value.shipModel.Copy());
+            }
+        }
+
+        // returns true if all ships were moved back to their previous location
+        internal bool ResetMovementPhase()
+        {
+            ShipModel previousShipData;
+            bool wasSuccessful = true;
+
+            // need to remove ships so they don't interfere with placing them back where they were
+            Model.ResetAllCells();
+
+            foreach (var pair in _spawnedShips)
+            {
+                wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
+                pair.Value.UpdatePosition(previousShipData.root, previousShipData.orientation);
+            }
+
+            return wasSuccessful;
         }
 
         void BuildGrid()
@@ -306,6 +346,13 @@ namespace Core.Board
             }
         }
 
+        public void DestroyShips()
+        {
+            foreach (ShipView shipView in SpawnedShipes.Values)
+            {
+                Destroy(shipView.gameObject);
+            }
+        }
     }
 }
 

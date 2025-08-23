@@ -18,11 +18,26 @@ namespace Core.Board
         
         private Camera _camera;
 
-        private EnemyWaveManager _enemyWaveManager;
-        
+
+        private EnemyWaveManager enemyWaveManager;
+
+        public static BoardController Get()
+        {
+            return GameObject.Find("BoardController").GetComponent<BoardController>();
+        }
+
+       
         void Awake()
         {
             _camera = Camera.main;
+        }
+
+        public void Reset()
+        {
+            playerView.Reset();
+            enemyView.Reset();
+            movementCellManager.ClearCells();
+            SelectedShip = null;
         }
 
         private void SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
