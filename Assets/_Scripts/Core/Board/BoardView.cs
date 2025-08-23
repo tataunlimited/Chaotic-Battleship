@@ -348,7 +348,7 @@ namespace Core.Board
 
         public void DestroyShips()
         {
-            foreach (ShipView shipView in SpawnedShipes.Values)
+            foreach (ShipView shipView in SpawnedShips.Values)
             {
                 Destroy(shipView.gameObject);
             }

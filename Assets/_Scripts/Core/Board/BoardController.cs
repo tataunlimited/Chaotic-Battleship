@@ -19,7 +19,7 @@ namespace Core.Board
         private Camera _camera;
 
 
-        private EnemyWaveManager enemyWaveManager;
+        private EnemyWaveManager _enemyWaveManager;
 
         public static BoardController Get()
         {
