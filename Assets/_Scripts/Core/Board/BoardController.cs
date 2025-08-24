@@ -160,13 +160,13 @@ namespace Core.Board
 
         public void PlayerAttack()
         {
-            Attack(playerView);
+            Attack(enemyView);
 
             
         }
         public void EnemyAttack()
         {
-            Attack(enemyView);
+            Attack(playerView);
         }
 
         private void Attack(BoardView boardView)
