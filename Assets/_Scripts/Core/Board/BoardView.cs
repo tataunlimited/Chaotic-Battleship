@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Core.GridSystem;
 using Core.Ship;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,6 +9,8 @@ namespace Core.Board
 {
     public class BoardView : MonoBehaviour
     {
+        private static readonly int Color1 = Shader.PropertyToID("_Color");
+
         [Header("Config")]
         public BoardSide side = BoardSide.Player;
         public bool revealShips;
@@ -21,19 +21,57 @@ namespace Core.Board
         public Vector3 origin = Vector3.zero;
         public GameObject cellPrefab;
 
-        public BoardModel Model { get; private set; }
-        public Dictionary<string, ShipView> SpawnedShipes => _spawnedShips;
+        public Color baseColor = Color.cyan;
 
+        public BoardModel Model { get; private set; }
+        public Dictionary<string, ShipView> SpawnedShips { get; } = new();
+
+        private Dictionary<string, ShipModel> previousShipPlacements = new();
         private readonly Dictionary<GridPos, Renderer> _tiles = new();
-        private readonly Dictionary<string, ShipView> _spawnedShips = new();
-        
-        
-        int _lastShipId = 0;
+        private int _lastShipId = 0;
+
 
         void Awake()
         {
             Model = new BoardModel(side, width, height);
             if (cellPrefab) BuildGrid();
+        }
+
+        public void Reset()
+        {
+            //HideShips();
+            DestroyShips();
+            SpawnedShips.Clear();
+            previousShipPlacements.Clear();
+            ResetIndicators();
+        }
+
+        internal void SaveShipLocations()
+        {
+            // TODO: might want to save the BoardModel _cells as well. Can use BoardModel.Copy(), but need to remove the previous ship locations 
+            previousShipPlacements.Clear();
+            foreach (var pair in SpawnedShips)
+            {
+                previousShipPlacements.Add(pair.Key, pair.Value.shipModel.Copy());
+            }
+        }
+
+        // returns true if all ships were moved back to their previous location
+        internal bool ResetMovementPhase()
+        {
+            ShipModel previousShipData;
+            bool wasSuccessful = true;
+
+            // need to remove ships so they don't interfere with placing them back where they were
+            Model.ResetAllCells();
+
+            foreach (var pair in SpawnedShips)
+            {
+                wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
+                pair.Value.UpdatePosition(previousShipData.root, previousShipData.orientation);
+            }
+
+            return wasSuccessful;
         }
 
         void BuildGrid()
@@ -67,7 +105,7 @@ namespace Core.Board
 
         private void Tint(GridPos p, Color c)
         {
-            if (_tiles.TryGetValue(p, out var r) && r.material.HasProperty("_Color"))
+            if (_tiles.TryGetValue(p, out var r) && r.material.HasProperty(Color1))
                 r.material.color = c;
         }
 
@@ -84,11 +122,11 @@ namespace Core.Board
             Tint(p, GetColor(p));
         }
 
-        public Color GetColor(GridPos p)
+        private Color GetColor(GridPos p)
         {
             Color c = Model.Get(p) switch
             {
-                CellState.Empty => Color.cyan,
+                CellState.Empty => baseColor,
                 CellState.Ship => Color.green,
                 CellState.Hit => Color.red,
                 CellState.Miss => Color.gray,
@@ -131,7 +169,7 @@ namespace Core.Board
                 shipView.Init(this, shipModel, isPlayer);
 
                 _lastShipId++;
-                _spawnedShips.Add(id, shipView);
+                SpawnedShips.Add(id, shipView);
             }
 
             if (!revealShips || !success) return success;
@@ -143,15 +181,20 @@ namespace Core.Board
             return true;
         }
 
-        public void UpdateBoard()
+        public void UpdateBoard(bool showShips = true)
         {
-            foreach (var ship in _spawnedShips)
+            foreach (var ship in SpawnedShips)
             {
                 Model.TryPlaceShip(ship.Value.shipModel);
             }
             foreach (var tile in _tiles)
             {
                 Tint(tile.Key, GetColor(tile.Key));
+            }
+
+            if (!showShips)
+            {
+                HideShips();
             }
         }
 
@@ -214,56 +257,99 @@ namespace Core.Board
             var attackCells = new List<GridPos>();
 
             // Loop through a 3x3 area centered on the "center" position
-
-
             if (orientaion is Orientation.North or Orientation.South)
             {
                 for (int i = 0; i < shipCells.Count; i++)
                 {
-                    var pos1 = new GridPos(shipCells[i].x-1, shipCells[i].y);
-                    var pos3 = new GridPos(shipCells[i].x+1, shipCells[i].y);
-                    if(Model.InBounds(pos1))
+                    var pos1 = new GridPos(shipCells[i].x - 1, shipCells[i].y);
+                    var pos3 = new GridPos(shipCells[i].x + 1, shipCells[i].y);
+                    if (Model.InBounds(pos1))
                         attackCells.Add(pos1);
-                    if(Model.InBounds(shipCells[i]))
+                    if (Model.InBounds(shipCells[i]))
                         attackCells.Add(shipCells[i]);
-                    if(Model.InBounds(pos3))
+                    if (Model.InBounds(pos3))
                         attackCells.Add(pos3);
-                    
+
                 }
             }
             else
             {
                 for (int i = 0; i < shipCells.Count; i++)
                 {
-                    var pos1 = new GridPos(shipCells[i].x, shipCells[i].y-1);
-                    var pos3 = new GridPos(shipCells[i].x, shipCells[i].y+1);
-                    if(Model.InBounds(pos1))
+                    var pos1 = new GridPos(shipCells[i].x, shipCells[i].y - 1);
+                    var pos3 = new GridPos(shipCells[i].x, shipCells[i].y + 1);
+                    if (Model.InBounds(pos1))
                         attackCells.Add(pos1);
-                    if(Model.InBounds(shipCells[i]))
+                    if (Model.InBounds(shipCells[i]))
                         attackCells.Add(shipCells[i]);
-                    if(Model.InBounds(pos3))
+                    if (Model.InBounds(pos3))
                         attackCells.Add(pos3);
-                    
+
                 }
             }
 
             var randomCells = new List<GridPos>();
             for (int i = 0; i < 3; i++)
             {
-                if(attackCells.Count == 0)
+                if (attackCells.Count == 0)
                     break;
                 int rndCellIndex = Random.Range(0, attackCells.Count);
                 randomCells.Add(attackCells[rndCellIndex]);
                 attackCells.RemoveAt(rndCellIndex);
-                
+
             }
             return randomCells;
         }
 
-        public void ResetIndicators()
+
+        public void ResetIndicators(bool showShips = true)
         {
             Model.ResetAllCells();
-            UpdateBoard();
+            UpdateBoard(showShips);
+        }
+
+        public void RevealShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                shipView.Show();
+                RevealAShip(shipView.shipModel);
+            }
+        }
+
+        private void RevealAShip(ShipModel shipModel)
+        {
+            foreach (var gridPos in shipModel.GetCells())
+            {
+                Tint(gridPos, Color.green);
+            }
+        }
+
+        private void HideShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                shipView.Hide();
+                HideAShip(shipView.shipModel);
+            }
+        }
+
+        private void HideAShip(ShipModel shipModel)
+        {
+            foreach (GridPos gp in shipModel.GetCells())
+            {
+                if (Model.Get(gp) == CellState.Ship)
+                    Tint(gp, Color.cyan);
+            }
+        }
+
+        public void DestroyShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                Destroy(shipView.gameObject);
+            }
         }
     }
 }
+

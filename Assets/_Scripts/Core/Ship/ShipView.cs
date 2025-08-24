@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Core.Board;
 using Core.GridSystem;
 using UnityEngine;
@@ -12,10 +11,10 @@ namespace Core.Ship
         
         public ShipModel shipModel;
         public BoardView playerView;
-        public BoardView enemyBoard;
         
-        private MovementCellManager _movementCellManager;
         public bool IsPlayer {private set; get;}
+
+        private Collider _collider;
 
         
         
@@ -32,33 +31,28 @@ namespace Core.Ship
 
         }
 
-        private void Hide()
+        public void Hide()
         {
             transform.GetChild(0).gameObject.SetActive(false);
         }
 
-        private void Show()
+        public void Show()
         {
             transform.GetChild(0).gameObject.SetActive(true);
         }
 
         private void Start()
         {
-            // Temporary for testing
-            var boards = FindObjectsByType<BoardView>(FindObjectsSortMode.None);
-            if (boards != null)
-            {
-                enemyBoard = boards.First((board) => board.isPlayer != IsPlayer);
-            }
+            _collider = GetComponentInChildren<Collider>(true);
         }
 
 
-        public void Attack()
+        public void Attack(BoardView enemyBoard)
         {
-            StartCoroutine(AttackSequence());
+            StartCoroutine(AttackSequence(enemyBoard));
         }
 
-        private IEnumerator AttackSequence()
+        private IEnumerator AttackSequence(BoardView enemyBoard)
         {
             var coords = shipModel.GetAttackCoordinates(enemyBoard);
             foreach (var gridPos in coords)
@@ -72,25 +66,22 @@ namespace Core.Ship
             }
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                Attack();
-            }
-        }
 
 
-        void UpdatePosition(GridPos newPos, Orientation newOrientation)
+        public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
             playerView.Model.ResetShipCells(shipModel);
-            playerView.Tint(shipModel.GetCells());
+            if (showCells)
+                playerView.Tint(shipModel.GetCells());
+
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
             playerView.Model.TryPlaceShip(shipModel);
-            playerView.Tint(shipModel.GetCells());
+            if (showCells)
+                playerView.Tint(shipModel.GetCells());
+
             SetPosition();
-            _movementCellManager.ClearCells();
+
             BoardController.SelectedShip = null;
         }
 
@@ -109,52 +100,17 @@ namespace Core.Ship
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
         }
 
-        public void SelectShip(MovementCellManager movementCellManager)
+        public void SelectShip()
         {
-            _movementCellManager = movementCellManager;
-            _movementCellManager.ClearCells();
-            var cellPositions = shipModel.GetMovablePositions(playerView);
-
-            foreach (var cell in cellPositions)
-            {
-                _movementCellManager.SpawnCell(cell, () =>
-                {
-                    UpdatePosition(shipModel.MoveTo(cell), shipModel.orientation);
-                });
-            }
+            _collider.enabled = false;
         }
         
         
         public void DeselectShip()
         {
+            _collider.enabled = true;
         }
         
-        
-        
-        public void MoveEast()
-        {
-            shipModel.MoveTowards(Orientation.East);
-            SetPosition();
-        }
-
-        public void MoveWest()
-        {
-            shipModel.MoveTowards(Orientation.West);
-            SetPosition();
-        }
-
-        public void MoveSouth()
-        {
-            shipModel.MoveTowards(Orientation.South);
-            SetPosition();
-        }
-
-        public void MoveNorth()
-        {
-            shipModel.MoveTowards(Orientation.North);
-            SetPosition();
-        }
-
         public void RotateLeft()
         {
             var targetOrientation = shipModel.RotateLeft();

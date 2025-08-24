@@ -10,15 +10,37 @@ public class GameManager : MonoBehaviour
     {
         START_ENCOUNTER, ENEMY_PLACING_SHIPS, PLAYER_PLACING_SHIPS, PLAYER_FIRING, ENEMY_FIRING, ENEMY_MOVING, PLAYER_MOVING, ENDWAVE
     }
-    public PHASE_STATE phaseState = PHASE_STATE.START_ENCOUNTER;
-    public bool enemyShipsPlaced = false;
-    public bool winConditionMet = false;
-    public bool loseConditionMet = false;
+    public PHASE_STATE phaseState;
+    public bool enemyShipsPlaced;
+    public bool winConditionMet;
+    public bool loseConditionMet;
 
-    public int waveNumber = 0;
+    public int waveNumber;
+
+
+    public static GameManager Get()
+    {
+        return GameObject.Find("OBJ_GameManager").GetComponent<GameManager>();
+    }
+
     void Start()
     {
+        Init();
+    }
 
+    void Init()
+    {
+        phaseState = PHASE_STATE.START_ENCOUNTER;
+        enemyShipsPlaced = false;
+        winConditionMet = false;
+        loseConditionMet = false;
+        waveNumber = 0;
+    }
+
+    public void Restart()
+    {
+        Init();
+        boardController.Reset();
     }
 
     // Update is called once per frame
@@ -35,6 +57,9 @@ public class GameManager : MonoBehaviour
         switch (phaseState)
         {
             case PHASE_STATE.START_ENCOUNTER:
+                // Jason: After GameOver.Restart() reloads the scene, StartEncounterCoroutine only runs to the yield
+                //      so was hoping StopCoroutine would reset it, but no luck
+                //StopCoroutine(StartEncounterCoroutine(1f));     
                 StartCoroutine(StartEncounterCoroutine(1f));
                 break;
 
@@ -86,7 +111,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(wait_time);
         
         phaseState = PHASE_STATE.PLAYER_PLACING_SHIPS;
-        boardController.SpawnPlayerShips();
+        PlacePlayerShips();
     }
     private void StartEncounter()
     {
@@ -95,21 +120,23 @@ public class GameManager : MonoBehaviour
         phaseState = PHASE_STATE.ENEMY_PLACING_SHIPS;
         Debug.Log("Phase changed to: ENEMY_PLACING_SHIPS");
         Debug.Log("Placing enemy ships...");
-
-        //TODO: place enemy ships on enemy grid
+        boardController.SpawnEnemyShips();
 
         phaseState = PHASE_STATE.PLAYER_PLACING_SHIPS;
         Debug.Log("Phase changed to: PLAYER_PLACING_SHIPS");
         PlacePlayerShips();
     }
 
+
+    // Logic for placing player ships
     private void PlacePlayerShips()
     {
-        // Logic for placing player ships
-
         //TODO: activate player ship placement from UI onto player grid
 
         Debug.Log("Waiting for player to place ships...");
+
+        boardController.SpawnPlayerShips();     // TODO: this is temporary until we implement proper ship placement
+        boardController.playerView.SaveShipLocations(); // TODO: this is temporary just for testing resetting. it shouldn't be needed since ships can be placed anywhere at will
     }
 
     private void BeginBattle()
@@ -191,7 +218,8 @@ public class GameManager : MonoBehaviour
     {
         // Logic for enemy movement
 
-        //TODO: move all enemy ships according to AI rules
+        //move all enemy ships according to AI rules
+        boardController.UpdateEnemyShips();
 
         Debug.Log("Enemy is moving...");
         phaseState = PHASE_STATE.PLAYER_MOVING;
@@ -199,9 +227,11 @@ public class GameManager : MonoBehaviour
         PlayerMoves();
     }
 
+    // Logic for player movement
     private void PlayerMoves()
     {
-        // Logic for player movement
+        boardController.playerView.SaveShipLocations();
+
         Debug.Log("Waiting for Player to move...");
 
 

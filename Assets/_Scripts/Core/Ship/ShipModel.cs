@@ -19,7 +19,8 @@ namespace Core.Ship
         public ShipType type;
         public int length = 3;
         public Orientation orientation = Orientation.North;
-        public GridPos root;               // starting cell (leftmost/topmost)
+        public GridPos root;               // tail position  // TODO: this should probably be the bow position since this is the position we rotate around
+        public bool isDestroyed = false;
 
         public List<GridPos> GetCells()
         {
@@ -28,27 +29,16 @@ namespace Core.Ship
             {
                 cells.Add( orientation switch
                 {
-                    Orientation.North => new GridPos(root.x, root.y + i),
-                    Orientation.East => new GridPos(root.x + i, root.y),
-                    Orientation.South => new GridPos(root.x, root.y - i),
-                    Orientation.West => new GridPos(root.x - i, root.y),
+                    Orientation.North => new GridPos(root.x, root.y - i),
+                    Orientation.East => new GridPos(root.x - i, root.y),
+                    Orientation.South => new GridPos(root.x, root.y + i),
+                    Orientation.West => new GridPos(root.x + i, root.y),
                     _ => throw new ArgumentOutOfRangeException()
                 });
             }
             return cells;
         }
-
-        public GridPos GetBowPosition()
-        {
-            return orientation switch
-            {
-                Orientation.North => new GridPos(root.x, root.y + length - 1),
-                Orientation.East => new GridPos(root.x + length - 1, root.y),
-                Orientation.South => new GridPos(root.x, root.y  - length + 1),
-                Orientation.West => new GridPos(root.x - length + 1, root.y),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
+        
         internal List<GridPos> GetAttackCoordinates(BoardView boardView)
         {
             
@@ -57,7 +47,7 @@ namespace Core.Ship
             switch (type)
             {
                 case ShipType.Destroyer:
-                    coords.Add(GetBowPosition());
+                    coords.Add(root);
                     break;
                 case ShipType.Battleship:
                     coords.AddRange(boardView.GetRandomPositions(4));
@@ -136,24 +126,8 @@ namespace Core.Ship
 
         public List<GridPos> GetMovablePositions(BoardView playerView)
         {
-            var movablePositions = new List<GridPos>();
-            for (int i = -2; i < 3; i++)
-            {
-                for (int j = -2; j < 3; j++)
-                {
-                    if (i == 0 && j == 0)
-                    {
-                        continue;
-                    }
-
-                    var pos = new GridPos(root.x + i, root.y + j);
-                    if (playerView.Model.InBounds(pos))
-                    {
-                        movablePositions.Add(pos);
-                    }
-                }
-            }
-            return movablePositions;
+            ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(type);
+            return pattern.GetAllPossibleMovePositions(playerView, this);
         }
     }
 
@@ -164,7 +138,7 @@ namespace Core.Ship
             { ShipType.Battleship, new ShipModel { id = "battleship", type = ShipType.Battleship, length = 4 } },
             { ShipType.Submarine, new ShipModel { id = "submarine", type = ShipType.Submarine, length = 1} },
             { ShipType.Destroyer, new ShipModel { id = "destroyer", type = ShipType.Destroyer, length = 2 } },
-            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Destroyer, length = 3 } }
+            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3 } }
         };
     }
     
