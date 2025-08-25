@@ -252,7 +252,7 @@ namespace Core.Board
             return col;
         }
 
-        public List<GridPos> CruiserAttack(List<GridPos> shipCells, Orientation orientaion)
+        public List<GridPos> CruiserAttack(List<GridPos> shipCells, Orientation orientaion, bool allPossibilities = false)
         {
             var attackCells = new List<GridPos>();
 
@@ -288,6 +288,9 @@ namespace Core.Board
                 }
             }
 
+            if (allPossibilities)
+                return attackCells;
+            
             var randomCells = new List<GridPos>();
             for (int i = 0; i < 3; i++)
             {
@@ -349,6 +352,19 @@ namespace Core.Board
             {
                 Destroy(shipView.gameObject);
             }
+        }
+
+        public List<GridPos> GetAllPositions()
+        {
+            List<GridPos> positions = new List<GridPos>();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    positions.Add(new GridPos(x, y));
+                }
+            }
+            return positions;
         }
     }
 }
