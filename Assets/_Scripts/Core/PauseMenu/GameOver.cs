@@ -14,7 +14,7 @@ public class GameOver: MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            GameOverPanel.SetActive(true);
+            GameOverPanel.SetActive(!GameOverPanel.activeSelf);
             Time.timeScale = 0f;
         }
     }
@@ -25,11 +25,11 @@ public class GameOver: MonoBehaviour
         // but it's still buggy (one of GameManager's coroutines is not getting reset).
         // Anyways, not needed for this prototype yet
         //
-        //GameManager game = GameManager.Get();
-        //game.Restart();
-        //GameOverPanel.SetActive(false);
+        GameManager game = GameManager.Get();
+        game.Restart();
+        GameOverPanel.SetActive(false);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        //UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     public void Quit()

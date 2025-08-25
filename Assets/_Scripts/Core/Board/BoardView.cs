@@ -40,7 +40,7 @@ namespace Core.Board
         public void Reset()
         {
             //HideShips();
-            DestroyShips();
+            DestroySpawnedShips();
             SpawnedShips.Clear();
             previousShipPlacements.Clear();
             ResetIndicators();
@@ -388,12 +388,34 @@ namespace Core.Board
             }
         }
 
-        public void DestroyShips()
+        public void HealAllShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                shipView.shipModel.ResetHP();
+                shipView.defaultState.SetActive(true);
+                shipView.brokenState.SetActive(false);
+            }
+        }
+
+        public bool AllShipsAreDestroyed()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                if (!shipView.shipModel.isDestroyed)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void DestroySpawnedShips()
         {
             foreach (ShipView shipView in SpawnedShips.Values)
             {
                 Destroy(shipView.gameObject);
             }
+            SpawnedShips.Clear();
         }
 
         
