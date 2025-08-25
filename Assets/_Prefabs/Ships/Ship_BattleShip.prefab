@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9071194118322993481, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -7.8193016
       objectReference: {fileID: 0}
     - target: {fileID: 9071194118322993481, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_LocalPosition.y
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9071194118322993481, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3.1175206
       objectReference: {fileID: 0}
     - target: {fileID: 9071194118322993481, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_LocalRotation.w
@@ -160,6 +160,10 @@ PrefabInstance:
     - target: {fileID: 4891026716920488016, guid: 6ecfd1a3bf7d0b94a90827e3fc0822c0, type: 3}
       propertyPath: m_Name
       value: BattleShipBroken
+      objectReference: {fileID: 0}
+    - target: {fileID: 4891026716920488016, guid: 6ecfd1a3bf7d0b94a90827e3fc0822c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6123181258168764871, guid: 6ecfd1a3bf7d0b94a90827e3fc0822c0, type: 3}
       propertyPath: m_LocalScale.x
