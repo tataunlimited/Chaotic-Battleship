@@ -20,7 +20,8 @@ namespace Core.Board
         public float cellSize = 1f;
         public Vector3 origin = Vector3.zero;
         public GameObject cellPrefab;
-
+        public GameObject hitFirePrefab;
+        private readonly List<GameObject> phasePersistentFx = new();
         public Color baseColor = Color.cyan;
 
         public BoardModel Model { get; private set; }
@@ -159,6 +160,27 @@ namespace Core.Board
             shipView.Show();
             foreach (var gp in shipView.shipModel.GetCells())
                 Tint(gp, Color.green);
+        }
+
+        public void SpawnPersistentHitFire(ShipView ship, GridPos cell, float yOffset = 0.5f)
+        {
+            if (hitFirePrefab == null || ship == null) return;
+
+            // world position of the hit cell
+            var worldPos = GridToWorld(cell, yOffset);
+
+            // make it follow the ship: convert to local, parent to ship
+            var fx = Instantiate(hitFirePrefab);
+            fx.transform.SetParent(ship.transform, worldPositionStays: false);
+            fx.transform.localPosition = ship.transform.InverseTransformPoint(worldPos);
+
+            phasePersistentFx.Add(fx);
+        }
+
+        public void ClearPhaseFX()
+        {
+            for (int i = 0; i < phasePersistentFx.Count; i++) if (phasePersistentFx[i]) Destroy(phasePersistentFx[i]);
+            phasePersistentFx.Clear();
         }
 
         public void OnShipSunk(ShipView shipView)

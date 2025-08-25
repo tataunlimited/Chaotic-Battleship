@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private static WaitForSeconds _waitForSeconds1 = new(1f);
     public BoardController boardController;
     public enum PHASE_STATE
     {
@@ -189,17 +190,16 @@ public class GameManager : MonoBehaviour
         // Logic for player firing
 
         //TODO: deactivate / unhighlight player movement options
-
-        //TODO: activate Fire function on all player ships, resolve hits
-
+        boardController.playerView.ClearPhaseFX();
+        boardController.enemyView.ClearPhaseFX();
         boardController.PlayerAttack();
         Debug.Log("Player Fired!");
         
-        yield return new WaitForSeconds(1f);
+        yield return _waitForSeconds1;
         phaseState = PHASE_STATE.ENEMY_FIRING;
         boardController.EnemyAttack();
         
-        yield return new WaitForSeconds(1f);
+        yield return _waitForSeconds1;
 
        
         CheckEndWaveConditions();
