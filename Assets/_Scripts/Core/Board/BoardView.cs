@@ -129,6 +129,7 @@ namespace Core.Board
                 CellState.Empty => baseColor,
                 CellState.Ship => Color.green,
                 CellState.Hit => Color.red,
+                CellState.NearMiss => Color.yellow,
                 CellState.Miss => Color.gray,
                 _ => throw new ArgumentOutOfRangeException()
             };

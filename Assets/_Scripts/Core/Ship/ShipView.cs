@@ -15,9 +15,7 @@ namespace Core.Ship
         public bool IsPlayer {private set; get;}
 
         private Collider _collider;
-
-        
-        
+         
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
             playerView = boardView;
