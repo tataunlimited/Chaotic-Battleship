@@ -10,15 +10,15 @@ namespace Core.Board
         public readonly BoardSide Side;
         public readonly int Width;
         public readonly int Height;
-        
-        
-        
-        private readonly CellState[,] _cells;
 
+
+
+        private readonly CellState[,] _cells;
+        public void Set(GridPos p, CellState s) => _cells[p.x, p.y] = s;
         public BoardModel(BoardSide side, int width, int height)
         {
-            Side   = side;
-            Width  = width;
+            Side = side;
+            Width = width;
             Height = height;
             _cells = new CellState[width, height];
         }
@@ -27,9 +27,9 @@ namespace Core.Board
         {
             BoardModel board = new BoardModel(Side, Width, Height);
 
-            for ( int x = 0; x < Width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
                 {
                     board._cells[x, y] = _cells[x, y];
                 }
@@ -38,7 +38,7 @@ namespace Core.Board
             return board;
         }
 
-        public void Reset() 
+        public void Reset()
         {
             ResetAllCells();
         }
@@ -98,14 +98,47 @@ namespace Core.Board
         public bool TryFire(GridPos p, out bool hit)
         {
             hit = false;
-            if (!InBounds(p)) return false;
+            if (!InBounds(p)) return false;                    // invalid shot
 
-            var s = _cells[p.x, p.y];
-            if (s == CellState.Hit || s == CellState.Miss) return false; // already fired
+            var state = Get(p);
+            switch (state)
+            {
+                case CellState.Ship:
+                    Set(p, CellState.Hit);
+                    hit = true;
+                    return true;
 
-            if (s == CellState.Ship) { _cells[p.x, p.y] = CellState.Hit; hit = true; }
-            else                     { _cells[p.x, p.y] = CellState.Miss; }
-            return true;
+                case CellState.Empty:
+                    Set(p, IsOrthogonallyAdjacentToShip(p) ? CellState.NearMiss : CellState.Miss);
+                    return true;
+
+                case CellState.Miss:
+                case CellState.NearMiss:
+                case CellState.Hit:
+                    // already resolved; don’t re-tint / re-animate
+                    return false;
+
+                default:
+                    return false;
+            }
+        }
+
+        private bool IsOrthogonallyAdjacentToShip(GridPos p)
+        {
+            // up, down, left, right only (no diagonals)
+            var neighbors = new[]{
+                new GridPos(p.x,     p.y+1),
+                new GridPos(p.x,     p.y-1),
+                new GridPos(p.x-1,   p.y),
+                new GridPos(p.x+1,   p.y),
+            };
+
+            foreach (var n in neighbors)
+            {
+                if (InBounds(n) && Get(n) == CellState.Ship)
+                    return true;
+            }
+            return false;
         }
     }
 }

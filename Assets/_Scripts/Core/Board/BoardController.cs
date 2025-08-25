@@ -4,6 +4,8 @@ using Core.Ship;
 
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine.Serialization;
 
 namespace Core.Board
 {
@@ -12,24 +14,22 @@ namespace Core.Board
         public BoardView playerView;
         public BoardView enemyView;
         public MovementCellManager movementCellManager;
+        public HighlightAttackArea highlightAttackArea;
 
         public List<ShipView> shipPrefabs;
-        public static ShipView SelectedShip;
+        public ShipView SelectedShip {get; private set;}
         
         private Camera _camera;
 
 
         private EnemyWaveManager _enemyWaveManager;
-
-        public static BoardController Get()
-        {
-            return GameObject.Find("BoardController").GetComponent<BoardController>();
-        }
+        public static BoardController Instance;
 
        
         void Awake()
         {
             _camera = Camera.main;
+            Instance = this;
         }
 
         public void Reset()
@@ -87,20 +87,21 @@ namespace Core.Board
             {
                 movementCellManager.SpawnCell(cell, () =>
                 {
-                    shipView.UpdatePosition(shipView.shipModel.MoveTo(cell), shipView.shipModel.orientation);
-                    shipView.DeselectShip();
-                    SelectedShip = null;
-                    movementCellManager.ClearCells();
+                    SelectedShip.UpdatePosition(shipView.shipModel.MoveTo(cell), shipView.shipModel.orientation);
+                    ClearSelectedShip();
                 });
             }
+
+            highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var chance), chance);
         }
 
         public void ClearSelectedShip()
         {
-            if (BoardController.SelectedShip != null)
+            if (SelectedShip != null)
             {
                 movementCellManager.ClearCells();
                 SelectedShip.DeselectShip();
+                highlightAttackArea.ClearHighlight();
                 SelectedShip = null;
             }
         }
@@ -160,20 +161,19 @@ namespace Core.Board
 
         public void PlayerAttack()
         {
-            Attack(playerView);
-
-            
+            foreach (var ship in playerView.SpawnedShips)
+            {
+                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
+                ship.Value.Attack(enemyView);
+            }
         }
+        
         public void EnemyAttack()
         {
-            Attack(enemyView);
-        }
-
-        private void Attack(BoardView boardView)
-        {
-            foreach (var ship in boardView.SpawnedShips)
+            foreach (var ship in enemyView.SpawnedShips)
             {
-                ship.Value.Attack(boardView);
+                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
+                ship.Value.Attack(playerView);
             }
         }
 
@@ -186,6 +186,7 @@ namespace Core.Board
         public void UpdateBoards()
         {
             playerView.UpdateBoard();
+            ClearSelectedShip();
         }
     }
 }

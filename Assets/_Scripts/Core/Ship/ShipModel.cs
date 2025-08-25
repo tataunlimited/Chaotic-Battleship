@@ -18,16 +18,32 @@ namespace Core.Ship
         public string id;
         public ShipType type;
         public int length = 3;
+
+        public int hp;
+        public int MaxHP => length;
+        public bool IsSunk => isDestroyed || hp <= 0;
         public Orientation orientation = Orientation.North;
         public GridPos root;               // bow (front) position   
         public bool isDestroyed = false;
 
+        /// <summary>Apply damage and return true if the ship just sunk.</summary>
+        public bool ApplyDamage()
+        {
+            if (IsSunk) return false;
+            hp = Math.Max(0, hp - 1);
+            if (hp == 0)
+            {
+                isDestroyed = true;
+                return true;
+            }
+            return false;
+        }
         public List<GridPos> GetCells()
         {
             var cells = new List<GridPos>();
             for (int i = 0; i < length; i++)
             {
-                cells.Add( orientation switch
+                cells.Add(orientation switch
                 {
                     Orientation.North => new GridPos(root.x, root.y - i),
                     Orientation.East => new GridPos(root.x - i, root.y),
@@ -39,11 +55,17 @@ namespace Core.Ship
             return cells;
         }
         
+        public void ResetHP()
+        {
+            hp = length;
+            isDestroyed = false;
+        }
+        
         internal List<GridPos> GetAttackCoordinates(BoardView boardView)
         {
-            
 
-            List < GridPos > coords = new List<GridPos>();
+
+            List<GridPos> coords = new List<GridPos>();
             switch (type)
             {
                 case ShipType.Destroyer:
@@ -54,7 +76,7 @@ namespace Core.Ship
                     break;
                 case ShipType.Submarine:
                     coords = orientation is Orientation.West or Orientation.East
-                    ? boardView.GetRow(root.y, orientation): boardView.GetColumn(root.x, orientation);
+                    ? boardView.GetRow(root.y, orientation) : boardView.GetColumn(root.x, orientation);
                     break;
                 case ShipType.Cruiser:
                     coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
@@ -63,7 +85,33 @@ namespace Core.Ship
             }
             return coords;
         }
-        
+        internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out bool chance)
+        {
+            List < GridPos > coords = new List<GridPos>();
+            chance = false;
+
+            switch (type)
+            {
+                case ShipType.Destroyer:
+                    coords.Add(root);
+                    chance = false;
+                    break;
+                case ShipType.Battleship:
+                    coords.AddRange(boardView.GetAllPositions());
+                    chance = true;
+                    break;
+                case ShipType.Submarine:
+                    coords = orientation is Orientation.West or Orientation.East
+                        ? boardView.GetRow(root.y, orientation): boardView.GetColumn(root.x, orientation);
+                    chance = false;
+                    break;
+                case ShipType.Cruiser:
+                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, true));
+                    chance = true; 
+                    break;
+            }
+            return coords;
+        }
         public ShipModel Copy()
         {
             ShipModel copy = new ShipModel
@@ -71,8 +119,10 @@ namespace Core.Ship
                 id = id,
                 type = type,
                 length = length,
-                root = root, 
-                orientation = orientation
+                root = root,
+                orientation = orientation,
+                hp = hp,
+                isDestroyed = isDestroyed
             };
             return copy;
         }
