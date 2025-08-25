@@ -13,6 +13,9 @@ namespace Core.Ship
         public BoardView playerView;
         public bool IsPlayer {private set; get;}
         private Collider _collider;
+
+        public GameObject defaultState;
+        public GameObject brokenState;
          
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
