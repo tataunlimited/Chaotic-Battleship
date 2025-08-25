@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using Core.Board;
+using Core.Ship;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,11 +13,16 @@ public class GameManager : MonoBehaviour
         START_ENCOUNTER, ENEMY_PLACING_SHIPS, PLAYER_PLACING_SHIPS, PLAYER_FIRING, ENEMY_FIRING, ENEMY_MOVING, PLAYER_MOVING, ENDWAVE
     }
     public PHASE_STATE phaseState;
+    public bool playerShipsPlaced;
     public bool enemyShipsPlaced;
     public bool winConditionMet;
     public bool loseConditionMet;
 
     public int waveNumber;
+
+    public GameObject GameOverPanel;
+    public GameObject NextWavePanel;
+    public TextMeshProUGUI WaveCountText;
 
 
     public static GameManager Get()
@@ -31,10 +38,12 @@ public class GameManager : MonoBehaviour
     void Init()
     {
         phaseState = PHASE_STATE.START_ENCOUNTER;
+        playerShipsPlaced = false;
         enemyShipsPlaced = false;
         winConditionMet = false;
         loseConditionMet = false;
-        waveNumber = 0;
+        waveNumber = 1;
+        WaveCountText.text = waveNumber.ToString();
     }
 
     public void Restart()
@@ -60,7 +69,8 @@ public class GameManager : MonoBehaviour
                 // Jason: After GameOver.Restart() reloads the scene, StartEncounterCoroutine only runs to the yield
                 //      so was hoping StopCoroutine would reset it, but no luck
                 //StopCoroutine(StartEncounterCoroutine(1f));     
-                StartCoroutine(StartEncounterCoroutine(1f));
+                //StartCoroutine(StartEncounterCoroutine(1f));
+                StartEncounter();
                 break;
 
             case PHASE_STATE.ENEMY_PLACING_SHIPS:
@@ -97,8 +107,8 @@ public class GameManager : MonoBehaviour
 
             case PHASE_STATE.ENDWAVE:
                 // Reset or prepare for the next encounter
+                EndWave();
                 phaseState = PHASE_STATE.START_ENCOUNTER;
-                enemyShipsPlaced = false; // Reset for next encounter
                 Debug.Log("Phase reset to: START_ENCOUNTER");
                 break;
         }
@@ -107,11 +117,21 @@ public class GameManager : MonoBehaviour
     private IEnumerator StartEncounterCoroutine(float wait_time)
     {
         phaseState = PHASE_STATE.ENEMY_PLACING_SHIPS;
-        boardController.SpawnEnemyShips();
+        if (!enemyShipsPlaced)
+        { 
+            boardController.SpawnEnemyShips();
+            enemyShipsPlaced = true;
+        }
         yield return new WaitForSeconds(wait_time);
         
         phaseState = PHASE_STATE.PLAYER_PLACING_SHIPS;
-        PlacePlayerShips();
+        if (!playerShipsPlaced)
+        {
+            PlacePlayerShips();
+            playerShipsPlaced = true;
+        }
+        else
+            boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
     }
     private void StartEncounter()
     {
@@ -190,19 +210,24 @@ public class GameManager : MonoBehaviour
     {
         // Logic to check if the wave has ended
         Debug.Log("Checking end wave conditions...");
+        winConditionMet = boardController.enemyView.AllShipsAreDestroyed();
+        loseConditionMet = boardController.playerView.AllShipsAreDestroyed();
+
         if (winConditionMet)
         {
             Debug.Log("Wave end conditions met, player wins!");
+            boardController.enemyView.RevealShips();    // show enemy board with destroyed ships
+
             phaseState = PHASE_STATE.ENDWAVE;
             Debug.Log("Phase changed to: ENDWAVE");
-            EndWave();
         }
         else if (loseConditionMet)
         {
             Debug.Log("Wave end conditions met, player loses!");
+            boardController.enemyView.RevealShips();    // show enemy board with destroyed ships
+
             phaseState = PHASE_STATE.ENDWAVE;
             Debug.Log("Phase changed to: ENDWAVE");
-            EndWave();
         }
         else
         {
@@ -230,7 +255,7 @@ public class GameManager : MonoBehaviour
     // Logic for player movement
     private void PlayerMoves()
     {
-        boardController.playerView.SaveShipLocations();
+        boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
 
         Debug.Log("Waiting for Player to move...");
 
@@ -242,24 +267,31 @@ public class GameManager : MonoBehaviour
     {
         // Logic for ending the wave
         Debug.Log("Ending wave...");
+
         if (winConditionMet)
         {
-            Debug.Log("Starting next wave...");
-
-            waveNumber++; // Increment wave number
-            winConditionMet = false; // Reset win condition
-            phaseState = PHASE_STATE.START_ENCOUNTER;
+            NextWavePanel.SetActive(true);
         }
         else
         {
-            Debug.Log("Restarting from beginning...");
-
-            waveNumber = 0; // Reset wave number
-            loseConditionMet = false; // Reset lose condition
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            GameOverPanel.SetActive(true);
         }
-
-        //TODO: remove all player/enemy ship instances
-        Debug.Log("Phase changed to: START_ENCOUNTER");
     }
+
+    public void StartNextWave()
+    {
+        // remove all enemy ship instances
+        boardController.enemyView.Reset();
+        enemyShipsPlaced = false;
+
+        // cleanup player board
+        boardController.playerView.ResetIndicators();
+        boardController.ClearSelectedShip();
+
+        waveNumber++; // Increment wave number
+        WaveCountText.text = waveNumber.ToString();
+        winConditionMet = false; // Reset win condition
+        phaseState = PHASE_STATE.START_ENCOUNTER;
+    }
+
 }

@@ -19,7 +19,7 @@ namespace Core.Ship
         public ShipType type;
         public int length = 3;
         public Orientation orientation = Orientation.North;
-        public GridPos root;               // tail position  // TODO: this should probably be the bow position since this is the position we rotate around
+        public GridPos root;               // bow (front) position   
         public bool isDestroyed = false;
 
         public List<GridPos> GetCells()

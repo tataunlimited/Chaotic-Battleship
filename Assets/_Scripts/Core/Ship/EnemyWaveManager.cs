@@ -23,8 +23,6 @@ namespace Core.Ship
                                                  ShipType.Destroyer, 
                                                  ShipType.Submarine };
 
-        public int waveNumber = 0;
-
         private Random rnd = new Random();
 
 
