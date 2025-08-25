@@ -75,9 +75,21 @@ namespace Core.Ship
                     coords.AddRange(boardView.GetRandomPositions(4));
                     break;
                 case ShipType.Submarine:
-                    coords = orientation is Orientation.West or Orientation.East
-                    ? boardView.GetRow(root.y, orientation) : boardView.GetColumn(root.x, orientation);
-                    break;
+                    {
+                        List<GridPos> line = orientation is Orientation.West or Orientation.East
+                            ? boardView.GetRow(root.y, orientation)
+                            : boardView.GetColumn(root.x, orientation);
+
+                        foreach (var pos in line)
+                        {
+                            coords.Add(pos);
+                       
+                            // Stop if this grid cell has a ship
+                            if (boardView.HasShipAt(pos))
+                                break;
+                        }
+                        break;
+                    }
                 case ShipType.Cruiser:
                     coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
                     break;

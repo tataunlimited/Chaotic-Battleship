@@ -361,7 +361,7 @@ namespace Core.Board
             }
         }
 
-        private void RevealAShip(ShipModel shipModel)
+        public void RevealAShip(ShipModel shipModel)
         {
             foreach (var gridPos in shipModel.GetCells())
             {
@@ -409,6 +409,14 @@ namespace Core.Board
             }
             return positions;
         }
+
+        public bool HasShipAt(GridPos pos)
+        {
+            return TryGetShipAt(pos, out _);
+        }
+
+
     }
+
 }
 
