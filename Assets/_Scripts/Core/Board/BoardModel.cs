@@ -80,7 +80,8 @@ namespace Core.Board
         {
             foreach (var c in shipModel.GetCells())
             {
-                _cells[c.x, c.y] = CellState.Empty;
+                if(InBounds(c))
+                    _cells[c.x, c.y] = CellState.Empty;
             }
         }
 
