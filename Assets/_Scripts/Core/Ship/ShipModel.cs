@@ -85,7 +85,33 @@ namespace Core.Ship
             }
             return coords;
         }
-        
+        internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out bool chance)
+        {
+            List < GridPos > coords = new List<GridPos>();
+            chance = false;
+
+            switch (type)
+            {
+                case ShipType.Destroyer:
+                    coords.Add(root);
+                    chance = false;
+                    break;
+                case ShipType.Battleship:
+                    coords.AddRange(boardView.GetAllPositions());
+                    chance = true;
+                    break;
+                case ShipType.Submarine:
+                    coords = orientation is Orientation.West or Orientation.East
+                        ? boardView.GetRow(root.y, orientation): boardView.GetColumn(root.x, orientation);
+                    chance = false;
+                    break;
+                case ShipType.Cruiser:
+                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, true));
+                    chance = true; 
+                    break;
+            }
+            return coords;
+        }
         public ShipModel Copy()
         {
             ShipModel copy = new ShipModel

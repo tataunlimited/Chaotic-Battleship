@@ -75,11 +75,11 @@ namespace Core.Ship
                     }
                     
                 }
+
                 VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
                 yield return _waitForSeconds0_1;
             }
         }
-
 
 
         public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
@@ -95,14 +95,12 @@ namespace Core.Ship
                 playerView.Tint(shipModel.GetCells());
 
             SetPosition();
-
-            BoardController.SelectedShip = null;
         }
 
         private void SetPosition()
         {
             transform.position = playerView.GridToWorld(shipModel.root);
-            float yAngle = shipModel.orientation switch 
+            float yAngle = shipModel.orientation switch
             {
                 Orientation.North => 0,
                 Orientation.East => 90,
@@ -110,7 +108,7 @@ namespace Core.Ship
                 Orientation.West => -90,
                 _ => 0
             };
-            
+
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
         }
 
@@ -118,34 +116,43 @@ namespace Core.Ship
         {
             _collider.enabled = false;
         }
-        
-        
+
+
         public void DeselectShip()
         {
             _collider.enabled = true;
         }
-        
-        public void RotateLeft()
+
+        public bool RotateLeft()
         {
             var targetOrientation = shipModel.RotateLeft();
-            
-            if(ValidateRotation(targetOrientation))
-                UpdatePosition(shipModel.root,  targetOrientation);
+
+            if (ValidateRotation(targetOrientation))
+            {
+                UpdatePosition(shipModel.root, targetOrientation);
+                return true;
+            }
+
+            return false;
         }
 
-        public void RotateRight()
+        public bool RotateRight()
         {
             var targetOrientation = shipModel.RotateRight();
-            
-            if(ValidateRotation(targetOrientation))
+
+            if (ValidateRotation(targetOrientation))
+            {
                 UpdatePosition(shipModel.root, targetOrientation);
+                return true;
+            }
+            return false;
         }
 
         private bool ValidateRotation(Orientation orientation)
         {
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
-            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos>{ shipModelCopy.root});
+            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
         }
     }
 }

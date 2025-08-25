@@ -1,3 +1,4 @@
+using System;
 using Core.Board;
 using Core.Ship;
 using TMPro;
@@ -8,7 +9,12 @@ namespace UI
     public class NavigationUI : MonoBehaviour
     {
         public TMP_Text shipMovementRemaining;
+        private BoardController _boardController;
 
+        private void Start()
+        {
+            _boardController = BoardController.Instance;
+        }
 
         public void EnableUI(bool enable)
         {
@@ -18,9 +24,8 @@ namespace UI
         public void OnResetButtonClicked()
         {
             // should this be changed to the class having a BoardController attribute that we set in the Unity Inspector?
-            BoardController boardController = BoardController.Get();
-            boardController.ClearSelectedShip();
-            boardController.playerView.ResetMovementPhase();
+            _boardController.ClearSelectedShip();
+            _boardController.playerView.ResetMovementPhase();
         }
 
         public void UpdateShipMovementRemaining(int value)
@@ -30,19 +35,24 @@ namespace UI
 
         public void RotateLeft()
         {
-            if (BoardController.SelectedShip != null)
+            if (_boardController.SelectedShip != null)
             {
-                BoardController.SelectedShip.RotateLeft();
+                if (_boardController.SelectedShip.RotateLeft())
+                {
+                    _boardController.ClearSelectedShip();
+                }
             }
         }
 
         public void RotateRight()
         {
-            if (BoardController.SelectedShip != null)
+            if (_boardController.SelectedShip != null)
             {
-                BoardController.SelectedShip.RotateRight();
+                if (_boardController.SelectedShip.RotateRight())
+                {
+                    _boardController.ClearSelectedShip();
+                }
             }
         }
-
     }
 }
