@@ -162,6 +162,7 @@ namespace Core.Board
         {
             foreach (var ship in playerView.SpawnedShips)
             {
+                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
                 ship.Value.Attack(enemyView);
             }
         }
@@ -170,6 +171,7 @@ namespace Core.Board
         {
             foreach (var ship in enemyView.SpawnedShips)
             {
+                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
                 ship.Value.Attack(playerView);
             }
         }

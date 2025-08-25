@@ -136,6 +136,46 @@ namespace Core.Board
             return c;
         }
 
+        public bool TryGetShipAt(GridPos pos, out ShipView shipView)
+        {
+            foreach (var s in SpawnedShips.Values)
+            {
+                var cells = s.shipModel.GetCells();
+                for (int i = 0; i < cells.Count; i++)
+                {
+                    if (cells[i].Equals(pos))
+                    {
+                        shipView = s;
+                        return true;
+                    }
+                }
+            }
+            shipView = null;
+            return false;
+        }
+
+        public void RevealShip(ShipView shipView)
+        {
+            shipView.Show();
+            foreach (var gp in shipView.shipModel.GetCells())
+                Tint(gp, Color.green);
+        }
+
+        public void OnShipSunk(ShipView shipView)
+        {
+            // Always reveal a sunk ship
+            shipView.Show();
+
+            // Mark all its cells as Hit (so the grid shows a full sunk silhouette)
+            foreach (var gp in shipView.shipModel.GetCells())
+            {
+                Model.Set(gp, CellState.Hit);
+                Tint(gp);
+            }
+
+            // Disable interaction and movement for this ship
+        }
+
         // Optional: quick gizmos
         void OnDrawGizmos()
         {
@@ -330,6 +370,7 @@ namespace Core.Board
         {
             foreach (ShipView shipView in SpawnedShips.Values)
             {
+                if (shipView.shipModel.IsSunk) continue; // keep sunk ships visible
                 shipView.Hide();
                 HideAShip(shipView.shipModel);
             }
@@ -351,6 +392,8 @@ namespace Core.Board
                 Destroy(shipView.gameObject);
             }
         }
+
+        
     }
 }
 

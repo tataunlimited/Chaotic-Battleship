@@ -149,6 +149,7 @@ namespace Core.Ship
 
         private bool RandomlyMoveAShip(BoardView board, ShipView shipView)
         {
+            if (shipView.shipModel.IsSunk) return true;  // don't move sunk ships
             ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(shipView.shipModel.type);
             return pattern.RandomlyTurnAndMove(board, shipView);
         }

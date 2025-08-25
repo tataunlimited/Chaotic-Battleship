@@ -8,12 +8,10 @@ namespace Core.Ship
 {
     public class ShipView : MonoBehaviour
     {
-        
+        private static WaitForSeconds _waitForSeconds0_1 = new(0.1f);
         public ShipModel shipModel;
         public BoardView playerView;
-        
         public bool IsPlayer {private set; get;}
-
         private Collider _collider;
          
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
@@ -21,12 +19,9 @@ namespace Core.Ship
             playerView = boardView;
             shipModel = model;
             IsPlayer = isPlayer;
-            if (!isPlayer)
-            {
-                Hide();
-            }
+            if (shipModel.hp <= 0) shipModel.ResetHP();
+            if (!isPlayer) Hide();
             SetPosition();
-
         }
 
         public void Hide()
@@ -58,9 +53,30 @@ namespace Core.Ship
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
                 {
                     enemyBoard.Tint(gridPos);
+                    if (hit)
+                    {
+                        //Find which enemy ship we hit
+                        if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
+                        {
+                            bool justSunk = enemyShip.shipModel.ApplyDamage();
+                            if (justSunk)
+                            {
+                                //sunk 
+                                VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                enemyBoard.RevealShip(enemyShip);
+                                enemyBoard.OnShipSunk(enemyShip);
+                            }
+                            else
+                            {
+                                //hit 
+                                VFXManager.Instance.SpawnHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                            }
+                        }
+                    }
+                    
                 }
                 VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
-                yield return new WaitForSeconds(0.1f);
+                yield return _waitForSeconds0_1;
             }
         }
 
