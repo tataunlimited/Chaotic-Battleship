@@ -61,7 +61,16 @@ namespace Core.Ship
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
                 {
-                    enemyBoard.Tint(gridPos);
+                    if(shipModel.type == ShipType.Submarine && !IsPlayer && !hit)
+                    {
+
+                    }
+                    else
+                    {
+                        VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
+                        enemyBoard.Tint(gridPos);
+                    }
+                        
                     if (hit)
                     {
                         //Find which enemy ship we hit
@@ -88,7 +97,7 @@ namespace Core.Ship
                     
                 }
 
-                VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
+               
                 yield return _waitForSeconds0_1;
             }
         }
