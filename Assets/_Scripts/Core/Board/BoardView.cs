@@ -388,6 +388,16 @@ namespace Core.Board
             }
         }
 
+        public void HealAllShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                shipView.shipModel.ResetHP();
+                shipView.defaultState.SetActive(true);
+                shipView.brokenState.SetActive(false);
+            }
+        }
+
         public bool AllShipsAreDestroyed()
         {
             foreach (ShipView shipView in SpawnedShips.Values)

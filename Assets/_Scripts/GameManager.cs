@@ -139,12 +139,23 @@ public class GameManager : MonoBehaviour
         Debug.Log("Starting new encounter...");
         phaseState = PHASE_STATE.ENEMY_PLACING_SHIPS;
         Debug.Log("Phase changed to: ENEMY_PLACING_SHIPS");
-        Debug.Log("Placing enemy ships...");
-        boardController.SpawnEnemyShips();
+        if (!enemyShipsPlaced)
+        {
+            Debug.Log("Placing enemy ships...");
+            boardController.SpawnEnemyShips();
+            enemyShipsPlaced = true;
+        }
 
         phaseState = PHASE_STATE.PLAYER_PLACING_SHIPS;
         Debug.Log("Phase changed to: PLAYER_PLACING_SHIPS");
-        PlacePlayerShips();
+        if (!playerShipsPlaced)
+        {
+            Debug.Log("Placing player ships...");
+            PlacePlayerShips();
+            playerShipsPlaced = true;
+        }
+        else
+            boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
     }
 
 
@@ -287,6 +298,7 @@ public class GameManager : MonoBehaviour
         // cleanup player board
         boardController.playerView.ResetIndicators();
         boardController.ClearSelectedShip();
+        boardController.playerView.HealAllShips();
 
         waveNumber++; // Increment wave number
         WaveCountText.text = waveNumber.ToString();
