@@ -436,7 +436,7 @@ namespace Core.Board
             for (int i = validPositions.Count - 1; i >= 0; i--)
             {
                 shipModelCopy.root = validPositions[i];
-                if (!Model.ValidateShipPlacement(shipModelCopy))
+                if (!Model.ValidateShipPlacement(shipModelCopy, shipModel.GetCells()))
                 {
                     validPositions.RemoveAt(i);
                 }
