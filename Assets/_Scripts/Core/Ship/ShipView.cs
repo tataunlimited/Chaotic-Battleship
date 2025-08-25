@@ -68,6 +68,7 @@ namespace Core.Ship
                         if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
                         {
                             bool justSunk = enemyShip.shipModel.ApplyDamage();
+                            enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
                             if (justSunk)
                             {
                                 //sunk 
