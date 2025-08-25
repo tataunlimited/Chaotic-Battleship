@@ -38,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4297834889547011565, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4791288536644770063, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_IsActive
@@ -63,6 +63,10 @@ PrefabInstance:
     - target: {fileID: 7133455884396350364, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: shipModel.length
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284658678121241804, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9071194118322993481, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: m_LocalPosition.x
@@ -163,7 +167,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4891026716920488016, guid: 6ecfd1a3bf7d0b94a90827e3fc0822c0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6123181258168764871, guid: 6ecfd1a3bf7d0b94a90827e3fc0822c0, type: 3}
       propertyPath: m_LocalScale.x

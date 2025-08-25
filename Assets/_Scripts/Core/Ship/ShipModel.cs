@@ -23,7 +23,7 @@ namespace Core.Ship
         public int MaxHP => length;
         public bool IsSunk => isDestroyed || hp <= 0;
         public Orientation orientation = Orientation.North;
-        public GridPos root;               // tail position  // TODO: this should probably be the bow position since this is the position we rotate around
+        public GridPos root;               // bow (front) position   
         public bool isDestroyed = false;
 
         /// <summary>Apply damage and return true if the ship just sunk.</summary>

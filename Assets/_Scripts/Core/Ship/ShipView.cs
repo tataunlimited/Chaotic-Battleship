@@ -22,7 +22,7 @@ namespace Core.Ship
             playerView = boardView;
             shipModel = model;
             IsPlayer = isPlayer;
-            if (shipModel.hp <= 0) shipModel.ResetHP();
+            if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
         }
