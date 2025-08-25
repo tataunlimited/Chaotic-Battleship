@@ -68,6 +68,8 @@ namespace Core.Ship
                                 VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
                                 enemyBoard.RevealShip(enemyShip);
                                 enemyBoard.OnShipSunk(enemyShip);
+                                enemyShip.defaultState.SetActive(false);
+                                enemyShip.brokenState.SetActive(true);
                             }
                             else
                             {

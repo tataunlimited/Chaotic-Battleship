@@ -242,6 +242,10 @@ PrefabInstance:
       value: Ship_Submarine
       objectReference: {fileID: 0}
     - target: {fileID: 7133455884396350364, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
+      propertyPath: shipModel.id
+      value: Submarine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7133455884396350364, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
       propertyPath: shipModel.type
       value: 4
       objectReference: {fileID: 0}
