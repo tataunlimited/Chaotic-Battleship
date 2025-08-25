@@ -10,18 +10,24 @@ namespace Core.Ship
     {
         private static WaitForSeconds _waitForSeconds0_1 = new(0.1f);
         public ShipModel shipModel;
-        public BoardView playerView;
         public bool IsPlayer {private set; get;}
+        
         private Collider _collider;
+        private BoardView _playerView;
+
 
         public GameObject defaultState;
         public GameObject brokenState;
+        
+        public bool IsPlacedOnGrid { get; private set; }
+
          
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
-            playerView = boardView;
+            _playerView = boardView;
             shipModel = model;
             IsPlayer = isPlayer;
+            SetShipOnGrid(!IsPlayer);
             if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
@@ -66,7 +72,7 @@ namespace Core.Ship
                             {
                                 //sunk 
                                 VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
-                                enemyBoard.RevealShip(enemyShip);
+                                enemyBoard.RevealAShip(enemyShip.shipModel);
                                 enemyBoard.OnShipSunk(enemyShip);
                                 enemyShip.defaultState.SetActive(false);
                                 enemyShip.brokenState.SetActive(true);
@@ -89,22 +95,23 @@ namespace Core.Ship
 
         public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
-            playerView.Model.ResetShipCells(shipModel);
-            if (showCells)
-                playerView.Tint(shipModel.GetCells());
+
+             _playerView.Model.ResetShipCells(shipModel);
+             if (showCells)
+                 _playerView.Tint(shipModel.GetCells());
 
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
-            playerView.Model.TryPlaceShip(shipModel);
+            _playerView.Model.TryPlaceShip(shipModel);
             if (showCells)
-                playerView.Tint(shipModel.GetCells());
+                _playerView.Tint(shipModel.GetCells());
 
             SetPosition();
         }
 
         private void SetPosition()
         {
-            transform.position = playerView.GridToWorld(shipModel.root);
+            transform.position = _playerView.GridToWorld(shipModel.root);
             float yAngle = shipModel.orientation switch
             {
                 Orientation.North => 0,
@@ -157,7 +164,13 @@ namespace Core.Ship
         {
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
-            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
+            return _playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
+        }
+
+
+        public void SetShipOnGrid(bool b)
+        {
+            IsPlacedOnGrid = b;
         }
     }
 }
