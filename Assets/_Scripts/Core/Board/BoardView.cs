@@ -105,6 +105,8 @@ namespace Core.Board
 
         private void Tint(GridPos p, Color c)
         {
+            if(!Model.InBounds(p))
+                return;
             if (_tiles.TryGetValue(p, out var r) && r.material.HasProperty(Color1))
                 r.material.color = c;
         }
@@ -113,12 +115,14 @@ namespace Core.Board
         {
             foreach (var p in positions)
             {
-                Tint(p, GetColor(p));
+                Tint(p);
             }
         }
 
         public void Tint(GridPos p)
         {
+            if(!Model.InBounds(p))
+                return;
             Tint(p, GetColor(p));
         }
 
@@ -152,13 +156,6 @@ namespace Core.Board
             }
             shipView = null;
             return false;
-        }
-
-        public void RevealShip(ShipView shipView)
-        {
-            shipView.Show();
-            foreach (var gp in shipView.shipModel.GetCells())
-                Tint(gp, Color.green);
         }
 
         public void OnShipSunk(ShipView shipView)
@@ -196,6 +193,8 @@ namespace Core.Board
 
         public bool TryPlaceShip(ShipView prefab, GridPos pos, Orientation orientation)
         {
+            bool spawnOutsideOfGrid = isPlayer;
+
 
             string id = name + _lastShipId;
             var shipModel = prefab.shipModel.Copy();
@@ -204,7 +203,7 @@ namespace Core.Board
             shipModel.root = pos;
 
             bool success = Model.TryPlaceShip(shipModel);
-            if (success)
+            if (success || spawnOutsideOfGrid)
             {
                 var shipView = Instantiate(prefab, Vector3.zero, Quaternion.identity);
                 shipView.Init(this, shipModel, isPlayer);
@@ -214,10 +213,8 @@ namespace Core.Board
             }
 
             if (!revealShips || !success) return success;
-            foreach (var gridPos in shipModel.GetCells())
-            {
-                Tint(gridPos, Color.green);
-            }
+
+            Tint(shipModel.GetCells());
 
             return true;
         }
@@ -226,11 +223,12 @@ namespace Core.Board
         {
             foreach (var ship in SpawnedShips)
             {
+                ship.Value.SetShipOnGrid(true);
                 Model.TryPlaceShip(ship.Value.shipModel);
             }
             foreach (var tile in _tiles)
             {
-                Tint(tile.Key, GetColor(tile.Key));
+                Tint(tile.Key);
             }
 
             if (!showShips)
@@ -361,12 +359,9 @@ namespace Core.Board
             }
         }
 
-        private void RevealAShip(ShipModel shipModel)
+        public void RevealAShip(ShipModel shipModel)
         {
-            foreach (var gridPos in shipModel.GetCells())
-            {
-                Tint(gridPos, Color.green);
-            }
+            Tint(shipModel.GetCells());
         }
 
         private void HideShips()
@@ -426,10 +421,28 @@ namespace Core.Board
             {
                 for (int y = 0; y < height; y++)
                 {
-                    positions.Add(new GridPos(x, y));
+                    var gridPos = new GridPos(x, y);
+                    positions.Add(gridPos);
                 }
             }
             return positions;
+        }
+
+        public List<GridPos> GetAllPossiblePositions(ShipModel shipModel)
+        {
+            var validPositions = GetAllPositions();
+            var shipModelCopy = shipModel.Copy();
+
+            for (int i = validPositions.Count - 1; i >= 0; i--)
+            {
+                shipModelCopy.root = validPositions[i];
+                if (!Model.ValidateShipPlacement(shipModelCopy))
+                {
+                    validPositions.RemoveAt(i);
+                }
+            }
+            
+            return validPositions;
         }
     }
 }
