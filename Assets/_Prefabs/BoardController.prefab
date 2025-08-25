@@ -52,6 +52,7 @@ MonoBehaviour:
   cellSize: 1
   origin: {x: -5, y: 0, z: 10.5}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6942412552272609847
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,6 +105,7 @@ MonoBehaviour:
   cellSize: 1
   origin: {x: -5, y: 0, z: 0}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+  baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &8915164760813226162
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,6 +156,7 @@ MonoBehaviour:
   playerView: {fileID: 5432096638131859965}
   enemyView: {fileID: 7972588326881394704}
   movementCellManager: {fileID: 7229790526498426260}
+  highlightAttackArea: {fileID: 8760750906226265112}
   shipPrefabs:
   - {fileID: 8763753302832759127, guid: 1266588c56a1e574981f89327ab4ca65, type: 3}
   - {fileID: 7645867953548946802, guid: 1be9800bf59d1924cb2ba5789b4a5ecd, type: 3}
@@ -170,6 +173,30 @@ PrefabInstance:
     - target: {fileID: 793416649247316086, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: m_Name
       value: MovementCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986662200643621202, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: chanceColor.a
+      value: 0.8666667
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: defaultColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: defaultColor.b
+      value: 0.066666685
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: defaultColor.g
+      value: 0.76862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: defaultColor.r
+      value: 0.34217143
       objectReference: {fileID: 0}
     - target: {fileID: 8009996881848241770, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: m_Pivot.x
@@ -265,6 +292,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cadb58fd1f2f0c4dbe7a1a0098111cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8760750906226265112 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+  m_PrefabInstance: {fileID: 1332777804502252984}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3806eb340bbce1a4f93c3e07ede0e77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &9031902960584274898 stripped

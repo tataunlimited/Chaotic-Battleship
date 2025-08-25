@@ -8,27 +8,20 @@ namespace Core.Ship
 {
     public class ShipView : MonoBehaviour
     {
-        
+        private static WaitForSeconds _waitForSeconds0_1 = new(0.1f);
         public ShipModel shipModel;
         public BoardView playerView;
-        
         public bool IsPlayer {private set; get;}
-
         private Collider _collider;
-
-        
-        
+         
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
             playerView = boardView;
             shipModel = model;
             IsPlayer = isPlayer;
-            if (!isPlayer)
-            {
-                Hide();
-            }
+            if (shipModel.hp <= 0) shipModel.ResetHP();
+            if (!isPlayer) Hide();
             SetPosition();
-
         }
 
         public void Hide()
@@ -60,12 +53,33 @@ namespace Core.Ship
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
                 {
                     enemyBoard.Tint(gridPos);
+                    if (hit)
+                    {
+                        //Find which enemy ship we hit
+                        if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
+                        {
+                            bool justSunk = enemyShip.shipModel.ApplyDamage();
+                            if (justSunk)
+                            {
+                                //sunk 
+                                VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                enemyBoard.RevealShip(enemyShip);
+                                enemyBoard.OnShipSunk(enemyShip);
+                            }
+                            else
+                            {
+                                //hit 
+                                VFXManager.Instance.SpawnHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                            }
+                        }
+                    }
+                    
                 }
+
                 VFXManager.Instance.SpawnExplosion(enemyBoard.GridToWorld(gridPos, 0.5f));
-                yield return new WaitForSeconds(0.1f);
+                yield return _waitForSeconds0_1;
             }
         }
-
 
 
         public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
@@ -81,14 +95,12 @@ namespace Core.Ship
                 playerView.Tint(shipModel.GetCells());
 
             SetPosition();
-
-            BoardController.SelectedShip = null;
         }
 
         private void SetPosition()
         {
             transform.position = playerView.GridToWorld(shipModel.root);
-            float yAngle = shipModel.orientation switch 
+            float yAngle = shipModel.orientation switch
             {
                 Orientation.North => 0,
                 Orientation.East => 90,
@@ -96,7 +108,7 @@ namespace Core.Ship
                 Orientation.West => -90,
                 _ => 0
             };
-            
+
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
         }
 
@@ -104,34 +116,43 @@ namespace Core.Ship
         {
             _collider.enabled = false;
         }
-        
-        
+
+
         public void DeselectShip()
         {
             _collider.enabled = true;
         }
-        
-        public void RotateLeft()
+
+        public bool RotateLeft()
         {
             var targetOrientation = shipModel.RotateLeft();
-            
-            if(ValidateRotation(targetOrientation))
-                UpdatePosition(shipModel.root,  targetOrientation);
+
+            if (ValidateRotation(targetOrientation))
+            {
+                UpdatePosition(shipModel.root, targetOrientation);
+                return true;
+            }
+
+            return false;
         }
 
-        public void RotateRight()
+        public bool RotateRight()
         {
             var targetOrientation = shipModel.RotateRight();
-            
-            if(ValidateRotation(targetOrientation))
+
+            if (ValidateRotation(targetOrientation))
+            {
                 UpdatePosition(shipModel.root, targetOrientation);
+                return true;
+            }
+            return false;
         }
 
         private bool ValidateRotation(Orientation orientation)
         {
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
-            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos>{ shipModelCopy.root});
+            return playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
         }
     }
 }

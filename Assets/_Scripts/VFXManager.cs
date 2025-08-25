@@ -16,5 +16,16 @@ public class VFXManager : MonoBehaviour
    {
       Instantiate(explosionPrefab, position, Quaternion.identity);
    }
-   
+
+   public void SpawnHitEffect(Vector3 vector3)
+   {
+      //throw new NotImplementedException();
+      Debug.Log("SHIP HIT!!!");
+   }
+
+   public void SpawnSunkEffect(Vector3 vector3)
+   {
+      Debug.Log("SHIP SUNK!!!");
+        //throw new NotImplementedException();
+   }
 }
