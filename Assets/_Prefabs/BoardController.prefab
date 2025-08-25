@@ -52,6 +52,7 @@ MonoBehaviour:
   cellSize: 1
   origin: {x: -5, y: 0, z: 10.5}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+  hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6942412552272609847
 GameObject:
@@ -105,6 +106,7 @@ MonoBehaviour:
   cellSize: 1
   origin: {x: -5, y: 0, z: 0}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+  hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
   baseColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &8915164760813226162
 GameObject:
