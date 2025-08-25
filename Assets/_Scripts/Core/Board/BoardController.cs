@@ -1,11 +1,9 @@
 
 using Core.GridSystem;
 using Core.Ship;
-
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine.Serialization;
+
 
 namespace Core.Board
 {
@@ -81,7 +79,15 @@ namespace Core.Board
                 SelectedShip.DeselectShip();
             }
             SelectedShip = shipView;
-            var cellPositions = shipView.shipModel.GetMovablePositions(playerView);
+            List<GridPos> cellPositions;
+            if (SelectedShip.IsPlacedOnGrid)
+            {
+                cellPositions = shipView.shipModel.GetMovablePositions(playerView);
+            }
+            else
+            {
+                cellPositions = playerView.GetAllPossiblePositions(SelectedShip.shipModel);
+            }
             movementCellManager.ClearCells();
             foreach (var cell in cellPositions)
             {
@@ -91,8 +97,8 @@ namespace Core.Board
                     ClearSelectedShip();
                 });
             }
-
-            highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var chance), chance);
+            if(playerView.Model.InBounds(SelectedShip.shipModel.root))
+                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var chance), chance);
         }
 
         public void ClearSelectedShip()
@@ -153,10 +159,10 @@ namespace Core.Board
 
         public void SpawnPlayerShips()
         {
-            SpawnShip(ShipType.Cruiser, new GridPos(0,0), Orientation.South, playerView);
-            SpawnShip(ShipType.Destroyer, new GridPos(1,0), Orientation.South, playerView);
-            SpawnShip(ShipType.Battleship, new GridPos(2,0), Orientation.South, playerView);
-            SpawnShip(ShipType.Submarine, new GridPos(3,0), Orientation.South, playerView);
+            SpawnShip(ShipType.Cruiser, new GridPos(-1,2), Orientation.North, playerView);
+            SpawnShip(ShipType.Destroyer, new GridPos(-2,1), Orientation.North, playerView);
+            SpawnShip(ShipType.Battleship, new GridPos(-3,3), Orientation.North, playerView);
+            SpawnShip(ShipType.Submarine, new GridPos(-4,0), Orientation.North, playerView);
         }
 
         public void PlayerAttack()
