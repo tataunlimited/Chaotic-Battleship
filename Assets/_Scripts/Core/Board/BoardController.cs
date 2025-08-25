@@ -160,20 +160,17 @@ namespace Core.Board
 
         public void PlayerAttack()
         {
-            Attack(enemyView);
-
-            
+            foreach (var ship in playerView.SpawnedShips)
+            {
+                ship.Value.Attack(enemyView);
+            }
         }
+        
         public void EnemyAttack()
         {
-            Attack(playerView);
-        }
-
-        private void Attack(BoardView boardView)
-        {
-            foreach (var ship in boardView.SpawnedShips)
+            foreach (var ship in enemyView.SpawnedShips)
             {
-                ship.Value.Attack(boardView);
+                ship.Value.Attack(playerView);
             }
         }
 
