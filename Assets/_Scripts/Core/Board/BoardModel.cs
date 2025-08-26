@@ -70,7 +70,7 @@ namespace Core.Board
                     continue;
                 }
 
-                if (!InBounds(c) || (_cells[c.x, c.y] != CellState.Empty && _cells[c.x, c.y] != CellState.Miss))
+                if (!InBounds(c) || (_cells[c.x, c.y] != CellState.Empty && _cells[c.x, c.y] != CellState.Miss && _cells[c.x, c.y] != CellState.NearMiss))
                     return false;
             }
             return true;
