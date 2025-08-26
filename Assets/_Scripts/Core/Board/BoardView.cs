@@ -457,6 +457,12 @@ namespace Core.Board
             return positions;
         }
 
+        public bool HasShipAt(GridPos pos)
+        {
+            return TryGetShipAt(pos, out _);
+        }
+
+
         public List<GridPos> GetAllPossiblePositions(ShipModel shipModel)
         {
             var validPositions = GetAllPositions();
@@ -474,5 +480,6 @@ namespace Core.Board
             return validPositions;
         }
     }
+
 }
 
