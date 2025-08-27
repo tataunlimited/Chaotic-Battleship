@@ -52,22 +52,24 @@ namespace Core.Board
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(0))
             {
                 if (TryHitBoard(enemyView, out var eCell))  // left-click fires at enemy
                 {
-                    if (enemyView.Model.TryFire(eCell, out _))
-                        enemyView.Tint(eCell);
+                    // if (enemyView.Model.TryFire(eCell, out _))
+                    //     enemyView.Tint(eCell);
+                    if (SelectedShip != null && SelectedShip.shipModel.type == ShipType.Destroyer)
+                    {
+                        SelectedShip.shipModel.reserved = eCell;
+                        highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+                    }
                 }
-            }
-            if (Input.GetMouseButtonDown(0))
-            {
                 if (TrySelectShip(out var shipView)) // right-click to test on player
                 {
                     UpdatePlayerSelectedShip(shipView);
                 }
-                
             }
+
 
         }
 
@@ -80,7 +82,7 @@ namespace Core.Board
             }
             SelectedShip = shipView;
             List<GridPos> cellPositions;
-            if (SelectedShip.IsPlacedOnGrid)
+            if (SelectedShip.IsInInitialPhase)
             {
                 cellPositions = shipView.shipModel.GetMovablePositions(playerView);
             }
@@ -98,7 +100,7 @@ namespace Core.Board
                 });
             }
             if(playerView.Model.InBounds(SelectedShip.shipModel.root))
-                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var chance), chance);
+                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
         }
 
         public void ClearSelectedShip()
@@ -193,6 +195,15 @@ namespace Core.Board
         {
             playerView.UpdateBoard();
             ClearSelectedShip();
+        }
+
+        public void ClearUI()
+        {
+            movementCellManager.ClearCells();
+            highlightAttackArea.ClearHighlight();
+            
+            
+            Debug.Log("ClearUI");
         }
     }
 }

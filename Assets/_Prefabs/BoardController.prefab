@@ -182,7 +182,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: chanceColor.a
-      value: 0.8666667
+      value: 0.8784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: chanceColor.g
+      value: 0.96624553
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: defaultColor.a
@@ -199,6 +203,18 @@ PrefabInstance:
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: defaultColor.r
       value: 0.34217143
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: selectionColor.a
+      value: 0.92941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: selectionColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: selectionColor.r
+      value: 0.9151845
       objectReference: {fileID: 0}
     - target: {fileID: 8009996881848241770, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: m_Pivot.x

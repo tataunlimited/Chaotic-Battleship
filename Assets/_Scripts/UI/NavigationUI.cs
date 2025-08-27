@@ -1,6 +1,4 @@
-using System;
 using Core.Board;
-using Core.Ship;
 using TMPro;
 using UnityEngine;
 

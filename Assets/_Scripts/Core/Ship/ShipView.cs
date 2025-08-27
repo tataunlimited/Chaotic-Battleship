@@ -13,18 +13,18 @@ namespace Core.Ship
         public bool IsPlayer {private set; get;}
         
         private Collider _collider;
-        private BoardView _playerView;
+        private BoardView _originBoardView;
 
 
         public GameObject defaultState;
         public GameObject brokenState;
         
-        public bool IsPlacedOnGrid { get; private set; }
-
+        public bool IsInInitialPhase { get; private set; }
+        public bool IsPlacedInsideTheGrid => shipModel.GetCells().TrueForAll(p=>_originBoardView.Model.InBounds(p));
          
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
-            _playerView = boardView;
+            _originBoardView = boardView;
             shipModel = model;
             IsPlayer = isPlayer;
             SetShipOnGrid(!IsPlayer);
@@ -56,7 +56,7 @@ namespace Core.Ship
 
         private IEnumerator AttackSequence(BoardView enemyBoard)
         {
-            var coords = shipModel.GetAttackCoordinates(enemyBoard);
+            var coords = shipModel.GetAttackCoordinates(enemyBoard, _originBoardView.IsLastShip);
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
@@ -76,7 +76,12 @@ namespace Core.Ship
                         //Find which enemy ship we hit
                         if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
                         {
-                            bool justSunk = enemyShip.shipModel.ApplyDamage();
+                            int damage = 1;
+                            if (shipModel.type == ShipType.Destroyer && _originBoardView.IsLastShip)
+                            {
+                                damage = 9999;
+                            }
+                            bool justSunk = enemyShip.shipModel.ApplyDamage(damage);
                             enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
                             if (justSunk)
                             {
@@ -106,22 +111,22 @@ namespace Core.Ship
         public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
 
-             _playerView.Model.ResetShipCells(shipModel);
+             _originBoardView.Model.ResetShipCells(shipModel);
              if (showCells)
-                 _playerView.Tint(shipModel.GetCells());
+                 _originBoardView.Tint(shipModel.GetCells());
 
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
-            _playerView.Model.TryPlaceShip(shipModel);
+            _originBoardView.Model.TryPlaceShip(shipModel);
             if (showCells)
-                _playerView.Tint(shipModel.GetCells());
+                _originBoardView.Tint(shipModel.GetCells());
 
             SetPosition();
         }
 
         private void SetPosition()
         {
-            transform.position = _playerView.GridToWorld(shipModel.root);
+            transform.position = _originBoardView.GridToWorld(shipModel.root);
             float yAngle = shipModel.orientation switch
             {
                 Orientation.North => 0,
@@ -174,13 +179,13 @@ namespace Core.Ship
         {
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
-            return _playerView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
+            return _originBoardView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
         }
 
 
         public void SetShipOnGrid(bool b)
         {
-            IsPlacedOnGrid = b;
+            IsInInitialPhase = b;
         }
     }
 }

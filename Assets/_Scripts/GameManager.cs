@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using Core.Board;
-using Core.Ship;
 using TMPro;
 using UnityEngine;
 
@@ -45,6 +43,7 @@ public class GameManager : MonoBehaviour
         loseConditionMet = false;
         waveNumber = 1;
         WaveCountText.text = waveNumber.ToString();
+        StartEncounter();
     }
 
     public void Restart()
@@ -62,17 +61,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private bool CanMoveToNextPhase()
+    {
+        return AreAllShipsPlaced();
+    }
+
+    private bool AreAllShipsPlaced()
+    {
+        return BoardController.Instance.playerView.AllShipsArePlaced;
+    }
+
     public void NextPhaseButton()
     {
+        if(!CanMoveToNextPhase())
+            return;
+        BoardController.Instance.ClearUI();
+
         switch (phaseState)
         {
-            case PHASE_STATE.START_ENCOUNTER:
-                // Jason: After GameOver.Restart() reloads the scene, StartEncounterCoroutine only runs to the yield
-                //      so was hoping StopCoroutine would reset it, but no luck
-                //StopCoroutine(StartEncounterCoroutine(1f));     
-                //StartCoroutine(StartEncounterCoroutine(1f));
-                StartEncounter();
-                break;
+            // case PHASE_STATE.START_ENCOUNTER:
+            //     // Jason: After GameOver.Restart() reloads the scene, StartEncounterCoroutine only runs to the yield
+            //     //      so was hoping StopCoroutine would reset it, but no luck
+            //     //StopCoroutine(StartEncounterCoroutine(1f));     
+            //     //StartCoroutine(StartEncounterCoroutine(1f));
+            //     StartEncounter();
+            //     break;
 
             case PHASE_STATE.ENEMY_PLACING_SHIPS:
                 Debug.Log("Placing enemy ships...");
@@ -113,9 +126,10 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Phase reset to: START_ENCOUNTER");
                 break;
         }
+
     }
 
-    private IEnumerator StartEncounterCoroutine(float wait_time)
+    /*private IEnumerator StartEncounterCoroutine(float wait_time)
     {
         phaseState = PHASE_STATE.ENEMY_PLACING_SHIPS;
         if (!enemyShipsPlaced)
@@ -133,7 +147,7 @@ public class GameManager : MonoBehaviour
         }
         else
             boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
-    }
+    }*/
     private void StartEncounter()
     {
         // Initialize wave-specific parameters

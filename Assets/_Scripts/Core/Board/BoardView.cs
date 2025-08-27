@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
@@ -30,6 +31,9 @@ namespace Core.Board
         private Dictionary<string, ShipModel> previousShipPlacements = new();
         private readonly Dictionary<GridPos, Renderer> _tiles = new();
         private int _lastShipId = 0;
+
+        public bool IsLastShip => SpawnedShips.Values.ToList().FindAll(x => !x.shipModel.isDestroyed).Count == 1;
+        public bool AllShipsArePlaced => SpawnedShips.Values.All(x => x.IsPlacedInsideTheGrid);
 
 
         void Awake()
@@ -132,9 +136,9 @@ namespace Core.Board
             Color c = Model.Get(p) switch
             {
                 CellState.Empty => baseColor,
-                CellState.Ship => Color.green,
+                CellState.Ship => baseColor,
                 CellState.Hit => Color.red,
-                CellState.NearMiss => Color.yellow,
+                CellState.NearMiss => Color.cyan,
                 CellState.Miss => Color.gray,
                 _ => throw new ArgumentOutOfRangeException()
             };
@@ -375,6 +379,20 @@ namespace Core.Board
 
         public void ResetIndicators(bool showShips = true)
         {
+            List<string> shipIdsToRemove = new List<string>();
+            foreach (var ship in SpawnedShips)
+            {
+                if (ship.Value.shipModel.isDestroyed)
+                {
+                    Destroy(ship.Value.gameObject);
+                    shipIdsToRemove.Add(ship.Key);
+                }
+            }
+
+            foreach (var id in shipIdsToRemove)
+            {
+                SpawnedShips.Remove(id);
+            }
             Model.ResetAllCells();
             UpdateBoard(showShips);
         }
@@ -408,7 +426,7 @@ namespace Core.Board
             foreach (GridPos gp in shipModel.GetCells())
             {
                 if (Model.Get(gp) == CellState.Ship)
-                    Tint(gp, Color.cyan);
+                    Tint(gp, baseColor);
             }
         }
 
