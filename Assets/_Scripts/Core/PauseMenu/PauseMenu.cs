@@ -3,13 +3,14 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     public GameObject PauseMenuPanel;
+    public GameObject OptionsMenuPanel;
 
     // Update is called once per frame
     void Update()
     {
 
     }
-
+    // PAUSE MENU
     public void Pause()
     {
         PauseMenuPanel.SetActive(true);
@@ -29,5 +30,18 @@ public class PauseMenu : MonoBehaviour
         #else
         Application.Quit();
         #endif
+    }
+
+    // OPTIONS MENU
+    public void Options()
+    {
+        PauseMenuPanel.SetActive(false);
+        OptionsMenuPanel.SetActive(true);
+    }
+
+    public void Return()
+    {
+        PauseMenuPanel.SetActive(true);
+        OptionsMenuPanel.SetActive(false);
     }
 }
