@@ -1,4 +1,5 @@
 
+using System;
 using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace Core.Board
         public BoardView enemyView;
         public MovementCellManager movementCellManager;
         public HighlightAttackArea highlightAttackArea;
+
+        public Action<bool> OnShipSelected;
 
         public List<ShipView> shipPrefabs;
         public ShipView SelectedShip {get; private set;}
@@ -101,6 +104,9 @@ namespace Core.Board
             }
             if(playerView.Model.InBounds(SelectedShip.shipModel.root))
                 highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+            
+            OnShipSelected?.Invoke(true);
+
         }
 
         public void ClearSelectedShip()
@@ -110,6 +116,7 @@ namespace Core.Board
                 movementCellManager.ClearCells();
                 SelectedShip.DeselectShip();
                 highlightAttackArea.ClearHighlight();
+                OnShipSelected?.Invoke(false);
                 SelectedShip = null;
             }
         }
