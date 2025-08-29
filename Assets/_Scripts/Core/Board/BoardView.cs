@@ -90,7 +90,8 @@ namespace Core.Board
                     var p = new GridPos(x, y);
                     var go = Instantiate(cellPrefab, GridToWorld(p), Quaternion.identity, parent);
                     go.name = $"{side}_Cell_{x}_{y}";
-                    if (go.TryGetComponent(out Renderer r)) _tiles[p] = r;
+                    var child = go.transform.GetChild(0);
+                    if (child.TryGetComponent(out Renderer r)) _tiles[p] = r;
                 }
 
             UpdateBoard();
