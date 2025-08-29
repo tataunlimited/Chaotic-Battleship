@@ -12,6 +12,8 @@ namespace UI
         private void Start()
         {
             _boardController = BoardController.Instance;
+            _boardController.OnShipSelected += EnableUI;
+            EnableUI(false);
         }
 
         public void EnableUI(bool enable)

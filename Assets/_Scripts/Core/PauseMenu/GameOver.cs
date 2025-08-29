@@ -25,11 +25,13 @@ public class GameOver: MonoBehaviour
         // but it's still buggy (one of GameManager's coroutines is not getting reset).
         // Anyways, not needed for this prototype yet
         //
-        GameManager game = GameManager.Get();
-        game.Restart();
-        GameOverPanel.SetActive(false);
-
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        // GameManager game = GameManager.Get();
+        // game.Restart();
+        // GameOverPanel.SetActive(false);
+        Debug.Log("Restart On Game Over");
+        PlayerData.Instance.waveNumber = 1;
+        PlayerData.Instance.currentScore = 0;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 
     public void Quit()

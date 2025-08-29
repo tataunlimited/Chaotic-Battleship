@@ -1,4 +1,5 @@
 
+using System;
 using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace Core.Board
         public BoardView enemyView;
         public MovementCellManager movementCellManager;
         public HighlightAttackArea highlightAttackArea;
+
+        public Action<bool> OnShipSelected;
 
         public List<ShipView> shipPrefabs;
         public ShipView SelectedShip {get; private set;}
@@ -70,6 +73,14 @@ namespace Core.Board
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                foreach (var enemyShip in enemyView.SpawnedShips)
+                {
+                    enemyShip.Value.ApplyDamage(100);
+                }
+            }
+
 
         }
 
@@ -101,6 +112,9 @@ namespace Core.Board
             }
             if(playerView.Model.InBounds(SelectedShip.shipModel.root))
                 highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+            
+            OnShipSelected?.Invoke(true);
+
         }
 
         public void ClearSelectedShip()
@@ -110,7 +124,13 @@ namespace Core.Board
                 movementCellManager.ClearCells();
                 SelectedShip.DeselectShip();
                 highlightAttackArea.ClearHighlight();
+                OnShipSelected?.Invoke(false);
                 SelectedShip = null;
+            }
+
+            foreach (var ship in playerView.SpawnedShips)
+            {
+                ship.Value.DeselectShip();
             }
         }
 
@@ -164,7 +184,7 @@ namespace Core.Board
             SpawnShip(ShipType.Cruiser, new GridPos(-1,2), Orientation.North, playerView);
             SpawnShip(ShipType.Destroyer, new GridPos(-2,1), Orientation.North, playerView);
             SpawnShip(ShipType.Battleship, new GridPos(-3,3), Orientation.North, playerView);
-            SpawnShip(ShipType.Submarine, new GridPos(-4,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Submarine, new GridPos(-1,3), Orientation.North, playerView);
         }
 
         public void PlayerAttack()
@@ -194,16 +214,12 @@ namespace Core.Board
         public void UpdateBoards()
         {
             playerView.UpdateBoard();
-            ClearSelectedShip();
+            
         }
 
         public void ClearUI()
         {
-            movementCellManager.ClearCells();
-            highlightAttackArea.ClearHighlight();
-            
-            
-            Debug.Log("ClearUI");
+            ClearSelectedShip();
         }
     }
 }
