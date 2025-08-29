@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using Core.GridSystem;
+using Core.Ship;
 
 namespace Core.Board
 {
@@ -7,15 +10,37 @@ namespace Core.Board
         public readonly BoardSide Side;
         public readonly int Width;
         public readonly int Height;
-        
-        private readonly CellState[,] _cells;
 
+
+
+        private readonly CellState[,] _cells;
+        public void Set(GridPos p, CellState s) => _cells[p.x, p.y] = s;
         public BoardModel(BoardSide side, int width, int height)
         {
-            Side   = side;
-            Width  = width;
+            Side = side;
+            Width = width;
             Height = height;
             _cells = new CellState[width, height];
+        }
+
+        public BoardModel Copy()
+        {
+            BoardModel board = new BoardModel(Side, Width, Height);
+
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    board._cells[x, y] = _cells[x, y];
+                }
+            }
+
+            return board;
+        }
+
+        public void Reset()
+        {
+            ResetAllCells();
         }
 
         public bool InBounds(GridPos p) =>
@@ -23,43 +48,98 @@ namespace Core.Board
 
         public CellState Get(GridPos p) => _cells[p.x, p.y];
 
-        public bool TryPlaceShip(GridPos root, int length, Orientation o)
+        public bool TryPlaceShip(ShipModel shipModel)
         {
             // validate
-            if (!ValidateShipPlacement(root, length, o)) return false;
+            if (!ValidateShipPlacement(shipModel)) return false;
             // commit
-            for (int i = 0; i < length; i++)
+            foreach (var c in shipModel.GetCells())
             {
-                var p = o == Orientation.Horizontal ? new GridPos(root.x + i, root.y)
-                    : new GridPos(root.x, root.y + i);
-                _cells[p.x, p.y] = CellState.Ship;
+                _cells[c.x, c.y] = CellState.Ship;
+            }
+
+            return true;
+        }
+
+        public bool ValidateShipPlacement(ShipModel shipModel, List<GridPos> positionsToIgnore = null)
+        {
+            foreach (var c in shipModel.GetCells())
+            {
+                if (positionsToIgnore != null && positionsToIgnore.Contains(c))
+                {
+                    continue;
+                }
+
+                if (!InBounds(c) || (_cells[c.x, c.y] != CellState.Empty && _cells[c.x, c.y] != CellState.Miss && _cells[c.x, c.y] != CellState.NearMiss))
+                    return false;
             }
             return true;
         }
 
-        public bool ValidateShipPlacement(GridPos root, int length, Orientation o)
+        public void ResetShipCells(ShipModel shipModel)
         {
-            for (int i = 0; i < length; i++)
+            foreach (var c in shipModel.GetCells())
             {
-                var p = o == Orientation.Horizontal ? new GridPos(root.x + i, root.y)
-                    : new GridPos(root.x, root.y + i);
-                if (!InBounds(p) || Get(p) != CellState.Empty) return false;
+                if(InBounds(c))
+                    _cells[c.x, c.y] = CellState.Empty;
             }
+        }
 
-            return true;
+        public void ResetAllCells()
+        {
+            for (int i = 0; i < _cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < _cells.GetLength(1); j++)
+                {
+                    _cells[i, j] = CellState.Empty;
+                }
+            }
         }
 
         public bool TryFire(GridPos p, out bool hit)
         {
             hit = false;
-            if (!InBounds(p)) return false;
+            if (!InBounds(p)) return false;                    // invalid shot
 
-            var s = _cells[p.x, p.y];
-            if (s == CellState.Hit || s == CellState.Miss) return false; // already fired
+            var state = Get(p);
+            switch (state)
+            {
+                case CellState.Ship:
+                    Set(p, CellState.Hit);
+                    hit = true;
+                    return true;
 
-            if (s == CellState.Ship) { _cells[p.x, p.y] = CellState.Hit; hit = true; }
-            else                     { _cells[p.x, p.y] = CellState.Miss; }
-            return true;
+                case CellState.Empty:
+                    Set(p, IsOrthogonallyAdjacentToShip(p) ? CellState.NearMiss : CellState.Miss);
+                    return true;
+
+                case CellState.Miss:
+                case CellState.NearMiss:
+                case CellState.Hit:
+                    // already resolved; don’t re-tint / re-animate
+                    return false;
+
+                default:
+                    return false;
+            }
+        }
+
+        private bool IsOrthogonallyAdjacentToShip(GridPos p)
+        {
+            // up, down, left, right only (no diagonals)
+            var neighbors = new[]{
+                new GridPos(p.x,     p.y+1),
+                new GridPos(p.x,     p.y-1),
+                new GridPos(p.x-1,   p.y),
+                new GridPos(p.x+1,   p.y),
+            };
+
+            foreach (var n in neighbors)
+            {
+                if (InBounds(n) && Get(n) == CellState.Ship)
+                    return true;
+            }
+            return false;
         }
     }
 }

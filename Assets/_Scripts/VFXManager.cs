@@ -1,0 +1,40 @@
+using System;
+using UnityEngine;
+
+public class VFXManager : MonoBehaviour
+{
+   public static VFXManager Instance;
+
+   public GameObject explosionPrefab;
+   
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField] private AudioClip shipSunkSound;
+
+    private void Awake()
+   {
+      Instance = this;
+   }
+
+   public void SpawnExplosion(Vector3 position)
+   {
+      Instantiate(explosionPrefab, position, Quaternion.identity);
+   }
+
+   public void SpawnHitEffect(Vector3 vector3)
+   {
+      Debug.Log("SHIP HIT!!!");
+        if (hitSound != null)
+        {
+            AudioSource.PlayClipAtPoint(hitSound, vector3);
+        }
+    }
+
+   public void SpawnSunkEffect(Vector3 vector3)
+   {
+      Debug.Log("SHIP SUNK!!!");
+        if (shipSunkSound != null)
+        {
+            AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
+        }
+    }
+}

@@ -1,29 +1,82 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Core.Board
 {
     public class BoardView : MonoBehaviour
     {
+        private static readonly int Color1 = Shader.PropertyToID("_Color");
+
         [Header("Config")]
         public BoardSide side = BoardSide.Player;
         public bool revealShips;
+        public bool isPlayer;
         public int width = 10;
         public int height = 10;
         public float cellSize = 1f;
         public Vector3 origin = Vector3.zero;
         public GameObject cellPrefab;
+        public GameObject hitFirePrefab;
+        private readonly List<GameObject> phasePersistentFx = new();
+        public Color baseColor = Color.cyan;
 
         public BoardModel Model { get; private set; }
+        public Dictionary<string, ShipView> SpawnedShips { get; } = new();
 
+        private Dictionary<string, ShipModel> previousShipPlacements = new();
         private readonly Dictionary<GridPos, Renderer> _tiles = new();
+        private int _lastShipId = 0;
+
+        public bool IsLastShip => SpawnedShips.Values.ToList().FindAll(x => !x.shipModel.isDestroyed).Count == 1;
+        public bool AllShipsArePlaced => SpawnedShips.Values.All(x => x.IsPlacedInsideTheGrid);
+
 
         void Awake()
         {
             Model = new BoardModel(side, width, height);
             if (cellPrefab) BuildGrid();
+        }
+
+        public void Reset()
+        {
+            //HideShips();
+            DestroySpawnedShips();
+            SpawnedShips.Clear();
+            previousShipPlacements.Clear();
+            ResetIndicators();
+        }
+
+        internal void SaveShipLocations()
+        {
+            // TODO: might want to save the BoardModel _cells as well. Can use BoardModel.Copy(), but need to remove the previous ship locations 
+            previousShipPlacements.Clear();
+            foreach (var pair in SpawnedShips)
+            {
+                previousShipPlacements.Add(pair.Key, pair.Value.shipModel.Copy());
+            }
+        }
+
+        // returns true if all ships were moved back to their previous location
+        internal bool ResetMovementPhase()
+        {
+            ShipModel previousShipData;
+            bool wasSuccessful = true;
+
+            // need to remove ships so they don't interfere with placing them back where they were
+            Model.ResetAllCells();
+
+            foreach (var pair in SpawnedShips)
+            {
+                wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
+                pair.Value.UpdatePosition(previousShipData.root, previousShipData.orientation);
+            }
+
+            return wasSuccessful;
         }
 
         void BuildGrid()
@@ -32,13 +85,16 @@ namespace Core.Board
             parent.SetParent(transform, false);
 
             for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-            {
-                var p = new GridPos(x, y);
-                var go = Instantiate(cellPrefab, GridToWorld(p), Quaternion.identity, parent);
-                go.name = $"{side}_Cell_{x}_{y}";
-                if (go.TryGetComponent(out Renderer r)) _tiles[p] = r;
-            }
+                for (int y = 0; y < height; y++)
+                {
+                    var p = new GridPos(x, y);
+                    var go = Instantiate(cellPrefab, GridToWorld(p), Quaternion.identity, parent);
+                    go.name = $"{side}_Cell_{x}_{y}";
+                    var child = go.transform.GetChild(0);
+                    if (child.TryGetComponent(out Renderer r)) _tiles[p] = r;
+                }
+
+            UpdateBoard();
         }
 
         public Vector3 GridToWorld(GridPos p, float yOffset = 0f) =>
@@ -53,14 +109,106 @@ namespace Core.Board
             return Model.InBounds(p);
         }
 
-        public void Tint(GridPos p, Color c)
+        private void Tint(GridPos p, Color c)
         {
-            if (_tiles.TryGetValue(p, out var r) && r.material.HasProperty("_Color"))
+            if(!Model.InBounds(p))
+                return;
+            if (_tiles.TryGetValue(p, out var r) && r.material.HasProperty(Color1))
                 r.material.color = c;
         }
 
+        public void Tint(List<GridPos> positions)
+        {
+            foreach (var p in positions)
+            {
+                Tint(p);
+            }
+        }
+
+        public void Tint(GridPos p)
+        {
+            if(!Model.InBounds(p))
+                return;
+            Tint(p, GetColor(p));
+        }
+
+        private Color GetColor(GridPos p)
+        {
+            Color c = Model.Get(p) switch
+            {
+                CellState.Empty => baseColor,
+                CellState.Ship => baseColor,
+                CellState.Hit => Color.red,
+                CellState.NearMiss => Color.cyan,
+                CellState.Miss => Color.gray,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            return c;
+        }
+
+        public bool TryGetShipAt(GridPos pos, out ShipView shipView)
+        {
+            foreach (var s in SpawnedShips.Values)
+            {
+                var cells = s.shipModel.GetCells();
+                for (int i = 0; i < cells.Count; i++)
+                {
+                    if (cells[i].Equals(pos))
+                    {
+                        shipView = s;
+                        return true;
+                    }
+                }
+            }
+            shipView = null;
+            return false;
+        }
+
+        public void RevealShip(ShipView shipView)
+        {
+            shipView.Show();
+            foreach (var gp in shipView.shipModel.GetCells())
+                Tint(gp, Color.green);
+        }
+
+        public void SpawnPersistentHitFire(ShipView ship, GridPos cell, float yOffset = 0.5f)
+        {
+            if (hitFirePrefab == null || ship == null) return;
+
+            // world position of the hit cell
+            var worldPos = GridToWorld(cell, yOffset);
+
+            // make it follow the ship: convert to local, parent to ship
+            var fx = Instantiate(hitFirePrefab);
+            fx.transform.SetParent(ship.transform, worldPositionStays: false);
+            fx.transform.localPosition = ship.transform.InverseTransformPoint(worldPos);
+
+            phasePersistentFx.Add(fx);
+        }
+
+        public void ClearPhaseFX()
+        {
+            for (int i = 0; i < phasePersistentFx.Count; i++) if (phasePersistentFx[i]) Destroy(phasePersistentFx[i]);
+            phasePersistentFx.Clear();
+        }
+
+        public void OnShipSunk(ShipView shipView)
+        {
+            // Always reveal a sunk ship
+            shipView.Show();
+
+            // Mark all its cells as Hit (so the grid shows a full sunk silhouette)
+            foreach (var gp in shipView.shipModel.GetCells())
+            {
+                Model.Set(gp, CellState.Hit);
+                Tint(gp);
+            }
+
+            // Disable interaction and movement for this ship
+        }
+
         // Optional: quick gizmos
-        void OnDrawGizmosSelected()
+        void OnDrawGizmos()
         {
             Gizmos.color = side == BoardSide.Player ? Color.green : Color.red;
             for (int x = 0; x <= width; x++)
@@ -77,41 +225,289 @@ namespace Core.Board
             }
         }
 
-        public void TryPlaceShip(ShipModel shipModel)
+        public bool TryPlaceShip(ShipView prefab, GridPos pos, Orientation orientation, out ShipView instance)
         {
-            bool success = Model.TryPlaceShip(shipModel.root, shipModel.length, shipModel.orientation);
-            if (!success || !revealShips) return;
-            foreach (var gridPos in shipModel.EnumerateCells())
+            instance = null;
+
+            bool spawnOutsideOfGrid = isPlayer; // allow staging outside grid for player during placement?
+
+            string id = name + _lastShipId;
+
+            var shipModel = prefab.shipModel.Copy();
+            shipModel.id = id;
+            shipModel.orientation = orientation;
+            shipModel.root = pos;
+
+            bool success = Model.TryPlaceShip(shipModel);
+
+            // Spawn if: placement succeeded OR we're allowed to stage outside grid (player)
+            if (success || spawnOutsideOfGrid)
             {
-                Tint(gridPos, Color.green);
+                instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                // (Awake on ShipView runs here)
+                instance.Init(this, shipModel, isPlayer);
+
+                _lastShipId++;
+                SpawnedShips[id] = instance;
+
+                if (revealShips && success)
+                {
+                    Tint(shipModel.GetCells());
+                }
+
+                return true; // we spawned a ship view
+            }
+
+            // No spawn, no instance
+            return false;
+        }
+
+        public void UpdateBoard(bool showShips = true)
+        {
+            foreach (var ship in SpawnedShips)
+            {
+                ship.Value.SetShipOnGrid(true);
+                Model.TryPlaceShip(ship.Value.shipModel);
+            }
+            foreach (var tile in _tiles)
+            {
+                Tint(tile.Key);
+            }
+
+            if (!showShips)
+            {
+                HideShips();
             }
         }
 
-        public List<GridPos> GetRandomPositions( int count)
+        public List<GridPos> GetRandomPositions(int count)
         {
-            return new List<GridPos>(count);
+            var randomPositions = new List<GridPos>();
+            for (int i = 0; i < count; i++)
+            {
+                randomPositions.Add(new GridPos(
+                    Random.Range(0, width),
+                    Random.Range(0, height)
+                    ));
+            }
+            return randomPositions;
         }
-        public List<GridPos> GetRow(int rowIndex)
+        public List<GridPos> GetRow(int rowIndex, Orientation orientaion)
         {
             var row = new List<GridPos>();
-            for (int i = 0; i < width; i++)
+            if (orientaion is Orientation.North or Orientation.South)
             {
-                row.Add(new GridPos(i, rowIndex));
+                Debug.LogError("Cannot return a row for North or South orientation");
+                return row;
             }
+            if (orientaion is Orientation.East)
+                for (int i = 0; i < height; i++)
+                {
+                    row.Add(new GridPos(i, rowIndex));
+                }
+            else
+                for (int i = width - 1; i > -1; i--)
+                {
+                    row.Add(new GridPos(i, rowIndex));
+                }
             return row;
         }
-        public List<GridPos> GetColumn( int colIndex)
+        public List<GridPos> GetColumn(int colIndex, Orientation orientaion)
         {
             var col = new List<GridPos>();
-            for (int i = 0; i < height; i++)
+            if (orientaion is Orientation.East or Orientation.West)
             {
-                col.Add(new GridPos(colIndex, i));
+                Debug.LogError("Cannot return a column for East or West orientation");
+                return col;
             }
+            if (orientaion is Orientation.North)
+                for (int i = 0; i < height; i++)
+                {
+                    col.Add(new GridPos(colIndex, i));
+                }
+            else
+                for (int i = height - 1; i > -1; i--)
+                {
+                    col.Add(new GridPos(colIndex, i));
+                }
+
             return col;
         }
 
+        public List<GridPos> CruiserAttack(List<GridPos> shipCells, Orientation orientaion, bool allPossibilities = false)
+        {
+            var attackCells = new List<GridPos>();
+
+            // Loop through a 3x3 area centered on the "center" position
+            if (orientaion is Orientation.North or Orientation.South)
+            {
+                for (int i = 0; i < shipCells.Count; i++)
+                {
+                    var pos1 = new GridPos(shipCells[i].x - 1, shipCells[i].y);
+                    var pos3 = new GridPos(shipCells[i].x + 1, shipCells[i].y);
+                    if (Model.InBounds(pos1))
+                        attackCells.Add(pos1);
+                    if (Model.InBounds(shipCells[i]))
+                        attackCells.Add(shipCells[i]);
+                    if (Model.InBounds(pos3))
+                        attackCells.Add(pos3);
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < shipCells.Count; i++)
+                {
+                    var pos1 = new GridPos(shipCells[i].x, shipCells[i].y - 1);
+                    var pos3 = new GridPos(shipCells[i].x, shipCells[i].y + 1);
+                    if (Model.InBounds(pos1))
+                        attackCells.Add(pos1);
+                    if (Model.InBounds(shipCells[i]))
+                        attackCells.Add(shipCells[i]);
+                    if (Model.InBounds(pos3))
+                        attackCells.Add(pos3);
+
+                }
+            }
+
+            if (allPossibilities)
+                return attackCells;
+            
+            var randomCells = new List<GridPos>();
+            for (int i = 0; i < 3; i++)
+            {
+                if (attackCells.Count == 0)
+                    break;
+                int rndCellIndex = Random.Range(0, attackCells.Count);
+                randomCells.Add(attackCells[rndCellIndex]);
+                attackCells.RemoveAt(rndCellIndex);
+
+            }
+            return randomCells;
+        }
 
 
+        public void ResetIndicators(bool showShips = true)
+        {
+            List<string> shipIdsToRemove = new List<string>();
+            foreach (var ship in SpawnedShips)
+            {
+                if (ship.Value.shipModel.isDestroyed)
+                {
+                    Destroy(ship.Value.gameObject);
+                    shipIdsToRemove.Add(ship.Key);
+                }
+            }
 
+            foreach (var id in shipIdsToRemove)
+            {
+                SpawnedShips.Remove(id);
+            }
+            Model.ResetAllCells();
+            UpdateBoard(showShips);
+        }
+
+        public void RevealShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                shipView.Show();
+                RevealAShip(shipView.shipModel);
+            }
+        }
+
+        public void RevealAShip(ShipModel shipModel)
+        {
+            Tint(shipModel.GetCells());
+        }
+
+        private void HideShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                if (shipView.shipModel.IsSunk) continue; // keep sunk ships visible
+                shipView.Hide();
+                HideAShip(shipView.shipModel);
+            }
+        }
+
+        private void HideAShip(ShipModel shipModel)
+        {
+            foreach (GridPos gp in shipModel.GetCells())
+            {
+                if (Model.Get(gp) == CellState.Ship)
+                    Tint(gp, baseColor);
+            }
+        }
+
+        public void HealAllShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                shipView.shipModel.ResetHP();
+                shipView.defaultState.SetActive(true);
+                shipView.brokenState.SetActive(false);
+            }
+        }
+
+        public bool AllShipsAreDestroyed()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                if (!shipView.shipModel.isDestroyed)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void DestroySpawnedShips()
+        {
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                Destroy(shipView.gameObject);
+            }
+            SpawnedShips.Clear();
+        }
+
+        
+        public List<GridPos> GetAllPositions()
+        {
+            List<GridPos> positions = new List<GridPos>();
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var gridPos = new GridPos(x, y);
+                    positions.Add(gridPos);
+                }
+            }
+            return positions;
+        }
+
+        public bool HasShipAt(GridPos pos)
+        {
+            return TryGetShipAt(pos, out _);
+        }
+
+
+        public List<GridPos> GetAllPossiblePositions(ShipModel shipModel)
+        {
+            var validPositions = GetAllPositions();
+            var shipModelCopy = shipModel.Copy();
+
+            for (int i = validPositions.Count - 1; i >= 0; i--)
+            {
+                shipModelCopy.root = validPositions[i];
+                if (!Model.ValidateShipPlacement(shipModelCopy, shipModel.GetCells()))
+                {
+                    validPositions.RemoveAt(i);
+                }
+            }
+            
+            return validPositions;
+        }
     }
+
 }
+
