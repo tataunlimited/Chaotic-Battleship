@@ -73,13 +73,13 @@ namespace Core.Board
                 }
             }
 
-            // if (Input.GetKeyDown(KeyCode.C))
-            // {
-            //     foreach (var enemyShip in enemyView.SpawnedShips)
-            //     {
-            //         enemyShip.Value.ApplyDamage(100);
-            //     }
-            // }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                foreach (var enemyShip in enemyView.SpawnedShips)
+                {
+                    enemyShip.Value.ApplyDamage(100);
+                }
+            }
 
 
         }
@@ -126,6 +126,11 @@ namespace Core.Board
                 highlightAttackArea.ClearHighlight();
                 OnShipSelected?.Invoke(false);
                 SelectedShip = null;
+            }
+
+            foreach (var ship in playerView.SpawnedShips)
+            {
+                ship.Value.DeselectShip();
             }
         }
 
