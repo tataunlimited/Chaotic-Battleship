@@ -184,7 +184,7 @@ namespace Core.Board
             SpawnShip(ShipType.Cruiser, new GridPos(-1,2), Orientation.North, playerView);
             SpawnShip(ShipType.Destroyer, new GridPos(-2,1), Orientation.North, playerView);
             SpawnShip(ShipType.Battleship, new GridPos(-3,3), Orientation.North, playerView);
-            SpawnShip(ShipType.Submarine, new GridPos(-4,0), Orientation.North, playerView);
+            SpawnShip(ShipType.Submarine, new GridPos(-1,3), Orientation.North, playerView);
         }
 
         public void PlayerAttack()
@@ -214,16 +214,12 @@ namespace Core.Board
         public void UpdateBoards()
         {
             playerView.UpdateBoard();
-            ClearSelectedShip();
+            
         }
 
         public void ClearUI()
         {
-            movementCellManager.ClearCells();
-            highlightAttackArea.ClearHighlight();
-            
-            
-            Debug.Log("ClearUI");
+            ClearSelectedShip();
         }
     }
 }
