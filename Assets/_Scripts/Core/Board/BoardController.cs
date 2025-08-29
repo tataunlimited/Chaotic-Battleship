@@ -41,16 +41,16 @@ namespace Core.Board
             SelectedShip = null;
         }
 
-        private void SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
+        private ShipView SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
         {
-            var shipPrefab = shipPrefabs.Find((ship)=>ship.shipModel.type == shipType);
-            if (shipPrefab == null)
-            {
-                Debug.LogError($"Ship type {shipType} not found");
-                return;
-            }
+            var prefab = shipPrefabs.Find(s => s.shipModel.type == shipType);
+            if (prefab == null) { Debug.LogError($"Ship type {shipType} not found"); return null; }
 
-            board.TryPlaceShip(shipPrefab, pos, orientation);
+            if (board.TryPlaceShip(prefab, pos, orientation, out var instance))
+                return instance;
+
+            Debug.LogError("TryPlaceShip failed");
+            return null;
         }
 
         private void Update()
@@ -84,7 +84,7 @@ namespace Core.Board
 
         }
 
-        private void UpdatePlayerSelectedShip(ShipView shipView)
+        public void UpdatePlayerSelectedShip(ShipView shipView)
         {
             shipView.SelectShip();
             if (SelectedShip != null)
@@ -179,12 +179,16 @@ namespace Core.Board
                 enemyView.RevealShips();
         }
 
-        public void SpawnPlayerShips()
+        public ShipView SpawnPlayerShip(ShipType shipType)
         {
-            SpawnShip(ShipType.Cruiser, new GridPos(-1,2), Orientation.North, playerView);
-            SpawnShip(ShipType.Destroyer, new GridPos(-2,1), Orientation.North, playerView);
-            SpawnShip(ShipType.Battleship, new GridPos(-3,3), Orientation.North, playerView);
-            SpawnShip(ShipType.Submarine, new GridPos(-1,3), Orientation.North, playerView);
+            return shipType switch
+            {
+                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 3), Orientation.North, playerView),
+                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 2), Orientation.North, playerView),
+                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-2, 1), Orientation.North, playerView),
+                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-3, 3), Orientation.North, playerView),
+                _ => throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null),
+            };
         }
 
         public void PlayerAttack()

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
+using UnityEngine;
 
 namespace Core.Ship
 {
@@ -19,18 +20,15 @@ namespace Core.Ship
         public string id;
         public ShipType type;
         public int length = 3;
-
+        public bool submerged = false;
         public int hp;
         public int MaxHP => length;
         public bool IsSunk => isDestroyed || hp <= 0;
         public Orientation orientation = Orientation.North;
         public GridPos root; // bow (front) position   
-        public GridPos reserved = new GridPos(-1000,-1000); // bow (front) position   
+        public GridPos reserved = new GridPos(-1000, -1000); // bow (front) position   
         public bool isDestroyed = false;
-        
-
         private int _round = 0;
-
         /// <summary>Apply damage and return true if the ship just sunk.</summary>
         public bool ApplyDamage(int damage = 1)
         {
@@ -90,24 +88,30 @@ namespace Core.Ship
                     coords.AddRange(boardView.GetRandomPositions(count));
                     break;
                 case ShipType.Submarine:
-                {
-                    if (_round % 2 == 0 || isSpecialAttack)
                     {
-                        List<GridPos> line = orientation is Orientation.West or Orientation.East
-                            ? boardView.GetRow(root.y, orientation)
-                            : boardView.GetColumn(root.x, orientation);
-
-                        foreach (var pos in line)
+                        if (_round % 2 == 0 || isSpecialAttack)
                         {
-                            coords.Add(pos);
-                            // Stop if this grid cell has a ship
-                            if (boardView.HasShipAt(pos))
-                                break;
+                            submerged = true;
+                            List<GridPos> line = orientation is Orientation.West or Orientation.East
+                                ? boardView.GetRow(root.y, orientation)
+                                : boardView.GetColumn(root.x, orientation);
+
+                            foreach (var pos in line)
+                            {
+                                coords.Add(pos);
+                                // Stop if this grid cell has a ship
+                                if (boardView.HasShipAt(pos))
+                                    break;
+                            }
                         }
+                        else
+                        {
+                            // Submarine is reloading
+                            submerged = false;
+                        }
+                        _round++;
+                        break;
                     }
-                    _round++;
-                    break;
-                }
                 case ShipType.Cruiser:
                     coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
                     if (isSpecialAttack)
@@ -122,7 +126,7 @@ namespace Core.Ship
             return coords;
         }
 
-        internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords,out bool chance)
+        internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords, out bool chance)
         {
             List<GridPos> coords = new List<GridPos>();
             selectedCoords = new List<GridPos>();
@@ -237,4 +241,7 @@ namespace Core.Ship
             { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3 } }
         };
     }
+    
+    
+    
 }

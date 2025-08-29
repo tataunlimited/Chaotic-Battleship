@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
     private static WaitForSeconds _waitForSeconds1 = new(1f);
     public BoardController boardController;
+    public CameraController cameraController;
     public enum PHASE_STATE
     {
         START_ENCOUNTER, ENEMY_PLACING_SHIPS, PLAYER_PLACING_SHIPS, PLAYER_FIRING, ENEMY_FIRING, ENEMY_MOVING, PLAYER_MOVING, ENDWAVE
@@ -41,7 +43,9 @@ public class GameManager : MonoBehaviour
         winConditionMet = false;
         loseConditionMet = false;
         WaveCountText.text = PlayerData.Instance.waveNumber.ToString();
+        cameraController = Camera.main.GetComponent<CameraController>();
         StartEncounter();
+        instance = this;
     }
 
     public void Restart()
@@ -179,7 +183,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Waiting for player to place ships...");
 
-        boardController.SpawnPlayerShips();     // TODO: this is temporary until we implement proper ship placement
+        //boardController.SpawnPlayerShips();      TODO: this is temporary until we implement proper ship placement
         boardController.playerView.SaveShipLocations(); // TODO: this is temporary just for testing resetting. it shouldn't be needed since ships can be placed anywhere at will
     }
 
@@ -192,6 +196,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player Ship placement confirmed");
         Debug.Log("Starting Battle...");
         boardController.UpdateBoards();
+        cameraController.GoToAttackView();
         phaseState = PHASE_STATE.PLAYER_FIRING;
         Debug.Log("Phase changed to: PLAYER_FIRING");
         StartCoroutine(AttackingPhase());
@@ -202,6 +207,8 @@ public class GameManager : MonoBehaviour
         // Logic for player firing
 
         //TODO: deactivate / unhighlight player movement options
+        cameraController.GoToAttackView();
+        yield return _waitForSeconds1;
         boardController.playerView.ClearPhaseFX();
         boardController.enemyView.ClearPhaseFX();
         boardController.PlayerAttack();
@@ -211,6 +218,7 @@ public class GameManager : MonoBehaviour
         phaseState = PHASE_STATE.ENEMY_FIRING;
         boardController.EnemyAttack();
         
+        yield return _waitForSeconds1;
         yield return _waitForSeconds1;
 
        
@@ -258,6 +266,7 @@ public class GameManager : MonoBehaviour
             phaseState = PHASE_STATE.ENEMY_MOVING;
             Debug.Log("Phase changed to: ENEMY_MOVING");
             EnemyMoves();
+            cameraController.GoToDefaultView();
         }
 
     }

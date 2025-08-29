@@ -225,32 +225,41 @@ namespace Core.Board
             }
         }
 
-        public bool TryPlaceShip(ShipView prefab, GridPos pos, Orientation orientation)
+        public bool TryPlaceShip(ShipView prefab, GridPos pos, Orientation orientation, out ShipView instance)
         {
-            bool spawnOutsideOfGrid = isPlayer;
+            instance = null;
 
+            bool spawnOutsideOfGrid = isPlayer; // allow staging outside grid for player during placement?
 
             string id = name + _lastShipId;
+
             var shipModel = prefab.shipModel.Copy();
             shipModel.id = id;
             shipModel.orientation = orientation;
             shipModel.root = pos;
 
             bool success = Model.TryPlaceShip(shipModel);
+
+            // Spawn if: placement succeeded OR we're allowed to stage outside grid (player)
             if (success || spawnOutsideOfGrid)
             {
-                var shipView = Instantiate(prefab, Vector3.zero, Quaternion.identity);
-                shipView.Init(this, shipModel, isPlayer);
+                instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                // (Awake on ShipView runs here)
+                instance.Init(this, shipModel, isPlayer);
 
                 _lastShipId++;
-                SpawnedShips.Add(id, shipView);
+                SpawnedShips[id] = instance;
+
+                if (revealShips && success)
+                {
+                    Tint(shipModel.GetCells());
+                }
+
+                return true; // we spawned a ship view
             }
 
-            if (!revealShips || !success) return success;
-
-            Tint(shipModel.GetCells());
-
-            return true;
+            // No spawn, no instance
+            return false;
         }
 
         public void UpdateBoard(bool showShips = true)
