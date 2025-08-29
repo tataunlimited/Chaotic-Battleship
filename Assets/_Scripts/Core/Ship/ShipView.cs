@@ -83,6 +83,11 @@ namespace Core.Ship
                             }
                             bool justSunk = enemyShip.shipModel.ApplyDamage(damage);
                             enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
+                            ShipHealth shipHealth = GetComponent<ShipHealth>();
+                            if (shipHealth != null)
+                            {
+                                shipHealth.TakeDamage(damage);
+                            }
                             if (justSunk)
                             {
                                 //sunk 
@@ -96,6 +101,7 @@ namespace Core.Ship
                             {
                                 //hit 
                                 VFXManager.Instance.SpawnHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                
                             }
                         }
                     }
