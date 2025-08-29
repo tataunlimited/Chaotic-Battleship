@@ -1,3 +1,4 @@
+using System;
 using Core.Ship;
 using UnityEngine;
 using TMPro;
@@ -7,7 +8,10 @@ public class GameManagerScore : MonoBehaviour
     [SerializeField] private ScoreConfig config;
     [SerializeField] private TextMeshProUGUI scoreText;
 
-    public int Score { get; private set; }
+    public int Score { 
+        get => PlayerData.Instance.currentScore;
+        private set => PlayerData.Instance.currentScore = value;
+    }
     public int TurnsThisWave { get; private set; }
 
     private void OnEnable()
@@ -22,6 +26,11 @@ public class GameManagerScore : MonoBehaviour
         GameEvents.OnPlayerHitSegment -= HandleHitSegment;
         GameEvents.OnPlayerDestroyedShip -= HandleDestroyedShip;
         GameEvents.OnWaveCleared -= HandleWaveCleared;
+    }
+
+    private void Start()
+    {
+        UpdateUI();
     }
 
     public void RegisterPlayerTurn() => TurnsThisWave++;

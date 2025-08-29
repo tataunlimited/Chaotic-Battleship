@@ -901,9 +901,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 3
-  m_WholeNumbers: 1
-  m_Value: 3
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2388,7 +2388,7 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 1
-  m_WholeNumbers: 1
+  m_WholeNumbers: 0
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2903,6 +2903,7 @@ GameObject:
   - component: {fileID: 500545358}
   - component: {fileID: 500545360}
   - component: {fileID: 500545359}
+  - component: {fileID: 500545361}
   m_Layer: 5
   m_Name: HUD_PlayerPanel
   m_TagString: Untagged
@@ -2972,6 +2973,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 500545357}
   m_CullTransparentMesh: 1
+--- !u!114 &500545361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500545357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a765b4b1a421844abb38a8972b23578, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battlship: {fileID: 2128153698}
+  cruiser: {fileID: 155665005}
+  sub: {fileID: 395198292}
+  destroyer: {fileID: 2020251215}
+  enemyBattleshipDestroyedUI: {fileID: 1711792940}
+  enemyCruiserDestroyedUI: {fileID: 864946480}
+  enemySubDestroyedUI: {fileID: 1172106590}
+  enemyDestroyerDestroyedUI: {fileID: 1544371825}
 --- !u!1 &510630385
 GameObject:
   m_ObjectHideFlags: 0
@@ -9178,6 +9199,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1418858135}
   m_CullTransparentMesh: 1
+--- !u!1 &1517596993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1517596995}
+  - component: {fileID: 1517596994}
+  m_Layer: 0
+  m_Name: DontDestroyOnLoad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1517596994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517596993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d930281a568752145a08129004cdbce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveNumber: 1
+  currentScore: 0
+--- !u!4 &1517596995
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517596993}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1466.0361, y: 801.9751, z: 61.387512}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1531933740
 GameObject:
   m_ObjectHideFlags: 0
@@ -12334,9 +12401,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 2
-  m_WholeNumbers: 1
-  m_Value: 2
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -13158,9 +13225,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 4
-  m_WholeNumbers: 1
-  m_Value: 4
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -13470,3 +13537,4 @@ SceneRoots:
   - {fileID: 517428643}
   - {fileID: 1267680412855025866}
   - {fileID: 1893701160}
+  - {fileID: 1517596995}
