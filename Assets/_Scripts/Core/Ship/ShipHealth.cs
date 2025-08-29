@@ -6,23 +6,33 @@ using UnityEngine.UI;
 public class ShipHealth : MonoBehaviour
 {
     
-    public int currentHealth;
     public Slider healthSlider;
+    public GameObject destroyedShip;
     public ShipView shipView;
 
     private void Start()
     {
-        shipView = GetComponent<ShipView>();
-        healthSlider = SliderManager.instance.GetSlider(shipView.shipModel.type);
-        currentHealth = shipView.shipModel.hp;
-        healthSlider.value = 1;
+        Reset();
     }
 
-    public void TakeDamage(int damage)
+    public void Reset()
     {
-        
-        
+        shipView = GetComponent<ShipView>();
+        if (shipView.IsPlayer)
+        {
+            healthSlider = SliderManager.instance.GetSlider(shipView.shipModel.type);
+            healthSlider.value = 1;
+        }
+        else
+        {
+            destroyedShip = SliderManager.instance.GetDestroyerUI(shipView.shipModel.type);
+            EnableDestroyedState(false);
+        }
 
+        
+    }
+    public void UpdateHealthBar()
+    {
         // update slider
         healthSlider.value = (float) shipView.shipModel.hp / shipView.shipModel.MaxHP;
 
@@ -30,11 +40,17 @@ public class ShipHealth : MonoBehaviour
         {
             DestroyShip();
         }
-        Debug.Log("shipHP drop" + shipView.shipModel.hp);
+        Debug.Log($"shipHP drop {gameObject.name} :: " + shipView.shipModel.hp);
     }
 
     private void DestroyShip()
     {
         
+    }
+
+    public void EnableDestroyedState(bool b)
+    {
+        if(destroyedShip!=null)
+            destroyedShip.SetActive(b);
     }
 }

@@ -8,9 +8,12 @@ public class NextWave: MonoBehaviour
 
     public void StartNextWave()
     {
-        Debug.Log("Starting next wave...");
-        GameManager.Get().StartNextWave();
-        NextWavePanel.SetActive(false);
+        // GameManager.Get().StartNextWave();
+        // NextWavePanel.SetActive(false);
+        Debug.Log("Starting Next Wave");
+        PlayerData.Instance.waveNumber ++;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+
     }
 
     public void Quit()

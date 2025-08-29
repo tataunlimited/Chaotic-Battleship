@@ -73,6 +73,14 @@ namespace Core.Board
                 }
             }
 
+            // if (Input.GetKeyDown(KeyCode.C))
+            // {
+            //     foreach (var enemyShip in enemyView.SpawnedShips)
+            //     {
+            //         enemyShip.Value.ApplyDamage(100);
+            //     }
+            // }
+
 
         }
 

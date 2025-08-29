@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     public bool winConditionMet;
     public bool loseConditionMet;
 
-    public int waveNumber;
 
     public GameObject GameOverPanel;
     public GameObject NextWavePanel;
@@ -41,8 +40,7 @@ public class GameManager : MonoBehaviour
         enemyShipsPlaced = false;
         winConditionMet = false;
         loseConditionMet = false;
-        waveNumber = 1;
-        WaveCountText.text = waveNumber.ToString();
+        WaveCountText.text = PlayerData.Instance.waveNumber.ToString();
         StartEncounter();
     }
 
@@ -314,8 +312,8 @@ public class GameManager : MonoBehaviour
         boardController.ClearSelectedShip();
         boardController.playerView.HealAllShips();
 
-        waveNumber++; // Increment wave number
-        WaveCountText.text = waveNumber.ToString();
+        PlayerData.Instance.waveNumber ++; // Increment wave number
+        WaveCountText.text = PlayerData.Instance.waveNumber.ToString();
         winConditionMet = false; // Reset win condition
         phaseState = PHASE_STATE.START_ENCOUNTER;
     }

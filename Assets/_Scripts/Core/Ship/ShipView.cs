@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
+using NUnit.Framework;
 using UnityEngine;
 
 namespace Core.Ship
@@ -14,6 +15,7 @@ namespace Core.Ship
         
         private Collider _collider;
         private BoardView _originBoardView;
+        private ShipHealth _shipHealth;
 
 
         public GameObject defaultState;
@@ -25,6 +27,7 @@ namespace Core.Ship
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
             _originBoardView = boardView;
+            _shipHealth = GetComponent<ShipHealth>();
             shipModel = model;
             IsPlayer = isPlayer;
             SetShipOnGrid(!IsPlayer);
@@ -81,13 +84,10 @@ namespace Core.Ship
                             {
                                 damage = 9999;
                             }
-                            bool justSunk = enemyShip.shipModel.ApplyDamage(damage);
+                            bool justSunk = enemyShip.ApplyDamage(damage);
+                            
                             enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
-                            ShipHealth shipHealth = GetComponent<ShipHealth>();
-                            if (shipHealth != null)
-                            {
-                                shipHealth.TakeDamage(damage);
-                            }
+
                             if (justSunk)
                             {
                                 //sunk 
@@ -111,6 +111,18 @@ namespace Core.Ship
                
                 yield return _waitForSeconds0_1;
             }
+        }
+
+        public bool ApplyDamage(int damage)
+        {
+            bool isSunk = shipModel.ApplyDamage(damage);
+            if(IsPlayer)
+                _shipHealth.UpdateHealthBar();
+            else if(!IsPlayer && isSunk)
+            {
+                _shipHealth.EnableDestroyedState(true);
+            }
+            return isSunk;
         }
 
 

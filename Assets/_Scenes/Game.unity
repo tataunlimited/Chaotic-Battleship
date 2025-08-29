@@ -2989,6 +2989,10 @@ MonoBehaviour:
   cruiser: {fileID: 155665005}
   sub: {fileID: 395198292}
   destroyer: {fileID: 2020251215}
+  enemyBattleshipDestroyedUI: {fileID: 1711792940}
+  enemyCruiserDestroyedUI: {fileID: 864946480}
+  enemySubDestroyedUI: {fileID: 1172106590}
+  enemyDestroyerDestroyedUI: {fileID: 1544371825}
 --- !u!1 &510630385
 GameObject:
   m_ObjectHideFlags: 0
@@ -12166,6 +12170,52 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &2039490741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2039490743}
+  - component: {fileID: 2039490742}
+  m_Layer: 0
+  m_Name: Don'tDestroyOnLoad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2039490742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039490741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d930281a568752145a08129004cdbce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveNumber: 1
+  currentScore: 0
+--- !u!4 &2039490743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039490741}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 180.00006, y: 628.5361, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2044476958
 GameObject:
   m_ObjectHideFlags: 0
@@ -13299,3 +13349,4 @@ SceneRoots:
   - {fileID: 1160401545}
   - {fileID: 517428643}
   - {fileID: 1267680412855025866}
+  - {fileID: 2039490743}
