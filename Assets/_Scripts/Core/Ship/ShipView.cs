@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
+using Core.Ship;
 using UnityEngine;
 
 namespace Core.Ship
@@ -57,6 +58,14 @@ namespace Core.Ship
         private IEnumerator AttackSequence(BoardView enemyBoard)
         {
             var coords = shipModel.GetAttackCoordinates(enemyBoard, _originBoardView.IsLastShip);
+
+            //count one player turn when we begin an attack against the enemy board
+            if (IsPlayer && enemyBoard != null && enemyBoard.side == BoardSide.Enemy)
+            {
+                var gm = UnityEngine.Object.FindObjectOfType<GameManagerScore>();
+                if (gm) gm.RegisterPlayerTurn();
+            }
+
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
@@ -83,6 +92,13 @@ namespace Core.Ship
                             }
                             bool justSunk = enemyShip.shipModel.ApplyDamage(damage);
                             enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
+
+                             //award per-segment points for HITS (player → enemy only)
+                            if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                            {
+                                GameEvents.RaiseHitSegment(enemyShip.shipModel.type);
+                            }
+
                             if (justSunk)
                             {
                                 //sunk 
@@ -91,6 +107,12 @@ namespace Core.Ship
                                 enemyBoard.OnShipSunk(enemyShip);
                                 enemyShip.defaultState.SetActive(false);
                                 enemyShip.brokenState.SetActive(true);
+
+                                //award SINK bonus (player → enemy only)
+                                if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                                {
+                                    GameEvents.RaiseDestroyedShip(enemyShip.shipModel.type);
+                                }
                             }
                             else
                             {
