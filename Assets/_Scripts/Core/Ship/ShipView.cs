@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
 using NUnit.Framework;
+using Core.Ship;
 using UnityEngine;
 
 namespace Core.Ship
@@ -88,6 +89,13 @@ namespace Core.Ship
                             
                             enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
 
+                             //award per-segment points for HITS (player → enemy only)
+                            if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                            {
+                                GameEvents.RaiseHitSegment(enemyShip.shipModel.type);
+                            }
+
+
                             if (justSunk)
                             {
                                 //sunk 
@@ -96,6 +104,12 @@ namespace Core.Ship
                                 enemyBoard.OnShipSunk(enemyShip);
                                 enemyShip.defaultState.SetActive(false);
                                 enemyShip.brokenState.SetActive(true);
+
+                                //award SINK bonus (player → enemy only)
+                                if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                                {
+                                    GameEvents.RaiseDestroyedShip(enemyShip.shipModel.type);
+                                }
                             }
                             else
                             {
