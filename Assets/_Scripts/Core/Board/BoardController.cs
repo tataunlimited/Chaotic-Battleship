@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections;
 using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
@@ -191,21 +192,23 @@ namespace Core.Board
             };
         }
 
-        public void PlayerAttack()
+        public IEnumerator PlayerAttack()
         {
             foreach (var ship in playerView.SpawnedShips)
             {
                 if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                ship.Value.Attack(enemyView);
+                yield return StartCoroutine(ship.Value.AttackSequence(enemyView));
+                yield return new WaitForSeconds(0.5f);
             }
         }
         
-        public void EnemyAttack()
+        public IEnumerator EnemyAttack()
         {
             foreach (var ship in enemyView.SpawnedShips)
             {
                 if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                ship.Value.Attack(playerView);
+                yield return StartCoroutine(ship.Value.AttackSequence(playerView));
+                yield return new WaitForSeconds(0.5f);
             }
         }
 
