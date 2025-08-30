@@ -2174,16 +2174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de1361ba13c2fc40930c8cc70730067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!82 &376672993 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 1921602660292000855, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-  m_PrefabInstance: {fileID: 1267680412855025866}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &376672994 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 6680908353702401903, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-  m_PrefabInstance: {fileID: 1267680412855025866}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &395198290
 GameObject:
   m_ObjectHideFlags: 0
@@ -13178,26 +13168,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1921602660292000855, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3409340765015769738, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: hitSound
+      propertyPath: shipDestroyedExplosionPrefab
       value: 
-      objectReference: {fileID: 376672994}
-    - target: {fileID: 3409340765015769738, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: audioSource
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3409340765015769738, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: shipSunkSound
-      value: 
-      objectReference: {fileID: 376672993}
-    - target: {fileID: 3430901819249191138, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 1
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1620140131458704099, guid: 57e5b83dfee152a47aedf7d83c83e9f5, type: 3}
     - target: {fileID: 4939016888631662202, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.34843552
@@ -13242,9 +13216,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: OBJ_GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 6680908353702401903, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
+    - target: {fileID: 8271288053284938885, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: m_Volume
+      value: 0.906
       objectReference: {fileID: 0}
     - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: nextPhaseBtn
