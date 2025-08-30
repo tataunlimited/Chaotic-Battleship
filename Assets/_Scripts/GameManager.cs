@@ -2,6 +2,7 @@ using System.Collections;
 using Core.Board;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,11 +19,14 @@ public class GameManager : MonoBehaviour
     public bool enemyShipsPlaced;
     public bool winConditionMet;
     public bool loseConditionMet;
+    public Button nextPhaseBtn;
 
 
     public GameObject GameOverPanel;
     public GameObject NextWavePanel;
     public TextMeshProUGUI WaveCountText;
+
+    private ShipPlacementUI _shipPlacementUI;
 
 
     public static GameManager Get()
@@ -46,6 +50,11 @@ public class GameManager : MonoBehaviour
         cameraController = Camera.main.GetComponent<CameraController>();
         StartEncounter();
         instance = this;
+        _shipPlacementUI = FindFirstObjectByType<ShipPlacementUI>();
+        _shipPlacementUI.OnAllShipsSpawned += () =>
+        {
+            nextPhaseBtn.interactable = true;
+        };
     }
 
     public void Restart()
@@ -61,11 +70,12 @@ public class GameManager : MonoBehaviour
         {
             NextPhaseButton();
         }
+        
     }
 
     private bool CanMoveToNextPhase()
     {
-        return AreAllShipsPlaced();
+        return AreAllShipsPlaced() && _shipPlacementUI.AreAllShipsSpawned && nextPhaseBtn.interactable;
     }
 
     private bool AreAllShipsPlaced()
@@ -89,6 +99,7 @@ public class GameManager : MonoBehaviour
             //     StartEncounter();
             //     break;
 
+            
             case PHASE_STATE.ENEMY_PLACING_SHIPS:
                 Debug.Log("Placing enemy ships...");
                 break;
@@ -111,6 +122,7 @@ public class GameManager : MonoBehaviour
                 phaseState = PHASE_STATE.PLAYER_MOVING;
                 Debug.Log("Phase changed to: PLAYER_MOVING");
                 break;
+               
 
             case PHASE_STATE.PLAYER_MOVING:
 
@@ -118,14 +130,16 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Player Movement Confirmed");
                 phaseState = PHASE_STATE.PLAYER_FIRING;
                 Debug.Log("Phase changed to: PLAYER_FIRING");
+                Debug.Log("nextPhaseBtn.interactable = false");
+                nextPhaseBtn.interactable = false;
                 StartCoroutine(AttackingPhase());
                 break;
 
             case PHASE_STATE.ENDWAVE:
                 // Reset or prepare for the next encounter
-                EndWave();
-                phaseState = PHASE_STATE.START_ENCOUNTER;
-                Debug.Log("Phase reset to: START_ENCOUNTER");
+                //EndWave();
+                //phaseState = PHASE_STATE.START_ENCOUNTER;
+                //Debug.Log("Phase reset to: START_ENCOUNTER");
                 break;
         }
 
@@ -200,6 +214,7 @@ public class GameManager : MonoBehaviour
         phaseState = PHASE_STATE.PLAYER_FIRING;
         Debug.Log("Phase changed to: PLAYER_FIRING");
         StartCoroutine(AttackingPhase());
+        nextPhaseBtn.interactable = false;
     }
 
     private IEnumerator AttackingPhase()
@@ -214,15 +229,15 @@ public class GameManager : MonoBehaviour
         boardController.PlayerAttack();
         Debug.Log("Player Fired!");
         
-        yield return _waitForSeconds1;
+        yield return new WaitForSeconds(1.5f);
         phaseState = PHASE_STATE.ENEMY_FIRING;
         boardController.EnemyAttack();
         
-        yield return _waitForSeconds1;
-        yield return _waitForSeconds1;
+        yield return new WaitForSeconds(1.5f);
 
-       
-        CheckEndWaveConditions();
+
+
+        StartCoroutine(CheckEndWaveConditions());
     }
 
     private void EnemyFires()
@@ -237,7 +252,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void CheckEndWaveConditions()
+    private IEnumerator CheckEndWaveConditions()
     {
         // Logic to check if the wave has ended
         Debug.Log("Checking end wave conditions...");
@@ -250,14 +265,18 @@ public class GameManager : MonoBehaviour
             boardController.enemyView.RevealShips();    // show enemy board with destroyed ships
 
             phaseState = PHASE_STATE.ENDWAVE;
+            
+            yield return _waitForSeconds1;
+            EndWave();
             Debug.Log("Phase changed to: ENDWAVE");
         }
         else if (loseConditionMet)
         {
             Debug.Log("Wave end conditions met, player loses!");
             boardController.enemyView.RevealShips();    // show enemy board with destroyed ships
-
             phaseState = PHASE_STATE.ENDWAVE;
+            yield return _waitForSeconds1;
+            EndWave();
             Debug.Log("Phase changed to: ENDWAVE");
         }
         else
@@ -267,6 +286,9 @@ public class GameManager : MonoBehaviour
             Debug.Log("Phase changed to: ENEMY_MOVING");
             EnemyMoves();
             cameraController.GoToDefaultView();
+            nextPhaseBtn.interactable = true;
+            Debug.Log("nextPhaseBtn.interactable = true");
+
         }
 
     }

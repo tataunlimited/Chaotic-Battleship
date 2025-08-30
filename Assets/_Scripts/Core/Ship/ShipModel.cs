@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Board;
 using Core.GridSystem;
 using UnityEngine;
@@ -71,6 +72,31 @@ namespace Core.Ship
             isDestroyed = false;
         }
 
+        private GridPos GetDestroyerAttackCellForAI(BoardView boardView)
+        {
+            var shipViews = boardView.SpawnedShips.Values.ToList();
+            int randomIndex = UnityEngine.Random.Range(0, shipViews.Count);
+            var rndShip = shipViews[randomIndex];
+            var bowPosition = rndShip.shipModel.root;
+
+            var listOfCells = new List<GridPos>();
+            for (int i = -1; i < 2; i++)
+            {
+                for (int j = -1; j < 2; j++)
+                {
+                    var newCell = new GridPos(bowPosition.x + i, bowPosition.y + j);
+                    if (boardView.Model.InBounds(newCell))
+                    {
+                        listOfCells.Add(newCell);
+                    }
+                }
+            }
+
+            var randomPos = listOfCells[UnityEngine.Random.Range(0, listOfCells.Count)];
+            Debug.Log("GetDestroyerAttackCellForAI:: Type: " + rndShip.shipModel.type + "  Name: " +rndShip.name+" is shooting at "+ randomPos);
+            return randomPos;
+        }
+
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
             List<GridPos> coords = new List<GridPos>();
@@ -80,6 +106,11 @@ namespace Core.Ship
                     if (reserved.x < 0 || reserved.y < 0)
                     {
                         reserved = root;
+                    }
+                    // means enemy is firing
+                    if (boardView.isPlayer)
+                    {
+                        reserved = GetDestroyerAttackCellForAI(boardView);
                     }
                     coords.Add(reserved);
                     break;

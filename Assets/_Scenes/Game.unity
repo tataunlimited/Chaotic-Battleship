@@ -8418,9 +8418,9 @@ MonoBehaviour:
   Cruisers_left_to_place: {fileID: 896747646}
   Battleships_left_to_place: {fileID: 1418858137}
   subs_left: 2
-  destroyers_left: 1
-  cruisers_left: 1
-  battleships_left: 1
+  destroyers_left: 2
+  cruisers_left: 2
+  battleships_left: 2
   Subs_left_to_place_Button: {fileID: 2016497147}
   Destroyers_left_to_place_Button: {fileID: 1531933744}
   Cruisers_left_to_place_Button: {fileID: 647250774}
@@ -8890,7 +8890,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1364717966}
   m_OnClick:
     m_PersistentCalls:
@@ -13141,7 +13141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4545686487655665958, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 11.799988
+      value: 11.800049
       objectReference: {fileID: 0}
     - target: {fileID: 4545686487655665958, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -13227,6 +13227,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8540501946238640647, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -11.800049
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13297,6 +13301,10 @@ PrefabInstance:
       value: OBJ_GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: nextPhaseBtn
+      value: 
+      objectReference: {fileID: 1364717965}
+    - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: GameOverPanel
       value: 
       objectReference: {fileID: 1799807540}
@@ -13335,7 +13343,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: baseColor.a
-      value: 0.40392157
+      value: 0.2627451
       objectReference: {fileID: 0}
     - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: baseColor.b
@@ -13391,19 +13399,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: baseColor.a
-      value: 0.40392157
+      value: 0.2627451
       objectReference: {fileID: 0}
     - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: baseColor.b
-      value: 0.52156866
+      value: 0.8050314
       objectReference: {fileID: 0}
     - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: baseColor.g
-      value: 0.5411765
+      value: 0.17722712
       objectReference: {fileID: 0}
     - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: baseColor.r
-      value: 0.19607843
+      value: 0.14936113
       objectReference: {fileID: 0}
     - target: {fileID: 8915164760813226162, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_Name
@@ -13429,5 +13437,5 @@ SceneRoots:
   - {fileID: 517428643}
   - {fileID: 1267680412855025866}
   - {fileID: 1893701160}
-  - {fileID: 1517596995}
   - {fileID: 88140927}
+  - {fileID: 1517596995}
