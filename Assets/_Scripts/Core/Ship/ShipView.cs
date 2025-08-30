@@ -165,22 +165,19 @@ namespace Core.Ship
             }
         }
 
+        
 
-        public void Attack(BoardView enemyBoard)
-        {
-            StartCoroutine(AttackSequence(enemyBoard));
-        }
-
-        private IEnumerator AttackSequence(BoardView enemyBoard)
+        public IEnumerator AttackSequence(BoardView enemyBoard)
         {
             var coords = shipModel.GetAttackCoordinates(enemyBoard, _originBoardView.IsLastShip);
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
                 {
+                    bool ignoreSound = false;
                     if (shipModel.type == ShipType.Submarine && !IsPlayer && !hit)
                     {
-
+                        ignoreSound = true;
                     }
                     else
                     {
@@ -231,6 +228,10 @@ namespace Core.Ship
 
                             }
                         }
+                    }
+                    else if(!ignoreSound)
+                    {
+                        VFXManager.Instance.PlayFireSound();
                     }
 
                 }

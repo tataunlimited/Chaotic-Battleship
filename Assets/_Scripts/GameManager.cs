@@ -226,14 +226,14 @@ public class GameManager : MonoBehaviour
         yield return _waitForSeconds1;
         boardController.playerView.ClearPhaseFX();
         boardController.enemyView.ClearPhaseFX();
-        boardController.PlayerAttack();
+        yield return StartCoroutine(boardController.PlayerAttack());
         Debug.Log("Player Fired!");
         
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.5f);
         phaseState = PHASE_STATE.ENEMY_FIRING;
-        boardController.EnemyAttack();
+        yield return StartCoroutine(boardController.EnemyAttack());
         
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(.5f);
 
 
 

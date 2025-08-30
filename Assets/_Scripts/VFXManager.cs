@@ -10,6 +10,7 @@ public class VFXManager : MonoBehaviour
    
     [SerializeField] private AudioSource hitSound;
     [SerializeField] private AudioSource shipSunkSound;
+    [SerializeField] private AudioSource fireSound;
 
     private void Awake()
    {
@@ -40,4 +41,9 @@ public class VFXManager : MonoBehaviour
             //AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
         }
     }
+   
+   public void PlayFireSound()
+   {
+       fireSound.Play();
+   }
 }

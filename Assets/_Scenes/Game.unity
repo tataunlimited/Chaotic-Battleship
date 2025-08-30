@@ -8325,10 +8325,10 @@ MonoBehaviour:
   Destroyers_left_to_place: {fileID: 853300330}
   Cruisers_left_to_place: {fileID: 896747646}
   Battleships_left_to_place: {fileID: 1418858137}
-  subs_left: 2
-  destroyers_left: 2
-  cruisers_left: 2
-  battleships_left: 2
+  subs_left: 1
+  destroyers_left: 1
+  cruisers_left: 1
+  battleships_left: 1
   Subs_left_to_place_Button: {fileID: 2016497147}
   Destroyers_left_to_place_Button: {fileID: 1531933744}
   Cruisers_left_to_place_Button: {fileID: 647250774}
