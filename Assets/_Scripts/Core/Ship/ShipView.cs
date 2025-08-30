@@ -214,7 +214,7 @@ namespace Core.Ship
                                 enemyBoard.OnShipSunk(enemyShip);
                                 enemyShip.defaultState.SetActive(false);
                                 enemyShip.brokenState.SetActive(true);
-
+                                
                                 //award SINK bonus (player → enemy only)
                                 if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
                                 {

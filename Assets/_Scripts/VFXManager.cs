@@ -7,6 +7,7 @@ public class VFXManager : MonoBehaviour
    public static VFXManager Instance;
 
    public GameObject explosionPrefab;
+    public GameObject shipDestroyedExplosionPrefab;
    
     [SerializeField] private AudioSource hitSound;
     [SerializeField] private AudioSource shipSunkSound;
@@ -32,14 +33,15 @@ public class VFXManager : MonoBehaviour
         }
     }
 
-   public void SpawnSunkEffect(Vector3 vector3)
-   {
-      Debug.Log("SHIP SUNK!!!");
+    public void SpawnSunkEffect(Vector3 vector3)
+    {
+        Debug.Log("SHIP SUNK!!!");
         if (shipSunkSound != null)
         {
             shipSunkSound.Play();
             //AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
         }
+        Instantiate(shipDestroyedExplosionPrefab, vector3, Quaternion.identity);
     }
    
    public void PlayFireSound()
