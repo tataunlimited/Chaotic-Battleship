@@ -4,7 +4,7 @@ using UnityEngine.Audio;
 
 public class SFXManager : MonoBehaviour
 {
-    public AudioMixer myAudioMixer;
+    [SerializeField] private AudioMixer myAudioMixer;
     //public Slider volumeSlider;
     //public AudioSource hitSoundSource;
     //public AudioSource shipSunkSource;

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class VFXManager : MonoBehaviour
 {
@@ -7,8 +8,8 @@ public class VFXManager : MonoBehaviour
 
    public GameObject explosionPrefab;
    
-    [SerializeField] private AudioClip hitSound;
-    [SerializeField] private AudioClip shipSunkSound;
+    [SerializeField] private AudioSource hitSound;
+    [SerializeField] private AudioSource shipSunkSound;
 
     private void Awake()
    {
@@ -25,7 +26,8 @@ public class VFXManager : MonoBehaviour
       Debug.Log("SHIP HIT!!!");
         if (hitSound != null)
         {
-            AudioSource.PlayClipAtPoint(hitSound, vector3);
+            hitSound.Play();
+            //AudioSource.PlayClipAtPoint(hitSound, vector3);
         }
     }
 
@@ -34,7 +36,8 @@ public class VFXManager : MonoBehaviour
       Debug.Log("SHIP SUNK!!!");
         if (shipSunkSound != null)
         {
-            AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
+            shipSunkSound.Play();
+            //AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
         }
     }
 }
