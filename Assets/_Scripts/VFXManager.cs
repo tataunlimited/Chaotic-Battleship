@@ -1,14 +1,17 @@
 using System;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class VFXManager : MonoBehaviour
 {
    public static VFXManager Instance;
 
    public GameObject explosionPrefab;
+    public GameObject shipDestroyedExplosionPrefab;
    
-    [SerializeField] private AudioClip hitSound;
-    [SerializeField] private AudioClip shipSunkSound;
+    [SerializeField] private AudioSource hitSound;
+    [SerializeField] private AudioSource shipSunkSound;
+    [SerializeField] private AudioSource fireSound;
 
     private void Awake()
    {
@@ -25,16 +28,24 @@ public class VFXManager : MonoBehaviour
       Debug.Log("SHIP HIT!!!");
         if (hitSound != null)
         {
-            AudioSource.PlayClipAtPoint(hitSound, vector3);
+            hitSound.Play();
+            //AudioSource.PlayClipAtPoint(hitSound, vector3);
         }
     }
 
-   public void SpawnSunkEffect(Vector3 vector3)
-   {
-      Debug.Log("SHIP SUNK!!!");
+    public void SpawnSunkEffect(Vector3 vector3)
+    {
+        Debug.Log("SHIP SUNK!!!");
         if (shipSunkSound != null)
         {
-            AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
+            shipSunkSound.Play();
+            //AudioSource.PlayClipAtPoint(shipSunkSound, vector3);
         }
+        Instantiate(shipDestroyedExplosionPrefab, vector3, Quaternion.identity);
     }
+   
+   public void PlayFireSound()
+   {
+       fireSound.Play();
+   }
 }

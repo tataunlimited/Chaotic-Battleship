@@ -1,4 +1,5 @@
 
+using System;
 using Core.Board;
 using Core.Ship;
 using TMPro;
@@ -28,6 +29,12 @@ public class ShipPlacementUI : MonoBehaviour
     private bool battleship_selected_to_place = false;
 
     private bool in_placement_Phase = false;
+    
+    
+
+    public bool AreAllShipsSpawned {private set; get; }
+
+    public Action OnAllShipsSpawned;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -74,7 +81,9 @@ public class ShipPlacementUI : MonoBehaviour
         }
         if (subs_left <= 0 && destroyers_left <= 0 && cruisers_left <= 0 && battleships_left <= 0)
         {
-            // All ships placed
+            if (AreAllShipsSpawned) return;
+            AreAllShipsSpawned = true;
+            OnAllShipsSpawned?.Invoke();
             placement_group.SetActive(false);
         }
     }
