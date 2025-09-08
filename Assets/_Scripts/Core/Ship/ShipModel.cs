@@ -20,7 +20,7 @@ namespace Core.Ship
     {
         public string id;
         public ShipType type;
-        public int length = 3;
+        public int length;
         public bool submerged = false;
         public int hp;
         public int MaxHP => length;
@@ -30,6 +30,11 @@ namespace Core.Ship
         public GridPos reserved = new GridPos(-1000, -1000); // bow (front) position   
         public bool isDestroyed = false;
         private int _round = 0;
+        public ShipMovementPattern movementPattern = null;
+        public bool canMove => !isDestroyed && movementPattern != null && movementPattern.canMove;
+        public bool canRotate => !isDestroyed && movementPattern != null && movementPattern.canRotate;
+
+
         /// <summary>Apply damage and return true if the ship just sunk.</summary>
         public bool ApplyDamage(int damage = 1)
         {
@@ -202,6 +207,7 @@ namespace Core.Ship
                 hp = hp,
                 isDestroyed = isDestroyed,
                 _round = _round,
+                movementPattern = ShipMovementPattern.CreateMovementPattern(type)
             };
             return copy;
         }
@@ -222,6 +228,9 @@ namespace Core.Ship
 
         public GridPos MoveTo(GridPos point)
         {
+            if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
+                movementPattern.hasAlreadyMoved = true;
+
             return point;
         }
 
@@ -257,8 +266,7 @@ namespace Core.Ship
 
         public List<GridPos> GetMovablePositions(BoardView playerView)
         {
-            ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(type);
-            return pattern.GetAllPossibleMovePositions(playerView, this);
+            return movementPattern.GetAllPossibleMovePositions(playerView, this);
         }
     }
 
@@ -266,10 +274,10 @@ namespace Core.Ship
     {
         public static readonly Dictionary<ShipType, ShipModel> DefaultShips = new()
         {
-            { ShipType.Battleship, new ShipModel { id = "battleship", type = ShipType.Battleship, length = 4 } },
-            { ShipType.Submarine, new ShipModel { id = "submarine", type = ShipType.Submarine, length = 1 } },
-            { ShipType.Destroyer, new ShipModel { id = "destroyer", type = ShipType.Destroyer, length = 2 } },
-            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3 } }
+            { ShipType.Battleship, new ShipModel { id = "battleship", type = ShipType.Battleship, length = 4, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Battleship) } },
+            { ShipType.Submarine, new ShipModel { id = "submarine", type = ShipType.Submarine, length = 1, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Submarine) } },
+            { ShipType.Destroyer, new ShipModel { id = "destroyer", type = ShipType.Destroyer, length = 2, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Destroyer) } },
+            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser) } }
         };
     }
     
