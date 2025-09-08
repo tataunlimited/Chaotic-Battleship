@@ -5,7 +5,7 @@ using TMPro;
 
 public class GameManagerScore : MonoBehaviour
 {
-    // 🔔 New: broadcast score changes so any UI (or SFX, etc.) can react
+    // New: broadcast score changes so any UI (or SFX, etc.) can react
     public static event Action<int> OnScoreChanged;
 
     [SerializeField] private ScoreConfig config;
@@ -77,7 +77,7 @@ public class GameManagerScore : MonoBehaviour
         EmitScoreChanged();
     }
 
-    // 🔔 Single place to update legacy text AND fire the decoupled event
+    // Single place to update legacy text AND fire the decoupled event
     private void EmitScoreChanged()
     {
         if (scoreText) scoreText.text = Score.ToString("N0"); // legacy path (safe to remove later)
