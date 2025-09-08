@@ -42,6 +42,15 @@ namespace Core.Board
             if (cellPrefab) BuildGrid();
         }
 
+        public void BeginMovementPhase()
+        {
+            // reset the ship's movementPatterns so they can move again
+            foreach (var pair in SpawnedShips)
+            {
+                pair.Value.shipModel.movementPattern.Reset();
+            }
+        }
+
         public void Reset()
         {
             //HideShips();
@@ -74,6 +83,7 @@ namespace Core.Board
             {
                 wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
                 pair.Value.UpdatePosition(previousShipData.root, previousShipData.orientation);
+                pair.Value.shipModel.movementPattern.Reset();
             }
 
             return wasSuccessful;

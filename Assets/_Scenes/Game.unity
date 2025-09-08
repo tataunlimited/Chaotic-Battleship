@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &13049830 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8610130497200863037, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+  m_PrefabInstance: {fileID: 785932791298956241}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &21198329
 GameObject:
   m_ObjectHideFlags: 0
@@ -10583,6 +10594,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1711792940}
   m_CullTransparentMesh: 1
+--- !u!114 &1738965340 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1411188738233424621, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+  m_PrefabInstance: {fileID: 785932791298956241}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1775954020
 GameObject:
   m_ObjectHideFlags: 0
@@ -13228,6 +13250,14 @@ PrefabInstance:
       propertyPath: boardController
       value: 
       objectReference: {fileID: 64301709}
+    - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: rotateLeftButton
+      value: 
+      objectReference: {fileID: 1738965340}
+    - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: rotateRightButton
+      value: 
+      objectReference: {fileID: 13049830}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
