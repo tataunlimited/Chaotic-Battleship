@@ -30,14 +30,10 @@ public class GameManager : MonoBehaviour
     public bool enemyShipsPlaced;
     public bool winConditionMet;
     public bool loseConditionMet;
-<<<<<<< Updated upstream
     public Button nextPhaseBtn;
     public Button rotateLeftButton;
     public Button rotateRightButton;
-=======
->>>>>>> Stashed changes
 
-    public Button nextPhaseBtn;
 
     public GameObject GameOverPanel;
     public GameObject NextWavePanel;
@@ -383,13 +379,10 @@ public class GameManager : MonoBehaviour
 
     private void PlayerMoves()
     {
-<<<<<<< Updated upstream
         boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
         boardController.playerView.BeginMovementPhase();    // resets their ability to move and rotate
 
-=======
         if (boardController != null) boardController.playerView.SaveShipLocations();
->>>>>>> Stashed changes
         Debug.Log("Waiting for Player to move...");
     }
 

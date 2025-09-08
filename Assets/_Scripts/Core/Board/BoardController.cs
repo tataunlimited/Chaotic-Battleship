@@ -159,12 +159,9 @@ namespace Core.Board
         {
             Debug.Log("UpdateEnemyShips");
 
-<<<<<<< Updated upstream
             enemyView.BeginMovementPhase();
 
-=======
             EnsureEnemyWaveManager();
->>>>>>> Stashed changes
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
             _enemyWaveManager.RandomlyMoveShips(enemyView);
 
