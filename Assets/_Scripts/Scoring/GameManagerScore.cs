@@ -5,32 +5,39 @@ using TMPro;
 
 public class GameManagerScore : MonoBehaviour
 {
+    // 🔔 New: broadcast score changes so any UI (or SFX, etc.) can react
+    public static event Action<int> OnScoreChanged;
+
     [SerializeField] private ScoreConfig config;
+
+    // (Optional legacy UI reference; safe to keep during transition)
     [SerializeField] private TextMeshProUGUI scoreText;
 
-    public int Score { 
+    public int Score {
         get => PlayerData.Instance.currentScore;
         private set => PlayerData.Instance.currentScore = value;
     }
+
     public int TurnsThisWave { get; private set; }
 
     private void OnEnable()
     {
-        GameEvents.OnPlayerHitSegment += HandleHitSegment;
-        GameEvents.OnPlayerDestroyedShip += HandleDestroyedShip;
-        GameEvents.OnWaveCleared += HandleWaveCleared;
+        GameEvents.OnPlayerHitSegment     += HandleHitSegment;
+        GameEvents.OnPlayerDestroyedShip  += HandleDestroyedShip;
+        GameEvents.OnWaveCleared          += HandleWaveCleared;
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerHitSegment -= HandleHitSegment;
-        GameEvents.OnPlayerDestroyedShip -= HandleDestroyedShip;
-        GameEvents.OnWaveCleared -= HandleWaveCleared;
+        GameEvents.OnPlayerHitSegment     -= HandleHitSegment;
+        GameEvents.OnPlayerDestroyedShip  -= HandleDestroyedShip;
+        GameEvents.OnWaveCleared          -= HandleWaveCleared;
     }
 
     private void Start()
     {
-        UpdateUI();
+        // Emit initial value so UI shows the correct score on scene load
+        EmitScoreChanged();
     }
 
     public void RegisterPlayerTurn() => TurnsThisWave++;
@@ -38,7 +45,7 @@ public class GameManagerScore : MonoBehaviour
     private void HandleHitSegment(ShipType ship)
     {
         Score += config ? config.segmentHit : 25;
-        UpdateUI();
+        EmitScoreChanged();
     }
 
     private void HandleDestroyedShip(ShipType ship)
@@ -48,30 +55,32 @@ public class GameManagerScore : MonoBehaviour
         else {
             switch (ship)
             {
-                case ShipType.Submarine: add = 50; break;
-                case ShipType.Destroyer: add = 100; break;
+                case ShipType.Submarine:  add = 50;  break;
+                case ShipType.Destroyer:  add = 100; break;
                 case ShipType.Battleship: add = 200; break;
             }
         }
         Score += add;
-        UpdateUI();
+        EmitScoreChanged();
     }
 
     private void HandleWaveCleared()
     {
-        int baseBonus = config ? config.waveClear : 1000;
-        int maxSpeed = config ? config.speedMax : 1000;
-        int perTurn = config ? config.speedPerTurn : 50;
+        int baseBonus = config ? config.waveClear   : 1000;
+        int maxSpeed  = config ? config.speedMax    : 1000;
+        int perTurn   = config ? config.speedPerTurn: 50;
 
         Score += baseBonus;
         Score += Mathf.Max(maxSpeed - perTurn * TurnsThisWave, 0);
 
-        UpdateUI();
         TurnsThisWave = 0;
+        EmitScoreChanged();
     }
 
-    private void UpdateUI()
+    // 🔔 Single place to update legacy text AND fire the decoupled event
+    private void EmitScoreChanged()
     {
-        if (scoreText) scoreText.text = Score.ToString("N0");
+        if (scoreText) scoreText.text = Score.ToString("N0"); // legacy path (safe to remove later)
+        OnScoreChanged?.Invoke(Score);                        // decoupled signal
     }
 }

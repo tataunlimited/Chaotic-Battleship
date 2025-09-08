@@ -1,10 +1,10 @@
-
 using System;
 using Core.Board;
 using Core.Ship;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class ShipPlacementUI : MonoBehaviour
 {
     public BoardController board_controller;
@@ -29,18 +29,27 @@ public class ShipPlacementUI : MonoBehaviour
     private bool battleship_selected_to_place = false;
 
     private bool in_placement_Phase = false;
-    
-    
 
-    public bool AreAllShipsSpawned {private set; get; }
+    // NEW: cache whatever counts you set in the Inspector as the defaults for each wave
+    private int _defSubs;
+    private int _defDestroyers;
+    private int _defCruisers;
+    private int _defBattleships;
 
+    public bool AreAllShipsSpawned { private set; get; }
     public Action OnAllShipsSpawned;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-
+        // Capture Inspector defaults so we can restore them each new wave
+        _defSubs        = subs_left;
+        _defDestroyers  = destroyers_left;
+        _defCruisers    = cruisers_left;
+        _defBattleships = battleships_left;
     }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start() { }
 
     // Update is called once per frame
     void Update()
@@ -49,36 +58,26 @@ public class ShipPlacementUI : MonoBehaviour
         {
             in_placement_Phase = true;
             placement_group.SetActive(true);
-            Subs_left_to_place.text = subs_left.ToString();
+            Subs_left_to_place.text       = subs_left.ToString();
             Destroyers_left_to_place.text = destroyers_left.ToString();
-            Cruisers_left_to_place.text = cruisers_left.ToString();
-            Battleships_left_to_place.text = battleships_left.ToString();
+            Cruisers_left_to_place.text   = cruisers_left.ToString();
+            Battleships_left_to_place.text= battleships_left.ToString();
         }
         else
         {
             in_placement_Phase = false;
-            sub_selected_to_place = false;
-            destroyer_selected_to_place = false;
-            cruiser_selected_to_place = false;
+            sub_selected_to_place        = false;
+            destroyer_selected_to_place  = false;
+            cruiser_selected_to_place    = false;
             battleship_selected_to_place = false;
             placement_group.SetActive(false);
         }
-        if (subs_left <= 0)
-        {
-            Subs_left_to_place_Button.interactable = false;
-        }
-        if (destroyers_left <= 0)
-        {
-            Destroyers_left_to_place_Button.interactable = false;
-        }
-        if (cruisers_left <= 0)
-        {
-            Cruisers_left_to_place_Button.interactable = false;
-        }
-        if (battleships_left <= 0)
-        {
-            Battleships_left_to_place_Button.interactable = false;
-        }
+
+        if (subs_left <= 0)        { Subs_left_to_place_Button.interactable        = false; }
+        if (destroyers_left <= 0)  { Destroyers_left_to_place_Button.interactable  = false; }
+        if (cruisers_left <= 0)    { Cruisers_left_to_place_Button.interactable    = false; }
+        if (battleships_left <= 0) { Battleships_left_to_place_Button.interactable = false; }
+
         if (subs_left <= 0 && destroyers_left <= 0 && cruisers_left <= 0 && battleships_left <= 0)
         {
             if (AreAllShipsSpawned) return;
@@ -86,6 +85,28 @@ public class ShipPlacementUI : MonoBehaviour
             OnAllShipsSpawned?.Invoke();
             placement_group.SetActive(false);
         }
+    }
+
+    // NEW: called by GameManager at the start of each wave
+    public void ResetForNewWave()
+    {
+        subs_left        = _defSubs;
+        destroyers_left  = _defDestroyers;
+        cruisers_left    = _defCruisers;
+        battleships_left = _defBattleships;
+
+        if (Subs_left_to_place_Button)        Subs_left_to_place_Button.interactable        = true;
+        if (Destroyers_left_to_place_Button)  Destroyers_left_to_place_Button.interactable  = true;
+        if (Cruisers_left_to_place_Button)    Cruisers_left_to_place_Button.interactable    = true;
+        if (Battleships_left_to_place_Button) Battleships_left_to_place_Button.interactable = true;
+
+        sub_selected_to_place        = false;
+        destroyer_selected_to_place  = false;
+        cruiser_selected_to_place    = false;
+        battleship_selected_to_place = false;
+
+        AreAllShipsSpawned = false;
+        // placement_group gets shown automatically when the phase flips in Update()
     }
 
     public void SetSubmarineToNextPlacement()
