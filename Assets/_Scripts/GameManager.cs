@@ -233,6 +233,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Phase changed to: PLAYER_PLACING_SHIPS");
         if (!playerShipsPlaced)
         {
+            boardController.playerView.Reset();     // removing player's previous ships
+
             Debug.Log("Placing player ships...");
             PlacePlayerShips();
             playerShipsPlaced = true;
