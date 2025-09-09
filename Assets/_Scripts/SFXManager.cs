@@ -4,7 +4,7 @@ using UnityEngine.Audio;
 
 public class SFXManager : MonoBehaviour
 {
-    [SerializeField] private AudioMixer MasterVolumeAudioMixer;
+    [SerializeField] private AudioMixer myAudioMixer;
     //public Slider volumeSlider;
     //public AudioSource hitSoundSource;
     //public AudioSource shipSunkSource;
@@ -25,19 +25,9 @@ public class SFXManager : MonoBehaviour
     //    }
     //}
 
-    public void SetMasterVolume(float sliderValue)
+    public void SetVolume(float sliderValue)
     {
-        MasterVolumeAudioMixer.SetFloat("MasterVolume", Mathf.Log10(sliderValue) * 20);
-    }
-    
-    public void SetSFXVolume(float sliderValue)
-    {
-        MasterVolumeAudioMixer.SetFloat("SFXVolume", Mathf.Log10(sliderValue) * 20);
-    }
-    
-    public void SetBGMVolume(float sliderValue)
-    {
-        MasterVolumeAudioMixer.SetFloat("BGMVolume", Mathf.Log10(sliderValue) * 20);
+        myAudioMixer.SetFloat("MasterVolume", Mathf.Log10(sliderValue) * 20);
     }
 
     //public void SetVolume(float volume)
