@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
 
     private ShipPlacementUI _shipPlacementUI;
 
+    public TMP_Text phaseText;
+    public TMP_Text roundNumber;
+
 
     public static GameManager Get()
     {
@@ -36,7 +39,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        var playerData = PlayerData.Instance;
+        playerData.currentPhase = PlayerData.Phase.Placement;
+        phaseText.text = playerData.currentPhase.ToString();
         Init();
+
+        roundNumber.text = playerData.currentRound.ToString();
+
     }
 
     void Init()
@@ -215,6 +224,10 @@ public class GameManager : MonoBehaviour
         Debug.Log("Phase changed to: PLAYER_FIRING");
         StartCoroutine(AttackingPhase());
         nextPhaseBtn.interactable = false;
+
+        var playerData = PlayerData.Instance;
+        playerData.currentPhase = PlayerData.Phase.Attack;
+        phaseText.text = playerData.currentPhase.ToString();
     }
 
     private IEnumerator AttackingPhase()
@@ -288,7 +301,9 @@ public class GameManager : MonoBehaviour
             cameraController.GoToDefaultView();
             nextPhaseBtn.interactable = true;
             Debug.Log("nextPhaseBtn.interactable = true");
-
+            var playerData = PlayerData.Instance;
+            playerData.currentRound++;
+            roundNumber.text = playerData.currentRound.ToString();
         }
 
     }
@@ -304,6 +319,10 @@ public class GameManager : MonoBehaviour
         phaseState = PHASE_STATE.PLAYER_MOVING;
         Debug.Log("Phase changed to: PLAYER_MOVING");
         PlayerMoves();
+
+        var playerData = PlayerData.Instance;
+        playerData.currentPhase = PlayerData.Phase.Movement;
+        phaseText.text = playerData.currentPhase.ToString();
     }
 
     // Logic for player movement
