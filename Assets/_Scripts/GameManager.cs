@@ -297,6 +297,9 @@ public class GameManager : MonoBehaviour
     private IEnumerator AttackingPhase()
     {
         if (cameraController != null) cameraController.GoToAttackView();
+        
+        PlayerData.Instance.currentPhase = PlayerData.Phase.Attack;
+        phaseText.text = PlayerData.Instance.currentPhase.ToString();
         yield return _waitForSeconds1;
 
         if (boardController != null)
@@ -304,7 +307,7 @@ public class GameManager : MonoBehaviour
             boardController.playerView.ClearPhaseFX();
             boardController.enemyView.ClearPhaseFX();
         }
-
+        
         // Player fires
         if (boardController != null)
             yield return StartCoroutine(boardController.PlayerAttack());
