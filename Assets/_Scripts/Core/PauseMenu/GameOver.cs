@@ -1,10 +1,9 @@
 using UnityEngine;
 
-public class GameOver: MonoBehaviour
+public class GameOver : MonoBehaviour
 {
     public GameObject GameOverPanel;
 
-    // Update is called once per frame
     void Update()
     {
         RoundLost();
@@ -21,25 +20,21 @@ public class GameOver: MonoBehaviour
 
     public void Restart()
     {
-        // This was meant to replace just doing LoadScene, so that it could preserve player information like score
-        // but it's still buggy (one of GameManager's coroutines is not getting reset).
-        // Anyways, not needed for this prototype yet
-        //
-        // GameManager game = GameManager.Get();
-        // game.Restart();
-        // GameOverPanel.SetActive(false);
         Debug.Log("Restart On Game Over");
-        PlayerData.Instance.waveNumber = 1;
-        PlayerData.Instance.currentScore = 0;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
+        SaveManager.ClearBoardState(); // ensure no stale mid-wave board
+        SaveManager.SaveGame();        // keep current meta (wave/score) consistent
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+        );
     }
 
     public void Quit()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 }

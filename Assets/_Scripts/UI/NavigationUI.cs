@@ -23,7 +23,9 @@ namespace UI
 
         public void OnResetButtonClicked()
         {
-            // should this be changed to the class having a BoardController attribute that we set in the Unity Inspector?
+            if (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
+                return;     // was causing bug during PLAYER_PLACING_SHIPS, so just doing nothing then
+
             _boardController.ClearSelectedShip();
             _boardController.playerView.ResetMovementPhase();
         }

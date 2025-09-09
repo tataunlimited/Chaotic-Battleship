@@ -116,6 +116,10 @@ namespace Core.Board
             
             OnShipSelected?.Invoke(true);
 
+
+            // enable/disable the rotate buttons
+            GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
+            GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
         }
 
         public void ClearSelectedShip()
@@ -155,6 +159,9 @@ namespace Core.Board
         {
             Debug.Log("UpdateEnemyShips");
 
+            enemyView.BeginMovementPhase();
+
+            EnsureEnemyWaveManager();
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
             _enemyWaveManager.RandomlyMoveShips(enemyView);
 
@@ -223,6 +230,13 @@ namespace Core.Board
             playerView.UpdateBoard();
             
         }
+
+        public void EnsureEnemyWaveManager()
+        {
+            if (_enemyWaveManager == null)
+                _enemyWaveManager = new EnemyWaveManager();
+        }
+
 
         public void ClearUI()
         {

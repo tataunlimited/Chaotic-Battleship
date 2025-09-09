@@ -319,6 +319,10 @@ namespace Core.Ship
             if (ValidateRotation(targetOrientation))
             {
                 UpdatePosition(shipModel.root, targetOrientation);
+
+                if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
+                    shipModel.movementPattern.hasAlreadyRotated = true;
+
                 return true;
             }
 
@@ -332,6 +336,10 @@ namespace Core.Ship
             if (ValidateRotation(targetOrientation))
             {
                 UpdatePosition(shipModel.root, targetOrientation);
+
+                if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
+                    shipModel.movementPattern.hasAlreadyRotated = true;
+
                 return true;
             }
             return false;
@@ -339,6 +347,9 @@ namespace Core.Ship
 
         private bool ValidateRotation(Orientation orientation)
         {
+            if (!shipModel.canRotate)
+                return false;
+
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
             return _originBoardView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
