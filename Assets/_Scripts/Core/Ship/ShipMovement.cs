@@ -15,15 +15,21 @@ namespace Core.Ship
     [RequireComponent(typeof(ShipView))]
     public class ShipMovement : MonoBehaviour
     {
-        [Header("Movement Settings")]
-        [SerializeField] private float moveSpeed = 6.5f;
+        [Header("Movement Settings")] [SerializeField]
+        private float moveSpeed = 6.5f;
+
         [SerializeField] private float rotationSpeed = 180f;
-        
+
+        [Header("Submarine Settings")] [SerializeField]
+        private float submergeDepth = -1.5f; // How far below the surface to go
+
+        [SerializeField] private float submergeDuration = .5f;
+
         private bool _isMoving = false;
 
         private ShipView _shipView;
         private static Coroutine _movementCoroutine;
-        
+
         public Vector3 GetOriginalPosition() => _shipView.Board.GridToWorld(_shipView.shipModel.root);
 
         private void Awake()
@@ -39,9 +45,10 @@ namespace Core.Ship
                 return;
             }
 
-       
+
             // A ship cannot move to its own current location with the same orientation.
-            if (targetPosition.Equals(_shipView.shipModel.root) && finalOrientation == _shipView.shipModel.orientation) return;
+            if (targetPosition.Equals(_shipView.shipModel.root) &&
+                finalOrientation == _shipView.shipModel.orientation) return;
 
             var path = PathfinderController.Instance.FindPathForShip(
                 _shipView.Board,
@@ -69,70 +76,111 @@ namespace Core.Ship
             yield return new WaitUntil(() => _movementCoroutine == null);
             StartCoroutine(FollowPathCoroutine(path, finalOrientation));
         }
+
+        // In ShipMovement.cs, replace the entire method with this one
+
         private IEnumerator FollowPathCoroutine(List<GridPos> path, Orientation finalOrientation)
         {
             Debug.Log($"Starting movement along path with {path.Count} steps.");
             BoardModel boardModel = _shipView.Board.Model;
             _isMoving = true;
-            // First, remove the ship from its starting position in the model
-            // This frees up the cells so other ships can pathfind around it while it moves.
             boardModel.ResetShipCells(_shipView.shipModel);
+
+            // --- New Submarine Logic ---
+            // Check if this ship is a submarine and store its starting height
+            bool isSubmarine = _shipView.shipModel.type == ShipType.Submarine; // Assumes ShipType enum
+            float originalY = transform.position.y;
+            float submergedY = originalY + submergeDepth;
+
+            // 1. SUBMERGE (if submarine)
+            if (isSubmarine)
+            {
+                Debug.Log("Submarine submerging...");
+                // Using DOTween for a smooth animation
+                yield return transform.DOMoveY(submergedY, submergeDuration).SetEase(Ease.InOutSine)
+                    .WaitForCompletion();
+            }
 
             GridPos currentGridPos = _shipView.shipModel.root;
 
             foreach (var nextNode in path)
             {
-                // --- 1. Rotation ---
-                Vector3 direction = (_shipView.Board.GridToWorld(nextNode) - transform.position).normalized;
-                if (direction != Vector3.zero)
-                {
-                    Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
-                    
-                    // This is where you would check if the rotation is blocked.
-                    // For simplicity, we'll skip that check, but the logic would be:
-                    // while(IsRotationBlocked(targetRotation)) { yield return null; }
+                Vector3 moveDirection = (_shipView.Board.GridToWorld(nextNode) - transform.position).normalized;
 
-                    while (Quaternion.Angle(transform.rotation, targetRotation) > 1.0f)
-                    {
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-                        yield return null;
-                    }
-                    transform.rotation = targetRotation; // Snap to final rotation
-                    
-                    // UPDATE THE MODEL: Sync the ship model's orientation with the visual rotation
-                    _shipView.shipModel.orientation = DirectionToOrientation(direction);
+                if (moveDirection == Vector3.zero) continue;
+
+                float forwardAngle = Vector3.Angle(transform.forward, moveDirection);
+                float backwardAngle = Vector3.Angle(transform.forward, -moveDirection);
+
+                Quaternion targetRotation;
+                Vector3 facingDirection;
+
+                if (backwardAngle < forwardAngle)
+                {
+                    facingDirection = -moveDirection;
+                    targetRotation = Quaternion.LookRotation(facingDirection, Vector3.up);
+                }
+                else
+                {
+                    facingDirection = moveDirection;
+                    targetRotation = Quaternion.LookRotation(facingDirection, Vector3.up);
                 }
 
-
-                // --- 2. Movement ---
-                Vector3 targetWorldPos = _shipView.Board.GridToWorld(nextNode);
-                while (Vector3.Distance(transform.position, targetWorldPos) > 0.01f)
+                // 2. Rotation
+                while (Quaternion.Angle(transform.rotation, targetRotation) > 1.0f)
                 {
-                    transform.position = Vector3.MoveTowards(transform.position, targetWorldPos, moveSpeed * Time.deltaTime);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation,
+                        rotationSpeed * Time.deltaTime);
                     yield return null;
                 }
-                transform.position = targetWorldPos; // Snap to final position
+
+                transform.rotation = targetRotation;
+                _shipView.shipModel.orientation = DirectionToOrientation(facingDirection);
+
+                // 3. Movement
+                Vector3 targetWorldPos = _shipView.Board.GridToWorld(nextNode);
+
+                // ** CRITICAL: Keep the submarine underwater during movement **
+                if (isSubmarine)
+                {
+                    targetWorldPos.y = submergedY;
+                }
+
+                while (Vector3.Distance(transform.position, targetWorldPos) > 0.01f)
+                {
+                    transform.position =
+                        Vector3.MoveTowards(transform.position, targetWorldPos, moveSpeed * Time.deltaTime);
+                    yield return null;
+                }
+
+                transform.position = targetWorldPos;
                 currentGridPos = nextNode;
             }
-            
-            // --- 3. Final Rotation ---
-            // After reaching the destination, perform the final rotation to match the desired orientation.
+
+            // 4. Final Rotation
             Quaternion finalTargetRotation = OrientationToRotation(finalOrientation);
             while (Quaternion.Angle(transform.rotation, finalTargetRotation) > 1.0f)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, finalTargetRotation, rotationSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, finalTargetRotation,
+                    rotationSpeed * Time.deltaTime);
                 yield return null;
             }
-            transform.rotation = finalTargetRotation; // Snap to final rotation
 
-            // --- 4. Finalize State ---
-            // Update the ship's logical position and orientation in the model
+            transform.rotation = finalTargetRotation;
+
+            // 5. RESURFACE (if submarine)
+            if (isSubmarine)
+            {
+                Debug.Log("Submarine resurfacing...");
+                yield return transform.DOMoveY(originalY, submergeDuration).SetEase(Ease.InOutSine).WaitForCompletion();
+            }
+
+            // 6. Finalize State
             _shipView.shipModel.root = currentGridPos;
             _shipView.shipModel.orientation = finalOrientation;
-            
-            // Place the ship back in the model at its final destination.
+
             boardModel.TryPlaceShip(_shipView.shipModel);
-            _shipView.Board.UpdateBoard(); // Visually update the board tints
+            _shipView.Board.UpdateBoard();
 
             Debug.Log("Movement finished.");
             _movementCoroutine = null;
@@ -144,21 +192,31 @@ namespace Core.Ship
         /// </summary>
         private Orientation DirectionToOrientation(Vector3 direction)
         {
-            // Use Vector3.Dot to find the dominant axis. This is more robust than checking x/z values.
-            float dotForward = Vector3.Dot(direction, Vector3.forward);
-            float dotBack = Vector3.Dot(direction, Vector3.back);
-            float dotRight = Vector3.Dot(direction, Vector3.right);
-            float dotLeft = Vector3.Dot(direction, Vector3.left);
+            // Normalize to be safe
+            direction.Normalize();
 
-            if (dotForward > 0.9f) return Orientation.North;
-            if (dotBack > 0.9f) return Orientation.South;
-            if (dotRight > 0.9f) return Orientation.East;
-            if (dotLeft > 0.9f) return Orientation.West;
-            
-            // Fallback in case of a non-cardinal direction (should not happen in grid movement)
+            if (direction.z > 0.5f) // North
+            {
+                if (direction.x > 0.5f) return Orientation.NorthEast;
+                if (direction.x < -0.5f) return Orientation.NorthWest;
+                return Orientation.North;
+            }
+
+            if (direction.z < -0.5f) // South
+            {
+                if (direction.x > 0.5f) return Orientation.SouthEast;
+                if (direction.x < -0.5f) return Orientation.SouthWest;
+                return Orientation.South;
+            }
+
+            // Must be East or West
+            if (direction.x > 0.5f) return Orientation.East;
+            if (direction.x < -0.5f) return Orientation.West;
+
+            // Fallback
             return _shipView.shipModel.orientation;
         }
-        
+
         /// <summary>
         /// Converts a grid Orientation enum to a world-space rotation Quaternion.
         /// </summary>
@@ -167,9 +225,13 @@ namespace Core.Ship
             float yAngle = orientation switch
             {
                 Orientation.North => 0,
+                Orientation.NorthEast => 45, // Add this
                 Orientation.East => 90,
+                Orientation.SouthEast => 135, // Add this
                 Orientation.South => 180,
-                Orientation.West => -90, // Or 270
+                Orientation.SouthWest => 225, // Add this
+                Orientation.West => 270,
+                Orientation.NorthWest => 315, // Add this
                 _ => 0
             };
             return Quaternion.Euler(0f, yAngle, 0f);
@@ -179,23 +241,23 @@ namespace Core.Ship
         {
             // we need to check the other collider's tag to see if it's a ship
             // if it is, we need to move the ship to the away up to the point the trigger exits'
-            if(!_isMoving) return;
+            if (!_isMoving) return;
 
             var otherMovement = other.gameObject.GetComponentInParent<ShipMovement>();
             if (otherMovement != null && otherMovement != this)
             {
                 Debug.Log($"Moving ship to avoid collision on {gameObject}");
-                
+
                 Vector3 direction = otherMovement.transform.position - transform.position;
                 float distance = direction.magnitude;
                 Vector3 normalizedDirection = direction.normalized;
-                
-                direction = normalizedDirection * Mathf.Abs(_shipView.shipModel.length-distance);
-                otherMovement.transform.DOMove(otherMovement.transform.position + direction, 2f/moveSpeed).SetEase(Ease.Linear);
-                otherMovement.transform.DOMove(otherMovement.GetOriginalPosition(), 2f/moveSpeed).SetDelay(3/moveSpeed).SetEase(Ease.Linear);
+
+                direction = normalizedDirection * Mathf.Abs(_shipView.shipModel.length - distance);
+                otherMovement.transform.DOMove(otherMovement.transform.position + direction, 2f / moveSpeed)
+                    .SetEase(Ease.Linear);
+                otherMovement.transform.DOMove(otherMovement.GetOriginalPosition(), 2f / moveSpeed)
+                    .SetDelay(3 / moveSpeed).SetEase(Ease.Linear);
             }
         }
     }
-    
 }
-

@@ -96,21 +96,25 @@ namespace Core.Pathfinding
 
         private static int GetDistance(Node nodeA, Node nodeB)
         {
-            // Manhattan distance for a 4-directional grid
+            // Diagonal distance heuristic for an 8-directional grid
             int dstX = Mathf.Abs(nodeA.Position.x - nodeB.Position.x);
             int dstY = Mathf.Abs(nodeA.Position.y - nodeB.Position.y);
-            return dstX + dstY;
+
+            // Cost: 14 for diagonal, 10 for orthogonal
+            if (dstX > dstY)
+                return 14 * dstY + 10 * (dstX - dstY);
+            return 14 * dstX + 10 * (dstY - dstX);
         }
 
         private static IEnumerable<Node> GetNeighbors(Node node, int width, int height)
         {
             List<Node> neighbors = new List<Node>();
 
-            // Orthogonal directions
-            int[] dx = { 0, 0, 1, -1 };
-            int[] dy = { 1, -1, 0, 0 };
+            // Combined orthogonal and diagonal directions
+            int[] dx = { 0, 0, 1, -1,  1, 1, -1, -1 };
+            int[] dy = { 1, -1, 0, 0,  1, -1, 1, -1 };
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 8; i++) // We now check 8 directions
             {
                 int checkX = node.Position.x + dx[i];
                 int checkY = node.Position.y + dy[i];

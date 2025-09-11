@@ -4,8 +4,17 @@ using System;
 namespace Core.GridSystem
 {
     public enum CellState { Empty, Ship, Hit, Miss, NearMiss }
-    public enum Orientation { North, East , South, West }
-    
+    public enum Orientation
+    {
+        North,
+        East,
+        South,
+        West,
+        NorthEast, // Add this
+        SouthEast, // Add this
+        SouthWest, // Add this
+        NorthWest  // Add this
+    }    
     public enum BoardSide { Player, Enemy }
 
     [System.Serializable]

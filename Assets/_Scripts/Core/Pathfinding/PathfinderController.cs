@@ -47,6 +47,8 @@ namespace Core.Pathfinding
                     continue;
                 }
 
+                if(movingShip.type == ShipType.Submarine)
+                    continue;
                 foreach (var cell in shipView.shipModel.GetCells())
                 {
                     unwalkablePositions.Add(cell);
