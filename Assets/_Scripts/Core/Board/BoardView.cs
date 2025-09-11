@@ -276,7 +276,7 @@ namespace Core.Board
         {
             foreach (var ship in SpawnedShips)
             {
-                ship.Value.SetShipOnGrid(true);
+               // ship.Value.SetShipOnGrid(true);
                 Model.TryPlaceShip(ship.Value.shipModel);
             }
             foreach (var tile in _tiles)

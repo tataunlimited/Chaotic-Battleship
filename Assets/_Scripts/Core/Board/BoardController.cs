@@ -191,10 +191,10 @@ namespace Core.Board
         {
             return shipType switch
             {
-                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 3), Orientation.North, playerView),
-                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 2), Orientation.North, playerView),
-                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-2, 1), Orientation.North, playerView),
-                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-3, 3), Orientation.North, playerView),
+                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 1), Orientation.North, playerView),
+                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 3), Orientation.North, playerView),
+                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-1, 2), Orientation.North, playerView),
+                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-1, 4), Orientation.North, playerView),
                 _ => throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null),
             };
         }

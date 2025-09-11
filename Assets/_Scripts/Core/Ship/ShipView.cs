@@ -16,15 +16,18 @@ namespace Core.Ship
         public bool IsPlayer {private set; get;}
         
         private Collider _collider;
-        private BoardView _originBoardView;
+        public BoardView Board {private set; get;}
         private ShipHealth _shipHealth;
+        
 
 
         public GameObject defaultState;
         public GameObject brokenState;
         
+        private ShipMovementComponent _movementComponent;
+        
         public bool IsInInitialPhase { get; private set; }
-        public bool IsPlacedInsideTheGrid => shipModel.GetCells().TrueForAll(p=>_originBoardView.Model.InBounds(p));
+        public bool IsPlacedInsideTheGrid => shipModel.GetCells().TrueForAll(p=>Board.Model.InBounds(p));
 
         //rocking
         // --- Rocking/Bobbing State (Model-scope, no Unity deps) ---
@@ -56,11 +59,23 @@ namespace Core.Ship
         // Base grid pose (we add rocking/bobbing on top of this)
         private Vector3 _basePos;
         private Quaternion _baseRot;
+        private Vector3 _defaultStateLocalPos;
+        private ShipMovement _shipMovement;
 
         private void Awake()
         {
             EnsureComponents();
             InitializeRocking(); 
+            _defaultStateLocalPos = defaultState.transform.localPosition;
+        }
+
+        private void Start()
+        {
+            _baseRot = defaultState.transform.localRotation;
+            _basePos = defaultState.transform.localPosition;
+            if(IsPlayer)
+                _shipMovement = gameObject.AddComponent<ShipMovement>();
+
         }
 
         private void EnsureComponents()
@@ -70,7 +85,7 @@ namespace Core.Ship
         }
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
-            _originBoardView = boardView;
+            Board = boardView;
             _shipHealth = GetComponent<ShipHealth>();
             shipModel = model;
             IsPlayer = isPlayer;
@@ -140,6 +155,7 @@ namespace Core.Ship
         /// <summary>Apply the rocking/bobbing to transform on top of the cached grid pose.</summary>
         private void ApplyRockPose(float dt)
         {
+    
             // Target pose layered on base (grid) pose
             Quaternion targetRot = _baseRot * Quaternion.AngleAxis(RockAngleDeg, Vector3.forward); // roll around local Z
             Vector3 targetPos = _basePos + new Vector3(0f, BobOffset, 0f);                         // bob along world Y
@@ -147,21 +163,21 @@ namespace Core.Ship
             if (rotationLerp > 0f)
             {
                 float k = 1f - Mathf.Exp(-rotationLerp * dt);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, k);
+                defaultState.transform.localRotation = Quaternion.Slerp(defaultState.transform.localRotation, targetRot, k);
             }
             else
             {
-                transform.rotation = targetRot;
+                defaultState.transform.localRotation = targetRot;
             }
 
             if (bobLerp > 0f)
             {
                 float k = 1f - Mathf.Exp(-bobLerp * dt);
-                transform.position = Vector3.Lerp(transform.position, targetPos, k);
+                defaultState.transform.localPosition = Vector3.Lerp(defaultState.transform.localPosition , targetPos, k);
             }
             else
             {
-                transform.position = targetPos;
+                defaultState.transform.localPosition = targetPos;
             }
         }
 
@@ -169,7 +185,7 @@ namespace Core.Ship
 
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
-            var coords = shipModel.GetAttackCoordinates(enemyBoard, _originBoardView.IsLastShip);
+            var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
@@ -191,7 +207,7 @@ namespace Core.Ship
                         if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
                         {
                             int damage = 1;
-                            if (shipModel.type == ShipType.Destroyer && _originBoardView.IsLastShip)
+                            if (shipModel.type == ShipType.Destroyer && Board.IsLastShip)
                             {
                                 damage = 9999;
                             }
@@ -258,31 +274,26 @@ namespace Core.Ship
         public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
 
-             _originBoardView.Model.ResetShipCells(shipModel);
+             Board.Model.ResetShipCells(shipModel);
              if (showCells)
-                 _originBoardView.Tint(shipModel.GetCells());
+                 Board.Tint(shipModel.GetCells());
 
+             if (_shipMovement != null)
+             {
+                 _shipMovement.StartMove(newPos, newOrientation);
+                 return;
+             }
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
-            _originBoardView.Model.TryPlaceShip(shipModel);
+            Board.Model.TryPlaceShip(shipModel);
             if (showCells)
-                _originBoardView.Tint(shipModel.GetCells());
+                Board.Tint(shipModel.GetCells());
             
             SetPosition();
         }
 
         private void SetPosition()
         {
-            if (shipModel.submerged)
-            {
-                // Set the position of the submerged submarine
-                transform.position = _originBoardView.GridToWorld(shipModel.root, -0.5f);
-                Debug.Log(transform.position);
-            }
-            else
-            {
-                transform.position = _originBoardView.GridToWorld(shipModel.root);
-            }
             float yAngle = shipModel.orientation switch
             {
                 Orientation.North => 0,
@@ -291,10 +302,22 @@ namespace Core.Ship
                 Orientation.West => -90,
                 _ => 0
             };
+            if (shipModel.submerged)
+            {
+                if(shipModel.type == ShipType.Submarine)
+                     defaultState.transform.localPosition = brokenState.transform.localPosition = _defaultStateLocalPos + new Vector3(0f, -0.5f, 0f);
+            }
+            else
+            {
+                
+                if(shipModel.type == ShipType.Submarine)
+                    defaultState.transform.localPosition = brokenState.transform.localPosition = _defaultStateLocalPos;
+            }
 
+
+            transform.position = Board.GridToWorld(shipModel.root);
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
-            _baseRot = transform.rotation;
-            _basePos = transform.position;
+
         }
 
         public void SelectShip()
@@ -352,7 +375,7 @@ namespace Core.Ship
 
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
-            return _originBoardView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
+            return Board.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
         }
 
 
