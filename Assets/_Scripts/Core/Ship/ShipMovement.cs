@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
 using Core.Pathfinding;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Core.Ship
@@ -15,11 +16,15 @@ namespace Core.Ship
     public class ShipMovement : MonoBehaviour
     {
         [Header("Movement Settings")]
-        [SerializeField] private float moveSpeed = 2.5f;
+        [SerializeField] private float moveSpeed = 6.5f;
         [SerializeField] private float rotationSpeed = 180f;
+        
+        private bool _isMoving = false;
 
         private ShipView _shipView;
-        private Coroutine _movementCoroutine;
+        private static Coroutine _movementCoroutine;
+        
+        public Vector3 GetOriginalPosition() => _shipView.Board.GridToWorld(_shipView.shipModel.root);
 
         private void Awake()
         {
@@ -34,6 +39,7 @@ namespace Core.Ship
                 return;
             }
 
+       
             // A ship cannot move to its own current location with the same orientation.
             if (targetPosition.Equals(_shipView.shipModel.root) && finalOrientation == _shipView.shipModel.orientation) return;
 
@@ -43,22 +49,31 @@ namespace Core.Ship
                 _shipView.shipModel.root,
                 targetPosition
             );
-
-            // Even if there is no path (e.g., rotating in place), we still might need to run the coroutine.
             if (path == null) path = new List<GridPos>();
 
             if (_movementCoroutine != null)
             {
-                StopCoroutine(_movementCoroutine);
+                StartCoroutine(WaitIfBusy(path, finalOrientation));
+                return;
             }
+            // if (_movementCoroutine != null)
+            // {
+            //     StopCoroutine(_movementCoroutine);
+            // }
+
             _movementCoroutine = StartCoroutine(FollowPathCoroutine(path, finalOrientation));
         }
 
+        private IEnumerator WaitIfBusy(List<GridPos> path, Orientation finalOrientation)
+        {
+            yield return new WaitUntil(() => _movementCoroutine == null);
+            StartCoroutine(FollowPathCoroutine(path, finalOrientation));
+        }
         private IEnumerator FollowPathCoroutine(List<GridPos> path, Orientation finalOrientation)
         {
             Debug.Log($"Starting movement along path with {path.Count} steps.");
             BoardModel boardModel = _shipView.Board.Model;
-
+            _isMoving = true;
             // First, remove the ship from its starting position in the model
             // This frees up the cells so other ships can pathfind around it while it moves.
             boardModel.ResetShipCells(_shipView.shipModel);
@@ -121,6 +136,7 @@ namespace Core.Ship
 
             Debug.Log("Movement finished.");
             _movementCoroutine = null;
+            _isMoving = false;
         }
 
         /// <summary>
@@ -158,6 +174,28 @@ namespace Core.Ship
             };
             return Quaternion.Euler(0f, yAngle, 0f);
         }
+
+        void OnTriggerEnter(Collider other)
+        {
+            // we need to check the other collider's tag to see if it's a ship
+            // if it is, we need to move the ship to the away up to the point the trigger exits'
+            if(!_isMoving) return;
+
+            var otherMovement = other.gameObject.GetComponentInParent<ShipMovement>();
+            if (otherMovement != null && otherMovement != this)
+            {
+                Debug.Log($"Moving ship to avoid collision on {gameObject}");
+                
+                Vector3 direction = otherMovement.transform.position - transform.position;
+                float distance = direction.magnitude;
+                Vector3 normalizedDirection = direction.normalized;
+                
+                direction = normalizedDirection * Mathf.Abs(_shipView.shipModel.length-distance);
+                otherMovement.transform.DOMove(otherMovement.transform.position + direction, 2f/moveSpeed).SetEase(Ease.Linear);
+                otherMovement.transform.DOMove(otherMovement.GetOriginalPosition(), 2f/moveSpeed).SetDelay(3/moveSpeed).SetEase(Ease.Linear);
+            }
+        }
     }
+    
 }
 

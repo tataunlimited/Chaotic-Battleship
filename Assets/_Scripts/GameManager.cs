@@ -282,7 +282,14 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Player Ship placement confirmed");
         Debug.Log("Starting Battle...");
-        if (boardController != null) boardController.UpdateBoards();
+        if (boardController != null)
+        {
+            boardController.UpdateBoards();
+            foreach (var ship in boardController.playerView.SpawnedShips)
+            {
+                ship.Value.SetShipOnGrid(true);
+            }
+        }
         if (cameraController != null) cameraController.GoToAttackView();
 
         phaseState = PHASE_STATE.PLAYER_FIRING;

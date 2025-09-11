@@ -206,12 +206,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.04, y: 0.04155461, z: 0.18202277}
-  m_Center: {x: 0, y: 0.000000001862645, z: 0}
+  m_Size: {x: 0.026695345, y: 0.022080531, z: 0.0924507}
+  m_Center: {x: 0.00009369701, y: -0.0075732665, z: -0.001311852}
 --- !u!4 &3222976685728578670 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c119b0f0b0f90e34fbe5441ad437b9f7, type: 3}
@@ -336,9 +336,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f14e97446f9242e4bb96a76d8a1cb269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
   healthSlider: {fileID: 0}
+  destroyedShip: {fileID: 0}
+  shipView: {fileID: 0}
 --- !u!4 &3559025510951956625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7188997284388319423, guid: aa635b344e342d8428cf0d74161c5630, type: 3}
