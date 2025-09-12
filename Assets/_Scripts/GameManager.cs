@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
         }
 
         // ---- Try to load a saved snapshot BEFORE spawning ships ----
+        /*
         GameState gs;
         if (SaveManager.TryLoadBoardState(out gs) && gs != null)
         {
@@ -133,6 +134,7 @@ public class GameManager : MonoBehaviour
                 SaveManager.ClearBoardState();
             }
         }
+        */
 
         StartEncounter();
     }

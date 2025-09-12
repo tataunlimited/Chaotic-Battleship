@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7188997284388319423}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BrokenShipModelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 9071194118322993481}
   - component: {fileID: 7133455884396350364}
   - component: {fileID: -865248615779685098}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BaseShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2826074501886197628}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShipModelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

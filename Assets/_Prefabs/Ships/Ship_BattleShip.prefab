@@ -440,7 +440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6261299411041916840}
   - component: {fileID: 5553364657551019958}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BattleShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
