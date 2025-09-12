@@ -14904,6 +14904,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.b
+      value: 0.15980244
+      objectReference: {fileID: 0}
+    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5518055910695580512, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14952,6 +14968,22 @@ PrefabInstance:
       propertyPath: 'shipPrefabs.Array.data[1]'
       value: 
       objectReference: {fileID: 7645867953548946802, guid: 1be9800bf59d1924cb2ba5789b4a5ecd, type: 3}
+    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: baseColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8915164760813226162, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_Name
       value: BoardController
