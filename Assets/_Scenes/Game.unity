@@ -14904,22 +14904,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.a
-      value: 0.2627451
-      objectReference: {fileID: 0}
-    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.b
-      value: 0.521305
-      objectReference: {fileID: 0}
-    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.g
-      value: 0.54088044
-      objectReference: {fileID: 0}
-    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.r
-      value: 0.19560131
-      objectReference: {fileID: 0}
     - target: {fileID: 5518055910695580512, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14958,26 +14942,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5518055910695580512, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.a
-      value: 0.2627451
-      objectReference: {fileID: 0}
-    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.b
-      value: 0.8050314
-      objectReference: {fileID: 0}
-    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.g
-      value: 0.17722712
-      objectReference: {fileID: 0}
-    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: baseColor.r
-      value: 0.14936113
-      objectReference: {fileID: 0}
-    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: revealShips
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8915164760813226162, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}

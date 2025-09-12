@@ -53,7 +53,7 @@ MonoBehaviour:
   origin: {x: -5, y: 0, z: 10.5}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
   hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  baseColor: {r: 0.14936113, g: 0.17722712, b: 0.8050314, a: 0.2627451}
 --- !u!1 &6942412552272609847
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   origin: {x: -5, y: 0, z: 0}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
   hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
-  baseColor: {r: 1, g: 1, b: 1, a: 1}
+  baseColor: {r: 0.19560131, g: 0.54088044, b: 0.521305, a: 0.2627451}
 --- !u!1 &8915164760813226162
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,6 +164,9 @@ MonoBehaviour:
   - {fileID: 7645867953548946802, guid: 1be9800bf59d1924cb2ba5789b4a5ecd, type: 3}
   - {fileID: 7079282047530222983, guid: 26c11a6116a62e146ae4f308d72b661e, type: 3}
   - {fileID: 3485610728871938994, guid: 5a8e50e039e40714fa58bbe02a04bda0, type: 3}
+  shipLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1001 &1332777804502252984
 PrefabInstance:
   m_ObjectHideFlags: 0
