@@ -14944,6 +14944,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6121325836595661982, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: shipLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6121325836595661982, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: 'shipPrefabs.Array.data[1]'
+      value: 
+      objectReference: {fileID: 7645867953548946802, guid: 1be9800bf59d1924cb2ba5789b4a5ecd, type: 3}
     - target: {fileID: 8915164760813226162, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_Name
       value: BoardController
