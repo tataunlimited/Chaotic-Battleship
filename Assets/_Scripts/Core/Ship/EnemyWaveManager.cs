@@ -64,7 +64,8 @@ namespace Core.Ship
             {
                 validLocations.Clear();
 
-                Array orientations = Enum.GetValues(typeof(Orientation));
+                //Array orientations = Enum.GetValues(typeof(Orientation));
+                Array orientations = new[] { Orientation.North, Orientation.East, Orientation.South, Orientation.West };
                 index = rnd.Next(orientations.Length);
                 ship.orientation = (Orientation)orientations.GetValue(index);
 

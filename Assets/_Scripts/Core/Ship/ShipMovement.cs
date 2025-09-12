@@ -22,13 +22,17 @@ namespace Core.Ship
 
         [Header("Submarine Settings")] [SerializeField]
         private float submergeDepth = -1.5f; // How far below the surface to go
-
         [SerializeField] private float submergeDuration = .5f;
+        
+        [Header("Collision Settings")]
+        [SerializeField] private float collisionPushForce = 0.5f; // How far the other ship gets pushed
+        [SerializeField] private float collisionPushDuration = 0.6f;
 
         private bool _isMoving = false;
 
         private ShipView _shipView;
         private static Coroutine _movementCoroutine;
+        private bool _isBeingPushed = false; // Prevents a ship from being pushed multiple times at once
 
         public Vector3 GetOriginalPosition() => _shipView.Board.GridToWorld(_shipView.shipModel.root);
 
@@ -60,13 +64,10 @@ namespace Core.Ship
 
             if (_movementCoroutine != null)
             {
-                StartCoroutine(WaitIfBusy(path, finalOrientation));
+                //StartCoroutine(WaitIfBusy(path, finalOrientation));
                 return;
             }
-            // if (_movementCoroutine != null)
-            // {
-            //     StopCoroutine(_movementCoroutine);
-            // }
+
 
             _movementCoroutine = StartCoroutine(FollowPathCoroutine(path, finalOrientation));
         }
@@ -239,24 +240,35 @@ namespace Core.Ship
 
         void OnTriggerEnter(Collider other)
         {
-            // we need to check the other collider's tag to see if it's a ship
-            // if it is, we need to move the ship to the away up to the point the trigger exits'
+            // A ship should only initiate a push while it is the one actively moving/rotating.
             if (!_isMoving) return;
 
             var otherMovement = other.gameObject.GetComponentInParent<ShipMovement>();
-            if (otherMovement != null && otherMovement != this)
+
+            // Check if we collided with another ship that isn't itself and isn't already being pushed.
+            if (otherMovement != null && otherMovement != this && !otherMovement._isBeingPushed)
             {
-                Debug.Log($"Moving ship to avoid collision on {gameObject}");
+                // 1. Calculate the direction to push the other ship.
+                // We get the vector from our center to their center.
+                Vector3 pushDirection = other.transform.position - transform.position;
+                pushDirection.y = 0; // We only want to push them on the horizontal plane.
+                pushDirection.Normalize();
 
-                Vector3 direction = otherMovement.transform.position - transform.position;
-                float distance = direction.magnitude;
-                Vector3 normalizedDirection = direction.normalized;
+                // 2. Set a flag on the other ship so it doesn't get pushed by multiple things at once.
+                otherMovement._isBeingPushed = true;
 
-                direction = normalizedDirection * Mathf.Abs(_shipView.shipModel.length - distance);
-                otherMovement.transform.DOMove(otherMovement.transform.position + direction, 2f / moveSpeed)
-                    .SetEase(Ease.Linear);
-                otherMovement.transform.DOMove(otherMovement.GetOriginalPosition(), 2f / moveSpeed)
-                    .SetDelay(3 / moveSpeed).SetEase(Ease.Linear);
+                // 3. Use DOPunchPosition for a natural effect.
+                // This single command handles the push and the return automatically.
+                otherMovement.transform.DOPunchPosition(
+                        punch: pushDirection * collisionPushForce, // The direction and strength of the punch
+                        duration: collisionPushDuration,
+                        vibrato: 0,       // How many times to vibrate; 0 is a smooth punch
+                        elasticity: 0.1f) // How much the ship will "bounce" back; 0 to 1
+                    .OnComplete(() =>
+                    {
+                        // When the animation is done, reset the flag on the other ship.
+                        otherMovement._isBeingPushed = false;
+                    });
             }
         }
     }

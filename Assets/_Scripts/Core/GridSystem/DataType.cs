@@ -6,14 +6,14 @@ namespace Core.GridSystem
     public enum CellState { Empty, Ship, Hit, Miss, NearMiss }
     public enum Orientation
     {
-        North,
-        East,
-        South,
-        West,
-        NorthEast, // Add this
-        SouthEast, // Add this
-        SouthWest, // Add this
-        NorthWest  // Add this
+        North = 0,
+        East = 1,
+        South = 2,
+        West = 3,
+        NorthEast = 4, 
+        SouthEast = 5, 
+        SouthWest = 6, 
+        NorthWest  = 7 
     }    
     public enum BoardSide { Player, Enemy }
 

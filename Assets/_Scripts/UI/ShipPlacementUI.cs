@@ -1,5 +1,6 @@
 using System;
 using Core.Board;
+using Core.GridSystem;
 using Core.Ship;
 using TMPro;
 using UnityEngine;
@@ -39,6 +40,8 @@ public class ShipPlacementUI : MonoBehaviour
     public bool AreAllShipsSpawned { private set; get; }
     public Action OnAllShipsSpawned;
 
+    private ShipView _spawnedShip;
+
     private void Awake()
     {
         // Capture Inspector defaults so we can restore them each new wave
@@ -54,6 +57,13 @@ public class ShipPlacementUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        if(_spawnedShip != null)
+        {
+            var gridPos = GetMouseGridPosition();
+            _spawnedShip.transform.position = board_controller.playerView.GridToWorld(gridPos);
+        }
+        
         if (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
         {
             in_placement_Phase = true;
@@ -85,6 +95,29 @@ public class ShipPlacementUI : MonoBehaviour
             OnAllShipsSpawned?.Invoke();
             placement_group.SetActive(false);
         }
+        
+
+    }
+    
+    private GridPos GetMouseGridPosition()
+    {
+        // Create a ray from the camera through the mouse position
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        GridPos pos = default;
+        // We need to know the 'z' position of our ground plane
+        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+        float rayDistance;
+
+        if (groundPlane.Raycast(ray, out rayDistance))
+        {
+            // Get the point where the ray intersects the plane
+            Vector3 worldPoint = ray.GetPoint(rayDistance);
+            // Convert the world point to a cell position on the tilemap
+            board_controller.playerView.WorldToGrid(worldPoint , out pos);
+        }
+
+        // Return a default value if the ray doesn't hit the plane
+        return pos;
     }
 
     // NEW: called by GameManager at the start of each wave
@@ -111,6 +144,8 @@ public class ShipPlacementUI : MonoBehaviour
 
     public void SetSubmarineToNextPlacement()
     {
+        if(_spawnedShip)
+            return;
         if (subs_left <= 0 || !in_placement_Phase)
         {
             Subs_left_to_place_Button.interactable = false;
@@ -121,10 +156,13 @@ public class ShipPlacementUI : MonoBehaviour
         var newShip = board_controller.SpawnPlayerShip(ShipType.Submarine);
         board_controller.UpdatePlayerSelectedShip(newShip);
         subs_left--;
+        StartShipPlacementOnGrid(newShip);
     }
 
     public void SetDestroyerToNextPlacement()
     {
+        if(_spawnedShip)
+            return;
         if (destroyers_left <= 0 || !in_placement_Phase)
         {
             Destroyers_left_to_place_Button.interactable = false;
@@ -135,10 +173,14 @@ public class ShipPlacementUI : MonoBehaviour
         var newShip = board_controller.SpawnPlayerShip(ShipType.Destroyer);
         board_controller.UpdatePlayerSelectedShip(newShip);
         destroyers_left--;
+        StartShipPlacementOnGrid(newShip);
+
     }
 
     public void SetCruiserToNextPlacement()
     {
+        if(_spawnedShip)
+            return;
         if (cruisers_left <= 0 || !in_placement_Phase)
         {
             Cruisers_left_to_place_Button.interactable = false;
@@ -149,10 +191,14 @@ public class ShipPlacementUI : MonoBehaviour
         var newShip = board_controller.SpawnPlayerShip(ShipType.Cruiser);
         board_controller.UpdatePlayerSelectedShip(newShip);
         cruisers_left--;
+        StartShipPlacementOnGrid(newShip);
+
     }
 
     public void SetBattleshipToNextPlacement()
     {
+        if(_spawnedShip)
+            return;
         if (battleships_left <= 0 || !in_placement_Phase)
         {
             Battleships_left_to_place_Button.interactable = false;
@@ -163,5 +209,19 @@ public class ShipPlacementUI : MonoBehaviour
         var newShip = board_controller.SpawnPlayerShip(ShipType.Battleship);
         board_controller.UpdatePlayerSelectedShip(newShip);
         battleships_left--;
+        StartShipPlacementOnGrid(newShip);
+    }
+
+    private void StartShipPlacementOnGrid(ShipView shipView)
+    {
+        _spawnedShip = shipView;
+        _spawnedShip.OnBeforeShipPlacedOnGrid += OnShipPlacedOnTheGrid;
+
+    }
+
+    private void OnShipPlacedOnTheGrid(ShipView shipView)
+    {
+        shipView.OnBeforeShipPlacedOnGrid -= OnShipPlacedOnTheGrid;
+        _spawnedShip = null;
     }
 }

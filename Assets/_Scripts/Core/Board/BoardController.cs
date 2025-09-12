@@ -22,6 +22,7 @@ namespace Core.Board
         public ShipView SelectedShip {get; private set;}
         
         private Camera _camera;
+        public LayerMask shipLayer;
 
 
         private EnemyWaveManager _enemyWaveManager;
@@ -109,6 +110,7 @@ namespace Core.Board
                 {
                     SelectedShip.UpdatePosition(shipView.shipModel.MoveTo(cell), shipView.shipModel.orientation);
                     ClearSelectedShip();
+                    
                 });
             }
             if(playerView.Model.InBounds(SelectedShip.shipModel.root))
@@ -149,7 +151,7 @@ namespace Core.Board
         private bool TrySelectShip(out ShipView shipView)
         {
             shipView = null;
-            if (!Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit, 500f))
+            if (!Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit, 500f, shipLayer))
                 return false;
             shipView = hit.collider.GetComponentInParent<ShipView>();
             return shipView != null && shipView.IsPlayer;
