@@ -15,8 +15,8 @@ namespace Core.GridSystem
             Width = width; Height = height; CellSize = cellSize; Origin = origin;
             _cells = new T[width, height];
             for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-                _cells[x, y] = defaultValue;
+                for (int y = 0; y < height; y++)
+                    _cells[x, y] = defaultValue;
         }
 
         public bool InBounds(GridPos p) => p.x >= 0 && p.y >= 0 && p.x < Width && p.y < Height;
