@@ -24,7 +24,7 @@ public class SubmarineController : MonoBehaviour
         if (hit.collider != null)
         {
             // If a hit is detected, log the hit point.
-            // Add hit logic here (e.g., deal damage, play an explosion effect).
+            // TODO Add hit logic here (e.g., deal damage, play an explosion effect).
             Debug.Log("Torpedo hit an enemy ship at: " + hit.point);
             // Get a reference to the enemy ship component.
             // Example: EnemyShip enemy = hit.collider.GetComponent<EnemyShip>();
