@@ -41,18 +41,18 @@ namespace Core.Ship
             _shipView = GetComponent<ShipView>();
         }
 
-        public void StartMove(GridPos targetPosition, Orientation finalOrientation)
+        public bool TryToStartMovement(GridPos targetPosition, Orientation finalOrientation)
         {
             if (_shipView == null || _shipView.Board == null)
             {
                 Debug.LogError("ShipView or Board not initialized!");
-                return;
+                return false;
             }
 
 
             // A ship cannot move to its own current location with the same orientation.
             if (targetPosition.Equals(_shipView.shipModel.root) &&
-                finalOrientation == _shipView.shipModel.orientation) return;
+                finalOrientation == _shipView.shipModel.orientation) return false;
 
             var path = PathfinderController.Instance.FindPathForShip(
                 _shipView.Board,
@@ -65,11 +65,12 @@ namespace Core.Ship
             if (_movementCoroutine != null)
             {
                 //StartCoroutine(WaitIfBusy(path, finalOrientation));
-                return;
+                return false;
             }
 
 
             _movementCoroutine = StartCoroutine(FollowPathCoroutine(path, finalOrientation));
+            return true;
         }
 
         private IEnumerator WaitIfBusy(List<GridPos> path, Orientation finalOrientation)

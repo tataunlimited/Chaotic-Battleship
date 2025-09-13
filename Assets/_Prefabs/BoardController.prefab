@@ -51,9 +51,9 @@ MonoBehaviour:
   height: 10
   cellSize: 1
   origin: {x: -5, y: 0, z: 10.5}
-  cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+  cellPrefab: {fileID: 3498131598842137522, guid: 53bd56a79daabf641a483f8a0f97be65, type: 3}
   hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
-  baseColor: {r: 0.14936113, g: 0.17722712, b: 0.8050314, a: 0.2627451}
+  baseColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &6942412552272609847
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ MonoBehaviour:
   origin: {x: -5, y: 0, z: 0}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
   hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
-  baseColor: {r: 0.19560131, g: 0.54088044, b: 0.521305, a: 0.2627451}
+  baseColor: {r: 0, g: 1, b: 0.15980244, a: 1}
 --- !u!1 &8915164760813226162
 GameObject:
   m_ObjectHideFlags: 0

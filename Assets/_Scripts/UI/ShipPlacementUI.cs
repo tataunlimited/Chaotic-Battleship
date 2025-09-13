@@ -101,7 +101,7 @@ public class ShipPlacementUI : MonoBehaviour
     
     private GridPos GetMouseGridPosition()
     {
-        // Create a ray from the camera through the mouse position
+        /*// Create a ray from the camera through the mouse position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         GridPos pos = default;
         // We need to know the 'z' position of our ground plane
@@ -114,8 +114,19 @@ public class ShipPlacementUI : MonoBehaviour
             Vector3 worldPoint = ray.GetPoint(rayDistance);
             // Convert the world point to a cell position on the tilemap
             board_controller.playerView.WorldToGrid(worldPoint , out pos);
+        }*/
+       
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        Vector3 cellPosition = new Vector3(-1000, 0, -1000);
+        GridPos pos = default;
+        if (Physics.Raycast(ray, out hit))
+        {
+            // hit.point contains the world position where the ray intersected with a collider
+            cellPosition = hit.collider.transform.position;
+            // You can also get the hit object: hit.collider.gameObject
         }
-
+        board_controller.playerView.WorldToGrid(cellPosition , out pos);
         // Return a default value if the ray doesn't hit the plane
         return pos;
     }

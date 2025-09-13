@@ -278,13 +278,13 @@ namespace Core.Ship
         }
 
 
-        public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
+        public bool UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
             if (shipModel.root.x < 0 || shipModel.root.y < 0)
             {
                 OnBeforeShipPlacedOnGrid?.Invoke(this);
                 SnapShipOnGrid(newPos, newOrientation, showCells);
-                return;
+                return true;
             }
 
 
@@ -294,14 +294,15 @@ namespace Core.Ship
 
             if (_shipMovement != null)
             {
-                _shipMovement.StartMove(newPos, newOrientation);
+               bool success = _shipMovement.TryToStartMovement(newPos, newOrientation);
                 UpdateSubPosition();
 
-                return;
+                return success;
             }
 
 
             SnapShipOnGrid(newPos, newOrientation, showCells);
+            return true;
         }
 
         private void UpdateSubPosition()
@@ -316,7 +317,7 @@ namespace Core.Ship
             }
         }
 
-        private void SnapShipOnGrid(GridPos newPos, Orientation newOrientation, bool showCells)
+        public void SnapShipOnGrid(GridPos newPos, Orientation newOrientation, bool showCells = false)
         {
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
@@ -327,7 +328,7 @@ namespace Core.Ship
             SetPosition();
         }
 
-        public void SetPosition()
+        private void SetPosition()
         {
             float yAngle = shipModel.orientation switch
             {

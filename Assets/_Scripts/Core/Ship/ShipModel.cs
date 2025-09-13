@@ -226,12 +226,10 @@ namespace Core.Ship
             return true;
         }
 
-        public GridPos MoveTo(GridPos point)
+        public void UpdateMovementStatus()
         {
             if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
                 movementPattern.hasAlreadyMoved = true;
-
-            return point;
         }
 
         public Orientation RotateLeft()
