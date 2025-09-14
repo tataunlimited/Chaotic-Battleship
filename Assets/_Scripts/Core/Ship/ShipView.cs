@@ -69,6 +69,9 @@ namespace Core.Ship
         private Vector3 _defaultStateLocalPos;
         private ShipMovement _shipMovement;
 
+        // //AUDIO SFX
+        // public AudioSource shipConfirmationSFX;
+
 
         private void Awake()
         {
@@ -396,6 +399,7 @@ namespace Core.Ship
 
         public void SelectShip()
         {
+            //shipConfirmationSFX.Play();
             EnsureComponents();
             if (_collider) _collider.enabled = false;
             else Debug.LogWarning("ShipView.SelectShip(): No Collider found on ship instance.");
