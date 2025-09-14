@@ -192,6 +192,11 @@ namespace Core.Ship
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
             var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
+            // Check if the current ship is the player's submarine
+            if (IsPlayer && shipModel.type == ShipType.Submarine)
+            {
+                FireTorpedo();
+            }
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
