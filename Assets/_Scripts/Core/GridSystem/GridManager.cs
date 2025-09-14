@@ -1,47 +1,67 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Core.GridSystem;
 
-public class GridManager : MonoBehaviour
+namespace Core.GridSystem
 {
-    public static GridManager Instance { get; private set; }
-    // The generic type `CellType`.
-    private Grid2D<CellType> grid;
-
-    private void Awake()
+    public struct GridPos
     {
-        if (Instance != null && Instance != this)
+        public int x;
+        public int y;
+
+        public GridPos(int x, int y)
         {
-            Destroy(this);
+            this.x = x;
+            this.y = y;
         }
-        else
+    }
+
+    public enum CellType
+    {
+        Empty,
+        Ship
+    }
+
+    public class GridManager : MonoBehaviour
+    {
+        public static GridManager Instance { get; private set; }
+        // The generic type `CellType`.
+        private Grid2D<CellType> grid;
+
+        private void Awake()
         {
-            Instance = this;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
+            }
+
+            grid = new Grid2D<CellType>(10, 10, 1.0f, Vector3.zero, CellType.Empty);
         }
 
-        grid = new Grid2D<CellType>(10, 10, 1.0f, Vector3.zero, CellType.Empty);
-    }
-
-    public bool InBounds(GridPos p)
-    {
-        return grid.InBounds(p);
-    }
-
-    public CellType GetCellType(GridPos p)
-    {
-        return grid.Get(p);
-    }
-
-    public bool WorldToGrid(Vector3 worldPosition, out GridPos gridPos)
-    {
-        return grid.WorldToGrid(worldPosition, out gridPos);
-    }
-
-    public void PlaceShip(GridPos startPos)
-    {
-        if (grid.InBounds(startPos))
+        public bool InBounds(GridPos p)
         {
-            grid.Set(startPos, CellType.Ship);
+            return grid.InBounds(p);
+        }
+
+        public CellType GetCellType(GridPos p)
+        {
+            return grid.Get(p);
+        }
+
+        public bool WorldToGrid(Vector3 worldPosition, out GridPos gridPos)
+        {
+            return grid.WorldToGrid(worldPosition, out gridPos);
+        }
+
+        public void PlaceShip(GridPos startPos)
+        {
+            if (grid.InBounds(startPos))
+            {
+                grid.Set(startPos, CellType.Ship);
+            }
         }
     }
 }
