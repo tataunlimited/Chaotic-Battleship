@@ -570,6 +570,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44874837}
   m_CullTransparentMesh: 1
+--- !u!82 &53868426 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1535707502357828936, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+  m_PrefabInstance: {fileID: 1267680412855025866}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &62507286
 GameObject:
   m_ObjectHideFlags: 0
@@ -3295,6 +3300,11 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!82 &413992944 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 8535369737342963921, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+  m_PrefabInstance: {fileID: 1267680412855025866}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &415271287
 GameObject:
   m_ObjectHideFlags: 0
@@ -5130,6 +5140,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1323259982}
         m_TargetAssemblyTypeName: ShipPlacementUI, Assembly-CSharp
         m_MethodName: SetCruiserToNextPlacement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 413992944}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9286,6 +9308,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 413992944}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1233618519
 GameObject:
   m_ObjectHideFlags: 0
@@ -11516,6 +11550,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1323259982}
         m_TargetAssemblyTypeName: ShipPlacementUI, Assembly-CSharp
         m_MethodName: SetDestroyerToNextPlacement
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 413992944}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14174,6 +14220,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 413992944}
+        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2020251213
 GameObject:
   m_ObjectHideFlags: 0
@@ -14987,6 +15045,34 @@ PrefabInstance:
     - target: {fileID: 4762255886464413588, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 53868426}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Play
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UnityEngine.AudioSource, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
