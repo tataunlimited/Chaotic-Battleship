@@ -25,12 +25,16 @@ namespace Core.Ship
         public int hp;
         public int MaxHP => length;
         public bool IsSunk => isDestroyed || hp <= 0;
+        public float armor = 0f;
+        public float armorDestroyerChance = 0f;
+        public float armorCruiserChance = 0f;
         public Orientation orientation = Orientation.North;
         public GridPos root; // bow (front) position   
         public GridPos reserved = new GridPos(-1000, -1000); // bow (front) position   
         public bool isDestroyed = false;
         private int _round = 0;
         public ShipMovementPattern movementPattern = null;
+        
         public bool canMove => !isDestroyed && movementPattern != null && movementPattern.canMove;
         public bool canRotate => !isDestroyed && movementPattern != null && movementPattern.canRotate;
 
@@ -265,6 +269,50 @@ namespace Core.Ship
         public List<GridPos> GetMovablePositions(BoardView playerView)
         {
             return movementPattern.GetAllPossibleMovePositions(playerView, this);
+        }
+
+        public bool CanReceiveDamage(ShipType attackerType)
+        {
+            if (armorDestroyerChance > 0 && attackerType == ShipType.Destroyer)
+            {
+                var chance = UnityEngine.Random.Range(0, 1f);
+                if (chance <= armorDestroyerChance)
+                {
+                    return false;
+                }
+            }
+            else if (armorCruiserChance > 0 && attackerType == ShipType.Cruiser)
+            {
+                var chance = UnityEngine.Random.Range(0, 1f);
+                if (chance <= armorCruiserChance)
+                {
+                    return false;
+                }
+            }
+
+            if (armor >= 1)
+            {
+                armor -= 1;
+                return false;
+            }
+            if (armor > 0)
+            {
+                var chance = UnityEngine.Random.Range(0, 1f);
+                armor = 0;
+                if (chance <= armor)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public void SetArmorLevelData(ArmorUpgrade armorData)
+        {
+            armor = armorData.ArmorPoints;
+            armorDestroyerChance = armorData.DestroyerArmorChance;
+            armorCruiserChance = armorData.CruiserArmorChance;
         }
     }
 

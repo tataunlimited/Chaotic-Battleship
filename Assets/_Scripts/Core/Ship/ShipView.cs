@@ -61,6 +61,10 @@ namespace Core.Ship
         private Quaternion _baseRot;
         private Vector3 _defaultStateLocalPos;
         private ShipMovement _shipMovement;
+        public int armorLevel;
+        public int specialAbilityLevel;
+        public int movementLevel;
+        public int attackLevel;
 
         private void Awake()
         {
@@ -91,9 +95,19 @@ namespace Core.Ship
             shipModel = model;
             IsPlayer = isPlayer;
             SetShipOnGrid(!IsPlayer);
+            UpdateLevelData();
             if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
+        }
+
+        private void UpdateLevelData()
+        {
+            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, armorLevel);
+            if (armorData != null)
+            {
+                shipModel.SetArmorLevelData(armorData);
+            }
         }
 
         public void Hide()
@@ -217,37 +231,48 @@ namespace Core.Ship
                                 damage = 9999;
                             }
 
-                            bool justSunk = enemyShip.ApplyDamage(damage);
+                            bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, out bool justSunk);
 
-                            enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
-
-                            //award per-segment points for HITS (player → enemy only)
-                            if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                            if (isDamaged)
                             {
-                                GameEvents.RaiseHitSegment(enemyShip.shipModel.type);
-                            }
-
-
-                            if (justSunk)
-                            {
-                                //sunk 
-                                VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
-                                enemyBoard.RevealAShip(enemyShip.shipModel);
-                                enemyBoard.OnShipSunk(enemyShip);
-                                enemyShip.defaultState.SetActive(false);
-                                enemyShip.brokenState.SetActive(true);
-
-                                //award SINK bonus (player → enemy only)
+                                enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
                                 if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
                                 {
-                                    GameEvents.RaiseDestroyedShip(enemyShip.shipModel.type);
+                                    GameEvents.RaiseHitSegment(enemyShip.shipModel.type);
                                 }
+                                if (justSunk)
+                                {
+                                    //sunk 
+                                    VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                    enemyBoard.RevealAShip(enemyShip.shipModel);
+                                    enemyBoard.OnShipSunk(enemyShip);
+                                    enemyShip.defaultState.SetActive(false);
+                                    enemyShip.brokenState.SetActive(true);
+
+                                    //award SINK bonus (player → enemy only)
+                                    if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                                    {
+                                        GameEvents.RaiseDestroyedShip(enemyShip.shipModel.type);
+                                    }
+                                }
+                                else
+                                {
+                                    //hit 
+                                    VFXManager.Instance.PlayHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                }
+                                
                             }
                             else
                             {
-                                //hit 
-                                VFXManager.Instance.SpawnHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                VFXManager.Instance.PlayArmorHitSound();
+
                             }
+
+                            //award per-segment points for HITS (player → enemy only)
+                            
+
+
+                            
                         }
                     }
                     else if (!ignoreSound)
@@ -264,9 +289,15 @@ namespace Core.Ship
             UpdateSubPosition();
         }
 
-        public bool ApplyDamage(int damage)
+        public bool ApplyDamage(int damage, ShipType type, out bool isSunk)
         {
-            bool isSunk = shipModel.ApplyDamage(damage);
+            isSunk = false;
+            if (!shipModel.CanReceiveDamage(type))
+            {
+                return false;
+            }
+            
+            isSunk = shipModel.ApplyDamage(damage);
             if (IsPlayer)
                 _shipHealth.UpdateHealthBar();
             else if (!IsPlayer && isSunk)
@@ -274,7 +305,7 @@ namespace Core.Ship
                 _shipHealth.EnableDestroyedState(true);
             }
 
-            return isSunk;
+            return true;
         }
 
 
