@@ -37,7 +37,8 @@ public class GameMenuActions : MonoBehaviour
         SaveManager.SaveGame();
 
         // Reload the current scene. Wave number is NOT changed here.
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //had to make it work with mine
+        SceneManager.Instance.ReloadActiveScene();
     }
 
     // Full wipe: PlayerPrefs + PlayerData defaults + snapshot; then reload scene.
@@ -45,6 +46,7 @@ public class GameMenuActions : MonoBehaviour
     {
         Time.timeScale = 1f;               // important: unpause before reload
         SaveManager.ResetAllData();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // same here
+        SceneManager.Instance.ReloadActiveScene();
     }
 }
