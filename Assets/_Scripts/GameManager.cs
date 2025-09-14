@@ -225,8 +225,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case PHASE_STATE.ENEMY_MOVING:
-                phaseState = PHASE_STATE.PLAYER_MOVING;
-                Debug.Log("Phase changed to: PLAYER_MOVING");
+                phaseState = PHASE_STATE.PLAYER_FIRING;
+                Debug.Log("Phase changed to: PLAYER_FIRING");
                 break;
 
             case PHASE_STATE.ENDWAVE:

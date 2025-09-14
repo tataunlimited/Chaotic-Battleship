@@ -31,7 +31,7 @@ namespace Core.Ship
         public float armorCruiserChance = 0f;
         public Orientation orientation = Orientation.North;
         public GridPos root; // bow (front) position   
-        public GridPos reserved = new GridPos(-1000, -1000); // Destroy's attack position   
+        public GridPos reserved = new GridPos(-1000, -1000); // Destroyer's attack position   
         public bool isDestroyed = false;
         private int _round = 0;
         public ShipMovementPattern movementPattern = null;
