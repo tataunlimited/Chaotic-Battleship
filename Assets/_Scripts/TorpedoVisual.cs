@@ -6,8 +6,14 @@ public class TorpedoVisual : MonoBehaviour
     public float speed = 5f;
     public float lifetime = 3f;
 
+    public float degree = -20f;
+
     private float _timeAlive;
 
+    void Start()
+    {
+        transform.eulerAngles = new Vector3(degree, transform.eulerAngles.y, transform.eulerAngles.z);
+    }
     void Update()
     {
         // Move the torpedo forward
