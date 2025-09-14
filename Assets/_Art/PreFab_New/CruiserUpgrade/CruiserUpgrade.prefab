@@ -1,0 +1,789 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2965500104669225294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 638622877324337149}
+  - component: {fileID: 107520514803488550}
+  - component: {fileID: 4908921686985303053}
+  m_Layer: 0
+  m_Name: Cruiser (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &638622877324337149
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965500104669225294}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.077, y: 0.029954197, z: 0.1221}
+  m_LocalScale: {x: 0.0066410205, y: 0.006641019, z: 0.0066410205}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2031481303568445506}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!23 &107520514803488550
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965500104669225294}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!102 &4908921686985303053
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2965500104669225294}
+  m_Text: 'CruiserArmor_Lvl2
+
+'
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 1
+  m_Anchor: 0
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!1 &3307581666739722393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 804826703411506715}
+  - component: {fileID: 8668093023665079917}
+  - component: {fileID: 2481296651572024264}
+  m_Layer: 0
+  m_Name: Cruiser (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &804826703411506715
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3307581666739722393}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.077, y: 0.029954197, z: 0.135}
+  m_LocalScale: {x: 0.0066410205, y: 0.006641019, z: 0.0066410205}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1674254434695928615}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!23 &8668093023665079917
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3307581666739722393}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!102 &2481296651572024264
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3307581666739722393}
+  m_Text: 'CruiserArmor_Lvl3
+
+'
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 1
+  m_Anchor: 0
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!1 &9031476909321997570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6254562838499455471}
+  - component: {fileID: 4108481473712273374}
+  - component: {fileID: 4991545786296764476}
+  m_Layer: 0
+  m_Name: Cruiser
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6254562838499455471
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031476909321997570}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.077, y: 0.029954197, z: 0.1139}
+  m_LocalScale: {x: 0.00664102, y: 0.006641019, z: 0.00664102}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2534557957347661573}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!23 &4108481473712273374
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031476909321997570}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!102 &4991545786296764476
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9031476909321997570}
+  m_Text: CruiserArmor_Lvl1
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 1
+  m_Anchor: 0
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 0
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+--- !u!1001 &1204322525728816332
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3860111304984265744}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.002048105
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.25120002
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: 919132149155446097, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: CruiserArmor_Lvl3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088044335864722743, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    - target: {fileID: 6429345194790687958, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 804826703411506715}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+--- !u!4 &1674254434695928615 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+  m_PrefabInstance: {fileID: 1204322525728816332}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1265143866025109347
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1857459372317705416}
+    m_Modifications:
+    - target: {fileID: 3712483447277084204, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_Name
+      value: Cruiser
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0050522983
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.11299339
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+--- !u!4 &2972381314637325301 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4093407753828533398, guid: 5dee9197e3ba3384eb5e510e496d898b, type: 3}
+  m_PrefabInstance: {fileID: 1265143866025109347}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1998467962464769961
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3860111304984265744}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.002048105
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.1603
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: 919132149155446097, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: CruiserArmor_Lvl2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088044335864722743, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    - target: {fileID: 6429345194790687958, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 3194819572890667659, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 638622877324337149}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+--- !u!4 &2031481303568445506 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+  m_PrefabInstance: {fileID: 1998467962464769961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2183608138115769123
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.126
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4729110761372424332, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: Cruiser_Armor_Lvl2
+      objectReference: {fileID: 0}
+    - target: {fileID: -3685612339770634179, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: Cruiser_Armor_Lvl1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2074357036723018277, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2074357036723018277, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2074357036723018277, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: -194331566598589546, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: Cruiser_Armor_Lvl1
+      objectReference: {fileID: 0}
+    - target: {fileID: 69336664992229382, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 69336664992229382, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 69336664992229382, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: CruiserUpgrade
+      objectReference: {fileID: 0}
+    - target: {fileID: 3050741429645401662, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3050741429645401662, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3050741429645401662, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088044335864722743, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    - target: {fileID: 3160509683966699315, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3194819572890667659, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: Cruiser_Armor_Lvl3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5258088863999579417, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5258088863999579417, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5258088863999579417, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429345194790687958, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    - target: {fileID: 7160781148396348016, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: CruiserUpgrade
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 2752640906723361820, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: -1378328303485463995, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: -2132771481331491363, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: -6285923093020194565, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: 8994196792087597224, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: 1402604497939692933, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: 4200155039888339302, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: -194331566598589546, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2972381314637325301}
+    - targetCorrespondingSourceObject: {fileID: 3160509683966699315, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2534557957347661573}
+    - targetCorrespondingSourceObject: {fileID: 3160509683966699315, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2031481303568445506}
+    - targetCorrespondingSourceObject: {fileID: 3160509683966699315, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1674254434695928615}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+--- !u!4 &1857459372317705416 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+  m_PrefabInstance: {fileID: 2183608138115769123}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3860111304984265744 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3160509683966699315, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+  m_PrefabInstance: {fileID: 2183608138115769123}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2640858111545815278
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3860111304984265744}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.002048105
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0772
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: -1843299831220903764, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2b9a418aacdeda94e83fd1168b57e327, type: 2}
+    - target: {fileID: 919132149155446097, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: m_Name
+      value: CruiserArmor_Lvl1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088044335864722743, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    - target: {fileID: 6429345194790687958, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c0ee3dcffdc35e345a42f9cee4632c0b, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: -4729110761372424332, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    - {fileID: 3194819572890667659, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6254562838499455471}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+--- !u!4 &2534557957347661573 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10030183a0d0f14a9f4422f7a8607f5, type: 3}
+  m_PrefabInstance: {fileID: 2640858111545815278}
+  m_PrefabAsset: {fileID: 0}

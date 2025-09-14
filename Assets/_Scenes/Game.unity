@@ -3446,11 +3446,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 429389095}
   m_CullTransparentMesh: 1
---- !u!82 &446213144 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7770661313889812639, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-  m_PrefabInstance: {fileID: 1267680412855025866}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &449018573
 GameObject:
   m_ObjectHideFlags: 0
@@ -5135,18 +5130,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1323259982}
         m_TargetAssemblyTypeName: ShipPlacementUI, Assembly-CSharp
         m_MethodName: SetCruiserToNextPlacement
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2099969922}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6959,11 +6942,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913294989}
   m_CullTransparentMesh: 1
---- !u!82 &922883308 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 5504946228770983719, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-  m_PrefabInstance: {fileID: 1267680412855025866}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &949234567
 GameObject:
   m_ObjectHideFlags: 0
@@ -9308,18 +9286,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2099969922}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1233618519
 GameObject:
   m_ObjectHideFlags: 0
@@ -11550,18 +11516,6 @@ MonoBehaviour:
       - m_Target: {fileID: 1323259982}
         m_TargetAssemblyTypeName: ShipPlacementUI, Assembly-CSharp
         m_MethodName: SetDestroyerToNextPlacement
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 2099969922}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14220,18 +14174,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2099969922}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &2020251213
 GameObject:
   m_ObjectHideFlags: 0
@@ -14707,11 +14649,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2067116061}
   m_CullTransparentMesh: 1
---- !u!82 &2099969922 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 3212150576824020064, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-  m_PrefabInstance: {fileID: 1267680412855025866}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2113436477
 GameObject:
   m_ObjectHideFlags: 0
@@ -15051,34 +14988,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 922883308}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: Play
-      objectReference: {fileID: 0}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: UnityEngine.AudioSource, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 6613127070804259580, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15092,10 +15001,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 328930175659269675, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4939016888631662202, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.34843552
@@ -15194,10 +15099,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5432096638131859965, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
-      propertyPath: shipConfirmationSFX
-      value: 
-      objectReference: {fileID: 446213144}
     - target: {fileID: 5518055910695580512, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -15242,6 +15143,10 @@ PrefabInstance:
       propertyPath: cellPrefab
       value: 
       objectReference: {fileID: 8406341763212950752, guid: bfe169c26ad032442a46d957e8e44bc8, type: 3}
+    - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: revealShips
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8915164760813226162, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: m_Name
       value: BoardController
