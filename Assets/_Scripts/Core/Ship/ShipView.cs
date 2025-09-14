@@ -278,6 +278,17 @@ namespace Core.Ship
             return isSunk;
         }
 
+        private void FireTorpedo()
+        {
+            if (torpedoPrefab != null && torpedoSpawnPoint != null)
+            {
+                // Get the forward direction of the submarine
+                Vector3 forwardDirection = transform.forward;
+
+                // Instantiate the torpedo at the spawn point's position and rotation
+                Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
+            }
+        }
 
         public bool UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
