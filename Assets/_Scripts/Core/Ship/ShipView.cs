@@ -213,7 +213,7 @@ namespace Core.Ship
         {
             var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
             // Check if the current ship is the player's submarine
-            if (IsPlayer && shipModel.type == ShipType.Submarine)
+            if (IsPlayer && shipModel.type == ShipType.Submarine && coords.Count>0)
             {
                 FireTorpedo();
             }
@@ -324,14 +324,8 @@ namespace Core.Ship
         {
             if (torpedoPrefab != null && torpedoSpawnPoint != null)
             {
-                // Get the forward direction of the submarine
-                Vector3 forwardDirection = transform.forward;
-
-
                 // Instantiate the torpedo at the spawn point's position and rotation
                 Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
-
-                Debug.Log("Fire Torpedo");
             }
         }
 

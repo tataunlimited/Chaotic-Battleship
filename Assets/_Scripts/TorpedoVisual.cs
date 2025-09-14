@@ -27,8 +27,7 @@ public class TorpedoVisual : MonoBehaviour
             // This is a simple way to make it "despawn" underwater.
             transform.position += Vector3.down * speed * Time.deltaTime * 0.5f;
 
-            // TODO Add a check here to destroy it after it's out of sight
-            if (_timeAlive >= lifetime + 1f) // Example: destroy 1 second after starting to dive
+            if (_timeAlive >= lifetime) // Example: destroy 1 second after starting to dive
             {
                 Destroy(gameObject);
             }
