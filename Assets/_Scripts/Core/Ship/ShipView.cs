@@ -45,7 +45,8 @@ namespace Core.Ship
         public float RockAngleDeg { get; private set; } // roll angle in degrees
         public float BobOffset { get; private set; } // vertical offset
 
-        [Header("View Smoothing (optional)")] [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
+        [Header("View Smoothing (optional)")]
+        [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
         public float rotationLerp = 12f;
 
         [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
@@ -294,7 +295,7 @@ namespace Core.Ship
 
             if (_shipMovement != null)
             {
-               bool success = _shipMovement.TryToStartMovement(newPos, newOrientation);
+                bool success = _shipMovement.TryToStartMovement(newPos, newOrientation);
                 UpdateSubPosition();
 
                 return success;

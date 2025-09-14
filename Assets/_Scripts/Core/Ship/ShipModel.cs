@@ -98,7 +98,7 @@ namespace Core.Ship
             }
 
             var randomPos = listOfCells[UnityEngine.Random.Range(0, listOfCells.Count)];
-            Debug.Log("GetDestroyerAttackCellForAI:: Type: " + rndShip.shipModel.type + "  Name: " +rndShip.name+" is shooting at "+ randomPos);
+            Debug.Log("GetDestroyerAttackCellForAI:: Type: " + rndShip.shipModel.type + "  Name: " + rndShip.name + " is shooting at " + randomPos);
             return randomPos;
         }
 
@@ -278,7 +278,7 @@ namespace Core.Ship
             { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser) } }
         };
     }
-    
-    
-    
+
+
+
 }
