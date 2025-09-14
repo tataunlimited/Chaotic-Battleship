@@ -76,14 +76,10 @@ namespace Core.Board
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetMouseButtonDown(1))
             {
-                foreach (var enemyShip in enemyView.SpawnedShips)
-                {
-                    enemyShip.Value.ApplyDamage(100);
-                }
+                ClearSelectedShip();
             }
-
 
         }
 
@@ -109,8 +105,11 @@ namespace Core.Board
             {
                 movementCellManager.SpawnCell(cell, () =>
                 {
-                    SelectedShip.UpdatePosition(shipView.shipModel.MoveTo(cell), shipView.shipModel.orientation);
-                    ClearSelectedShip();
+                    if (SelectedShip.UpdatePosition(cell, shipView.shipModel.orientation))
+                    {
+                        shipView.shipModel.UpdateMovementStatus();
+                        ClearSelectedShip();
+                    }
                     
                 });
             }

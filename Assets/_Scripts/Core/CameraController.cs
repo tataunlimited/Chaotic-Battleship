@@ -1,3 +1,5 @@
+using System;
+using DG.Tweening;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -13,10 +15,14 @@ public class CameraController : MonoBehaviour
     public Vector3 defaultEulerAngles;
     public Vector3 attackPosition;
     public Vector3 attackEulerAngles;
+    
+    public Vector3 enemyBoardViewPosition;
+    public Vector3 enemyBoardEulerAngles;
 
     [Header("Transition Settings")]
     [Tooltip("Seconds to move between views when duration not provided.")]
     public float transitionDuration = 0.6f;
+    public float zoomDuration = 0.3f;
     public AnimationCurve easing = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
     public bool useUnscaledTime = false;
 
@@ -26,6 +32,9 @@ public class CameraController : MonoBehaviour
     [Range(1f, 179f)] public float attackFOV  = 45f;
 
     public bool IsTransitioning { get; private set; }
+    private bool _isZooming;
+    
+    private bool _isDefaultView;
 
     Coroutine _activeRoutine;
 
@@ -34,6 +43,7 @@ public class CameraController : MonoBehaviour
         if (!targetCamera) {targetCamera = Camera.main;}
         defaultPosition = transform.position;
         defaultEulerAngles = transform.rotation.eulerAngles;
+        _isDefaultView = true;
         if (targetCamera) defaultFOV = targetCamera.fieldOfView;
     }
 
@@ -45,6 +55,7 @@ public class CameraController : MonoBehaviour
         float dur = instant ? 0f : transitionDuration;
         float? fov = tweenFieldOfView && targetCamera ? defaultFOV : (float?)null;
         LerpToPose(pose, dur, fov);
+        _isDefaultView = true;
     }
 
     /// <summary>Lerp to the attack view (anchor or fallback).</summary>
@@ -54,6 +65,7 @@ public class CameraController : MonoBehaviour
         float dur = instant ? 0f : transitionDuration;
         float? fov = tweenFieldOfView && targetCamera ? attackFOV : (float?)null;
         LerpToPose(pose, dur, fov);
+        _isDefaultView = false;
     }
 
     /// <summary>Immediately snaps to the default view (no tween).</summary>
@@ -95,6 +107,24 @@ public class CameraController : MonoBehaviour
     {
         if (_activeRoutine != null) StopCoroutine(_activeRoutine);
         _activeRoutine = StartCoroutine(Co_LerpToPose(targetPose, duration, fovTarget));
+    }
+
+    private void Update()
+    {
+        if(!_isDefaultView || _isZooming)
+            return;
+        if (Input.mouseScrollDelta.y > 0f)
+        {
+            transform.DOMove(enemyBoardViewPosition, zoomDuration).OnComplete(()=>_isZooming = false);
+            transform.DORotate(enemyBoardEulerAngles, zoomDuration);
+            _isZooming = true;
+        }
+        else if(Input.mouseScrollDelta.y < 0f)
+        {
+            transform.DOMove(defaultPosition, zoomDuration).OnComplete(()=>_isZooming = false);;
+            transform.DORotate(defaultEulerAngles, zoomDuration);
+            _isZooming = false;
+        }
     }
 
     System.Collections.IEnumerator Co_LerpToPose(Pose targetPose, float duration, float? fovTarget)

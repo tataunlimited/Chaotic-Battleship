@@ -10,7 +10,6 @@ namespace Core.Board
 {
     public class BoardView : MonoBehaviour
     {
-        private static readonly int Color1 = Shader.PropertyToID("_Color");
 
         [Header("Config")]
         public BoardSide side = BoardSide.Player;
@@ -23,13 +22,12 @@ namespace Core.Board
         public GameObject cellPrefab;
         public GameObject hitFirePrefab;
         private readonly List<GameObject> phasePersistentFx = new();
-        public Color baseColor = Color.cyan;
 
         public BoardModel Model { get; private set; }
         public Dictionary<string, ShipView> SpawnedShips { get; } = new();
 
         private Dictionary<string, ShipModel> previousShipPlacements = new();
-        private readonly Dictionary<GridPos, Renderer> _tiles = new();
+        private readonly Dictionary<GridPos, GridCell> _tiles = new();
         private int _lastShipId = 0;
 
         public bool IsLastShip => SpawnedShips.Values.ToList().FindAll(x => !x.shipModel.isDestroyed).Count == 1;
@@ -82,7 +80,7 @@ namespace Core.Board
             foreach (var pair in SpawnedShips)
             {
                 wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
-                pair.Value.UpdatePosition(previousShipData.root, previousShipData.orientation);
+                pair.Value.SnapShipOnGrid(previousShipData.root, previousShipData.orientation);
                 pair.Value.shipModel.movementPattern.Reset();
             }
 
@@ -100,8 +98,8 @@ namespace Core.Board
                     var p = new GridPos(x, y);
                     var go = Instantiate(cellPrefab, GridToWorld(p), Quaternion.identity, parent);
                     go.name = $"{side}_Cell_{x}_{y}";
-                    var child = go.transform.GetChild(0);
-                    if (child.TryGetComponent(out Renderer r)) _tiles[p] = r;
+                    if(go.TryGetComponent(out GridCell r)) _tiles[p] = r;
+
                 }
 
             UpdateBoard();
@@ -118,14 +116,7 @@ namespace Core.Board
             p = new GridPos(x, y);
             return Model.InBounds(p);
         }
-
-        private void Tint(GridPos p, Color c)
-        {
-            if(!Model.InBounds(p))
-                return;
-            if (_tiles.TryGetValue(p, out var r) && r.material.HasProperty(Color1))
-                r.material.color = c;
-        }
+        
 
         public void Tint(List<GridPos> positions)
         {
@@ -139,21 +130,9 @@ namespace Core.Board
         {
             if(!Model.InBounds(p))
                 return;
-            Tint(p, GetColor(p));
-        }
-
-        private Color GetColor(GridPos p)
-        {
-            Color c = Model.Get(p) switch
-            {
-                CellState.Empty => baseColor,
-                CellState.Ship => baseColor,
-                CellState.Hit => Color.red,
-                CellState.NearMiss => Color.cyan,
-                CellState.Miss => Color.gray,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-            return c;
+            //Tint(p, GetColor(p));
+            if (_tiles.TryGetValue(p, out var r))
+                r.SetColor(Model.Get(p));
         }
 
         public bool TryGetShipAt(GridPos pos, out ShipView shipView)
@@ -173,14 +152,7 @@ namespace Core.Board
             shipView = null;
             return false;
         }
-
-        public void RevealShip(ShipView shipView)
-        {
-            shipView.Show();
-            foreach (var gp in shipView.shipModel.GetCells())
-                Tint(gp, Color.green);
-        }
-
+        
         public void SpawnPersistentHitFire(ShipView ship, GridPos cell, float yOffset = 0.5f)
         {
             if (hitFirePrefab == null || ship == null) return;
@@ -264,7 +236,6 @@ namespace Core.Board
                 {
                     Tint(shipModel.GetCells());
                 }
-
                 return true; // we spawned a ship view
             }
 
@@ -446,7 +417,7 @@ namespace Core.Board
             foreach (GridPos gp in shipModel.GetCells())
             {
                 if (Model.Get(gp) == CellState.Ship)
-                    Tint(gp, baseColor);
+                    Tint(gp);
             }
         }
 

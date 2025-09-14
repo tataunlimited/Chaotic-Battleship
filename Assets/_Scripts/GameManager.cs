@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.Board;
+using Core.Ship.Upgrade;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     public BoardController boardController;
     public CameraController cameraController;
+    
+    public ArmorUpgradeSO armorUpgradeSO;
 
     public enum PHASE_STATE
     {
