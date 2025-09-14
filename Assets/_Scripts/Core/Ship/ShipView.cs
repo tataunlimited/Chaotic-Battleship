@@ -18,12 +18,6 @@ namespace Core.Ship
         public BoardView Board { private set; get; }
         private ShipHealth _shipHealth;
 
-        [SerializeField]
-        private GameObject torpedoPrefab;
-
-        [SerializeField]
-        private Transform torpedoSpawnPoint;
-
 
         public GameObject defaultState;
         public GameObject brokenState;
@@ -51,8 +45,7 @@ namespace Core.Ship
         public float RockAngleDeg { get; private set; } // roll angle in degrees
         public float BobOffset { get; private set; } // vertical offset
 
-        [Header("View Smoothing (optional)")]
-        [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
+        [Header("View Smoothing (optional)")] [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
         public float rotationLerp = 12f;
 
         [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
@@ -198,11 +191,6 @@ namespace Core.Ship
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
             var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
-            // Check if the current ship is the player's submarine
-            if (IsPlayer && shipModel.type == ShipType.Submarine)
-            {
-                FireTorpedo();
-            }
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
@@ -289,17 +277,6 @@ namespace Core.Ship
             return isSunk;
         }
 
-        private void FireTorpedo()
-        {
-            if (torpedoPrefab != null && torpedoSpawnPoint != null)
-            {
-                // Get the forward direction of the submarine
-                Vector3 forwardDirection = transform.forward;
-
-                // Instantiate the torpedo at the spawn point's position and rotation
-                Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
-            }
-        }
 
         public bool UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
@@ -317,7 +294,7 @@ namespace Core.Ship
 
             if (_shipMovement != null)
             {
-                bool success = _shipMovement.TryToStartMovement(newPos, newOrientation);
+               bool success = _shipMovement.TryToStartMovement(newPos, newOrientation);
                 UpdateSubPosition();
 
                 return success;
