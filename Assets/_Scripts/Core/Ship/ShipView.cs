@@ -68,10 +68,7 @@ namespace Core.Ship
         private Quaternion _baseRot;
         private Vector3 _defaultStateLocalPos;
         private ShipMovement _shipMovement;
-        public int armorLevel;
-        public int specialAbilityLevel;
-        public int movementLevel;
-        public int attackLevel;
+
 
         private void Awake()
         {
@@ -102,15 +99,17 @@ namespace Core.Ship
             shipModel = model;
             IsPlayer = isPlayer;
             SetShipOnGrid(!IsPlayer);
-            UpdateLevelData();
+            if(IsPlayer)
+                LoadPlayerShipData();
             if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
         }
 
-        private void UpdateLevelData()
+        private void LoadPlayerShipData()
         {
-            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, armorLevel);
+            var pd = PlayerData.Instance;
+            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Armor));
             if (armorData != null)
             {
                 shipModel.SetArmorLevelData(armorData);
