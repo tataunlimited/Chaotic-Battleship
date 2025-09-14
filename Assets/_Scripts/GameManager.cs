@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
         PLAYER_PLACING_SHIPS,
         PLAYER_FIRING,
         ENEMY_FIRING,
-        ENEMY_MOVING,
         PLAYER_MOVING,
+        ENEMY_MOVING,
         ENDWAVE
     }
 
@@ -198,14 +198,13 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Phase changed to: ENEMY_MOVING");
                 break;
 
-            case PHASE_STATE.ENEMY_MOVING:
-                phaseState = PHASE_STATE.PLAYER_MOVING;
-                Debug.Log("Phase changed to: PLAYER_MOVING");
-                break;
-
             case PHASE_STATE.PLAYER_MOVING:
                 if (boardController != null)
                     boardController.ResetGridIndicators();
+
+                phaseState = PHASE_STATE.ENEMY_MOVING;
+                Debug.Log("Phase changed to: ENEMY_MOVING");
+                EnemyMoves();
 
                 Debug.Log("Player Movement Confirmed");
 
@@ -216,10 +215,15 @@ public class GameManager : MonoBehaviour
                 // Snapshot after player commits movement
                 SaveSnapshot();
 
-                phaseState = PHASE_STATE.PLAYER_FIRING;
-                Debug.Log("Phase changed to: PLAYER_FIRING");
+                phaseState = PHASE_STATE.ENEMY_MOVING;
+                Debug.Log("Phase changed to: ENEMY_MOVING");
                 if (nextPhaseBtn != null) nextPhaseBtn.interactable = false;
                 StartCoroutine(AttackingPhase());
+                break;
+
+            case PHASE_STATE.ENEMY_MOVING:
+                phaseState = PHASE_STATE.PLAYER_MOVING;
+                Debug.Log("Phase changed to: PLAYER_MOVING");
                 break;
 
             case PHASE_STATE.ENDWAVE:
@@ -378,10 +382,10 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("Wave end conditions not met, continuing...");
-            phaseState = PHASE_STATE.ENEMY_MOVING;
-            Debug.Log("Phase changed to: ENEMY_MOVING");
+            phaseState = PHASE_STATE.PLAYER_MOVING;
+            Debug.Log("Phase changed to: PLAYER_MOVING");
+            PlayerMoves();
 
-            EnemyMoves();
             if (cameraController != null) cameraController.GoToDefaultView();
             if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
             Debug.Log("nextPhaseBtn.interactable = true");

@@ -24,10 +24,11 @@ namespace Core.Ship
         public bool submerged = false;
         public int hp;
         public int MaxHP => length;
+        public int currentArmor;
         public bool IsSunk => isDestroyed || hp <= 0;
         public Orientation orientation = Orientation.North;
         public GridPos root; // bow (front) position   
-        public GridPos reserved = new GridPos(-1000, -1000); // bow (front) position   
+        public GridPos reserved = new GridPos(-1000, -1000); // Destroy's attack position   
         public bool isDestroyed = false;
         private int _round = 0;
         public ShipMovementPattern movementPattern = null;
@@ -77,31 +78,6 @@ namespace Core.Ship
             isDestroyed = false;
         }
 
-        private GridPos GetDestroyerAttackCellForAI(BoardView boardView)
-        {
-            var shipViews = boardView.SpawnedShips.Values.ToList();
-            int randomIndex = UnityEngine.Random.Range(0, shipViews.Count);
-            var rndShip = shipViews[randomIndex];
-            var bowPosition = rndShip.shipModel.root;
-
-            var listOfCells = new List<GridPos>();
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
-                    var newCell = new GridPos(bowPosition.x + i, bowPosition.y + j);
-                    if (boardView.Model.InBounds(newCell))
-                    {
-                        listOfCells.Add(newCell);
-                    }
-                }
-            }
-
-            var randomPos = listOfCells[UnityEngine.Random.Range(0, listOfCells.Count)];
-            Debug.Log("GetDestroyerAttackCellForAI:: Type: " + rndShip.shipModel.type + "  Name: " +rndShip.name+" is shooting at "+ randomPos);
-            return randomPos;
-        }
-
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
             List<GridPos> coords = new List<GridPos>();
@@ -112,11 +88,9 @@ namespace Core.Ship
                     {
                         reserved = root;
                     }
-                    // means enemy is firing
-                    if (boardView.isPlayer)
-                    {
-                        reserved = GetDestroyerAttackCellForAI(boardView);
-                    }
+
+                    // AI destroyer target is set during AI movement/placement now
+
                     coords.Add(reserved);
                     break;
                 case ShipType.Battleship:

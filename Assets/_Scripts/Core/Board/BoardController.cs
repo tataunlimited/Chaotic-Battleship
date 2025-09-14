@@ -24,7 +24,8 @@ namespace Core.Board
         private Camera _camera;
         public LayerMask shipLayer;
 
-
+        // exposing this for debugging purposes
+        [SerializeField]
         private EnemyWaveManager _enemyWaveManager;
         public static BoardController Instance;
 
@@ -164,8 +165,8 @@ namespace Core.Board
             enemyView.BeginMovementPhase();
 
             EnsureEnemyWaveManager();
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            _enemyWaveManager.RandomlyMoveShips(enemyView);
+            // update the enemy ship locations and orientations, and place them on the enemyView board
+            _enemyWaveManager.MoveEnemyShips(enemyView, playerView);
 
             // use revealShips for testing purposes to show where the enemy ships are placed
             if (enemyView.revealShips)
@@ -175,10 +176,19 @@ namespace Core.Board
         public void SpawnEnemyShips()
         {
             _enemyWaveManager = new EnemyWaveManager();
+
+            // DEBUG ONLY: do not check in with the next 2 lines
+            _enemyWaveManager.intelligenceLevel = 0;
+            Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
+
             List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
             _enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
+
+            // Note: the designer said not to move intelligently during enemy placement
+            // Give the AI a chance to move to "smarter" locations
+            //_enemyWaveManager.MoveEnemyShips(enemyView, playerView);
 
             enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
             foreach (ShipModel ship in enemyShips)
