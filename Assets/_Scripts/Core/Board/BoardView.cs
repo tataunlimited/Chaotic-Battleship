@@ -236,7 +236,6 @@ namespace Core.Board
                 {
                     Tint(shipModel.GetCells());
                 }
-
                 return true; // we spawned a ship view
             }
 
