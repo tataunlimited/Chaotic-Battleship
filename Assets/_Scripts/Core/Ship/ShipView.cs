@@ -296,8 +296,11 @@ namespace Core.Ship
                 // Get the forward direction of the submarine
                 Vector3 forwardDirection = transform.forward;
 
+
                 // Instantiate the torpedo at the spawn point's position and rotation
                 Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
+
+                Debug.Log("Fire Torpedo");
             }
         }
 
