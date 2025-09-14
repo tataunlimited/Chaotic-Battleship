@@ -21,16 +21,6 @@ public class GridManager : MonoBehaviour
         grid = new Grid2D<CellType>(10, 10, 1.0f, Vector3.zero, CellType.Empty);
     }
 
-    public bool InBounds(GridPos p)
-    {
-        return grid.InBounds(p);
-    }
-
-    public CellType GetCellType(GridPos p)
-    {
-        return grid.Get(p);
-    }
-
     public bool WorldToGrid(Vector3 worldPosition, out GridPos gridPos)
     {
         return grid.WorldToGrid(worldPosition, out gridPos);
