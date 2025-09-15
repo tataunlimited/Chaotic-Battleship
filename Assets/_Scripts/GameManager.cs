@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text phaseText;
     public TMP_Text roundNumber;
+    
+    private int _roundNumber = 1;
 
     // set true when we load a snapshot so we can bypass placement UI gating
     private bool _loadedFromSnapshot = false;
@@ -70,7 +72,7 @@ public class GameManager : MonoBehaviour
         phaseText.text = playerData.currentPhase.ToString();
         Init();
 
-        roundNumber.text = playerData.currentRound.ToString();
+        roundNumber.text = _roundNumber.ToString();
 
     }
 
@@ -357,8 +359,23 @@ public class GameManager : MonoBehaviour
 
         if (boardController != null)
         {
-            winConditionMet = boardController.enemyView.AllShipsAreDestroyed();
-            loseConditionMet = boardController.playerView.AllShipsAreDestroyed();
+            if (_roundNumber < 10)
+            {
+                winConditionMet = boardController.enemyView.AllShipsAreDestroyed();
+                loseConditionMet = boardController.playerView.AllShipsAreDestroyed();
+            }
+            else
+            {
+                var ratio = boardController.enemyView.ComputeTotalHealth()/boardController.playerView.ComputeTotalHealth();
+                if (ratio > 1)
+                {
+                    loseConditionMet = true;
+                }
+                else
+                {
+                    winConditionMet = true;
+                }
+            }
         }
 
         if (winConditionMet)
@@ -389,9 +406,8 @@ public class GameManager : MonoBehaviour
             if (cameraController != null) cameraController.GoToDefaultView();
             if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
             Debug.Log("nextPhaseBtn.interactable = true");
-            var playerData = PlayerData.Instance;
-            playerData.currentRound++;
-            roundNumber.text = playerData.currentRound.ToString();
+            _roundNumber++;
+            roundNumber.text = _roundNumber.ToString();
         }
     }
 

@@ -11,7 +11,6 @@ public class PlayerData : MonoBehaviour
     // Core values
     public int waveNumber = 1;
     public int currentScore = 0;
-    public int currentRound = 1;
     public enum Phase {Placement, Attack, Movement}
     public Phase currentPhase;
     
