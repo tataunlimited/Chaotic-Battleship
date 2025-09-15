@@ -1,27 +1,44 @@
 using UnityEngine;
-using static GameManager;
 
-public class NextWave: MonoBehaviour
+public class NextWave : MonoBehaviour
 {
-    public GameObject NextWavePanel;
-
+    [SerializeField] private GameObject NextWavePanel;
 
     public void StartNextWave()
     {
-        // GameManager.Get().StartNextWave();
-        // NextWavePanel.SetActive(false);
         Debug.Log("Starting Next Wave");
-        PlayerData.Instance.waveNumber ++;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
 
+        var gm = GameManager.instance ?? GameManager.Get();
+        if (gm != null)
+        {
+            gm.StartNextWave();                 // increments wave & saves; also resets placement UI
+            // NEW: Set baseline for the new wave so restarts roll back correctly
+            if (PlayerData.Instance != null)
+            {
+                PlayerData.Instance.scoreAtWaveStart = PlayerData.Instance.currentScore;
+                SaveManager.SaveGame();
+            }
+            if (NextWavePanel) NextWavePanel.SetActive(false);
+            return;
+        }
+
+        // Safety: if GameManager isn't found for some reason, at least bump wave meta
+        if (PlayerData.Instance != null)
+        {
+            PlayerData.Instance.waveNumber += 1;
+            PlayerData.Instance.scoreAtWaveStart = PlayerData.Instance.currentScore; // NEW
+        }
+        SaveManager.ClearBoardState();
+        SaveManager.SaveGame();
+        if (NextWavePanel) NextWavePanel.SetActive(false);
     }
 
     public void Quit()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 }

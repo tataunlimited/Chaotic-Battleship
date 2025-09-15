@@ -1,14 +1,10 @@
 
-using Core.GridSystem;
-
-using UnityEngine;
-using System.Collections.Generic;
 using System;
-using Random = System.Random;
+using System.Collections.Generic;
 using Core.Board;
-using static UnityEngine.EventSystems.EventTrigger;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
+using Core.GridSystem;
+using UnityEngine;
+using Random = System.Random;
 
 
 namespace Core.Ship
@@ -24,7 +20,15 @@ namespace Core.Ship
         public bool canMoveAfterRotating = false;
         public int maxMovementPoints = 1;
         public int movesRemaining = 1;
+        public bool hasAlreadyMoved = false;
         public bool hasAlreadyRotated = false;
+
+        public bool canMove => !hasAlreadyMoved && (!hasAlreadyRotated || canMoveAfterRotating);
+
+        // The initial design used to be that if it rotated, it would subtract 1 from the movesRemaining
+        //      and it could only rotate if it hadn't moved it's full maxMovementPoints, but I don't see that in the GDD anymore
+        //public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating && movesRemaining > 0);
+        public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating);
 
 
         public static ShipMovementPattern CreateMovementPattern(ShipType type)
@@ -43,6 +47,7 @@ namespace Core.Ship
         {
             movesRemaining = maxMovementPoints;
             hasAlreadyRotated = false;
+            hasAlreadyMoved = false;
         }
 
         // AI Movement Decision Rules:
@@ -61,7 +66,7 @@ namespace Core.Ship
         public bool RandomlyTurnAndMove(BoardView board, ShipView shipView)
         {
             ShipModel ship = shipView.shipModel;
-            Debug.Log("RandomlyTurnAndMove ship: " + ship.id + " starts with orientation: " + ship.orientation + ", pos: " + ship.root);
+            Debug.Log("RandomlyTurnAndMove ship: " + shipView.name + " starts with orientation: " + ship.orientation + ", pos: " + ship.root);
 
             Reset();
 
@@ -76,7 +81,7 @@ namespace Core.Ship
             }
 
             bool isSuccess = MoveToARandomPosition(board, shipView);
-            Debug.Log("RandomlyTurnAndMove ship: " + ship.id + " ends at orientation: " + ship.orientation + ", pos: " + ship.root);
+            Debug.Log("RandomlyTurnAndMove ship: " + shipView.name + " ends at orientation: " + ship.orientation + ", pos: " + ship.root);
             return isSuccess;
         }
 
@@ -88,26 +93,14 @@ namespace Core.Ship
             Orientation newOrientation = ship.orientation;
             List<Orientation> validOrientations = new List<Orientation>();     // valid Orientations that the ship can fit
 
-            if (ship.isDestroyed)   // destroyed ships can't rotate
+            if (!ship.canRotate)   // destroyed ships can't rotate
                 return false;
 
-            // remove the current ship location so it doesn't block possible locations
-            board.Model.ResetShipCells(ship);
-            //if (board.revealShips)
-            //    board.HideAShip(ship);
+            if (CanRotateLeft(board, shipView, out newOrientation))
+                validOrientations.Add(newOrientation);
 
-            ship.orientation = ship.RotateLeft();
-            if (board.Model.ValidateShipPlacement(ship))
-            {
-                validOrientations.Add(ship.orientation);
-            }
-
-            ship.orientation = originalOrientation;
-            ship.orientation = ship.RotateRight();
-            if (board.Model.ValidateShipPlacement(ship))
-            {
-                validOrientations.Add(ship.orientation);
-            }
+            if (CanRotateRight(board, shipView, out newOrientation))
+                validOrientations.Add(newOrientation);
 
             if (validOrientations.Count == 0)
             {
@@ -118,7 +111,9 @@ namespace Core.Ship
             {
                 newOrientation = validOrientations[rnd.Next(validOrientations.Count)];
                 hasAlreadyRotated = true;
-                movesRemaining--;
+
+                // The initial design used to be that if it rotated, it would subtract 1 from the movesRemaining but I don't see that in the GDD anymore
+                //movesRemaining--;
             }
 
             // place the ship
@@ -129,12 +124,52 @@ namespace Core.Ship
             return hasSuccessfullyTurned;
         }
 
+        public bool CanRotateLeft(BoardView board, ShipView shipView, out Orientation orientation)
+        {
+            ShipModel ship = shipView.shipModel;
+            bool canSuccessfullyTurn = false;
+            Orientation originalOrientation = ship.orientation;
+
+            // remove the current ship location so it doesn't block possible locations
+            board.Model.ResetShipCells(ship);
+
+            ship.orientation = ship.RotateLeft();
+            canSuccessfullyTurn = board.Model.ValidateShipPlacement(ship);
+            orientation = ship.orientation;
+
+            // put the ship back at its original location
+            shipView.UpdatePosition(ship.root, originalOrientation, false);
+            return canSuccessfullyTurn;
+        }
+
+
+        public bool CanRotateRight(BoardView board, ShipView shipView, out Orientation orientation)
+        {
+            ShipModel ship = shipView.shipModel;
+            bool canSuccessfullyTurn = false;
+            Orientation originalOrientation = ship.orientation;
+
+            // remove the current ship location so it doesn't block possible locations
+            board.Model.ResetShipCells(ship);
+
+            ship.orientation = ship.RotateRight();
+            canSuccessfullyTurn = board.Model.ValidateShipPlacement(ship);
+            orientation = ship.orientation;
+
+            // put the ship back at its original location
+            shipView.UpdatePosition(ship.root, originalOrientation, false);
+            return canSuccessfullyTurn;
+        }
+
         private bool MoveToARandomPosition(BoardView board, ShipView shipView)
         {
             ShipModel ship = shipView.shipModel;
             bool hasBeenSuccessfullyPlaced = true;
             GridPos originalPosition = ship.root;
             GridPos newPosition = ship.root;
+
+            if (!ship.canMove)   // destroyed ships can't rotate
+                return false;
 
             // remove the current ship location so it doesn't block possible locations
             board.Model.ResetShipCells(ship);
@@ -162,7 +197,6 @@ namespace Core.Ship
             return hasBeenSuccessfullyPlaced;
         }
 
-
         public abstract List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship);
 
     }
@@ -173,7 +207,7 @@ namespace Core.Ship
         public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
         {
             List<GridPos> locations = new();
-            if (ship.isDestroyed)   // destroyed ships can't move
+            if (!ship.canMove)    // destroyed ships can't move. and can't move again if already moved or rotated
                 return locations;
 
             GridPos originalPosition = ship.root;
@@ -204,7 +238,7 @@ namespace Core.Ship
         public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
         {
             List<GridPos> locations = new();
-            if (ship.isDestroyed)   // destroyed ships can't move
+            if (!ship.canMove)   // destroyed ships can't move. and can't move again if already moved or rotated
                 return locations;
 
             GridPos originalPosition = ship.root;
@@ -245,7 +279,7 @@ namespace Core.Ship
         public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
         {
             List<GridPos> locations = new();
-            if (ship.isDestroyed)   // destroyed ships can't move
+            if (!ship.canMove)    // destroyed ships can't move.
                 return locations;
 
             GridPos originalPosition = ship.root;     
@@ -319,7 +353,7 @@ namespace Core.Ship
         public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
         {
             List<GridPos> locations = new();
-            if (ship.isDestroyed)   // destroyed ships can't move
+            if (!ship.canMove)    // destroyed ships can't move.
                 return locations;
 
             GridPos originalPosition = ship.root;

@@ -22,8 +22,10 @@ namespace Core.Board
         public ShipView SelectedShip {get; private set;}
         
         private Camera _camera;
+        public LayerMask shipLayer;
 
-
+        // exposing this for debugging purposes
+        [SerializeField]
         private EnemyWaveManager _enemyWaveManager;
         public static BoardController Instance;
 
@@ -74,14 +76,10 @@ namespace Core.Board
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.C))
+            if (Input.GetMouseButtonDown(1))
             {
-                foreach (var enemyShip in enemyView.SpawnedShips)
-                {
-                    enemyShip.Value.ApplyDamage(100);
-                }
+                ClearSelectedShip();
             }
-
 
         }
 
@@ -107,8 +105,12 @@ namespace Core.Board
             {
                 movementCellManager.SpawnCell(cell, () =>
                 {
-                    SelectedShip.UpdatePosition(shipView.shipModel.MoveTo(cell), shipView.shipModel.orientation);
-                    ClearSelectedShip();
+                    if (SelectedShip.UpdatePosition(cell, shipView.shipModel.orientation))
+                    {
+                        shipView.shipModel.UpdateMovementStatus();
+                        ClearSelectedShip();
+                    }
+                    
                 });
             }
             if(playerView.Model.InBounds(SelectedShip.shipModel.root))
@@ -116,6 +118,10 @@ namespace Core.Board
             
             OnShipSelected?.Invoke(true);
 
+
+            // enable/disable the rotate buttons
+            GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
+            GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
         }
 
         public void ClearSelectedShip()
@@ -145,7 +151,7 @@ namespace Core.Board
         private bool TrySelectShip(out ShipView shipView)
         {
             shipView = null;
-            if (!Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit, 500f))
+            if (!Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit, 500f, shipLayer))
                 return false;
             shipView = hit.collider.GetComponentInParent<ShipView>();
             return shipView != null && shipView.IsPlayer;
@@ -155,8 +161,11 @@ namespace Core.Board
         {
             Debug.Log("UpdateEnemyShips");
 
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            _enemyWaveManager.RandomlyMoveShips(enemyView);
+            enemyView.BeginMovementPhase();
+
+            EnsureEnemyWaveManager();
+            // update the enemy ship locations and orientations, and place them on the enemyView board
+            _enemyWaveManager.MoveEnemyShips(enemyView, playerView);
 
             // use revealShips for testing purposes to show where the enemy ships are placed
             if (enemyView.revealShips)
@@ -166,10 +175,19 @@ namespace Core.Board
         public void SpawnEnemyShips()
         {
             _enemyWaveManager = new EnemyWaveManager();
+
+            // DEBUG ONLY: do not check in with the next 2 lines
+            _enemyWaveManager.intelligenceLevel = 0;
+            Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
+
             List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
             _enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
+
+            // Note: the designer said not to move intelligently during enemy placement
+            // Give the AI a chance to move to "smarter" locations
+            //_enemyWaveManager.MoveEnemyShips(enemyView, playerView);
 
             enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
             foreach (ShipModel ship in enemyShips)
@@ -184,10 +202,10 @@ namespace Core.Board
         {
             return shipType switch
             {
-                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 3), Orientation.North, playerView),
-                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 2), Orientation.North, playerView),
-                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-2, 1), Orientation.North, playerView),
-                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-3, 3), Orientation.North, playerView),
+                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 1), Orientation.North, playerView),
+                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 3), Orientation.North, playerView),
+                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-1, 2), Orientation.North, playerView),
+                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-1, 4), Orientation.North, playerView),
                 _ => throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null),
             };
         }
@@ -223,6 +241,13 @@ namespace Core.Board
             playerView.UpdateBoard();
             
         }
+
+        public void EnsureEnemyWaveManager()
+        {
+            if (_enemyWaveManager == null)
+                _enemyWaveManager = new EnemyWaveManager();
+        }
+
 
         public void ClearUI()
         {

@@ -46,7 +46,12 @@ namespace Core.Board
         public bool InBounds(GridPos p) =>
             p.x >= 0 && p.y >= 0 && p.x < Width && p.y < Height;
 
-        public CellState Get(GridPos p) => _cells[p.x, p.y];
+        public CellState Get(GridPos p, bool ignoreOutOfBounds = false)
+        {
+            if (!InBounds(p) && ignoreOutOfBounds)
+                return CellState.Empty;           
+            return _cells[p.x, p.y];
+        }
 
         public bool TryPlaceShip(ShipModel shipModel)
         {

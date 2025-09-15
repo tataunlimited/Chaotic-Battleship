@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
-using NUnit.Framework;
-using Core.Ship;
 using UnityEngine;
 using System;
+using DG.Tweening;
 
 namespace Core.Ship
 {
@@ -13,41 +12,52 @@ namespace Core.Ship
     {
         private static WaitForSeconds _waitForSeconds0_1 = new(0.1f);
         public ShipModel shipModel;
-        public bool IsPlayer {private set; get;}
-        
+        public bool IsPlayer { private set; get; }
+
         private Collider _collider;
-        private BoardView _originBoardView;
+        public BoardView Board { private set; get; }
         private ShipHealth _shipHealth;
+
+        [SerializeField]
+        private GameObject torpedoPrefab;
+
+        [SerializeField]
+        private Transform torpedoSpawnPoint;
 
 
         public GameObject defaultState;
         public GameObject brokenState;
-        
+
+        private ShipMovementComponent _movementComponent;
+
+        public Action<ShipView> OnBeforeShipPlacedOnGrid;
+
         public bool IsInInitialPhase { get; private set; }
-        public bool IsPlacedInsideTheGrid => shipModel.GetCells().TrueForAll(p=>_originBoardView.Model.InBounds(p));
+        public bool IsPlacedInsideTheGrid => shipModel.GetCells().TrueForAll(p => Board.Model.InBounds(p));
 
         //rocking
         // --- Rocking/Bobbing State (Model-scope, no Unity deps) ---
         public bool rockingEnabled = true;
 
         // Degrees around the "roll" axis (e.g., Z in 2D top-down)
-        public float rockAmplitudeDeg = 2.0f;     // gentle roll
-        public float rockFrequencyHz = 0.20f;     // 0.2 cycles/sec
+        public float rockAmplitudeDeg = 2.0f; // gentle roll
+        public float rockFrequencyHz = 0.20f; // 0.2 cycles/sec
 
         // Vertical (Y) offset units; scale in view if needed
         public float bobAmplitude = 0.06f;
         public float bobFrequencyHz = 0.33f;
 
         // Outputs (read by view)
-        public float RockAngleDeg { get; private set; }   // roll angle in degrees
-        public float BobOffset    { get; private set; }   // vertical offset
+        public float RockAngleDeg { get; private set; } // roll angle in degrees
+        public float BobOffset { get; private set; } // vertical offset
 
         [Header("View Smoothing (optional)")]
         [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
         public float rotationLerp = 12f;
+
         [Tooltip("Higher values = snappier response. 0 to disable smoothing.")]
         public float bobLerp = 12f;
-        
+
         private float _rockTime;
         private float _bobTime;
         private float _rockPhase;
@@ -56,28 +66,57 @@ namespace Core.Ship
         // Base grid pose (we add rocking/bobbing on top of this)
         private Vector3 _basePos;
         private Quaternion _baseRot;
+        private Vector3 _defaultStateLocalPos;
+        private ShipMovement _shipMovement;
+
+        // //AUDIO SFX
+        // public AudioSource shipConfirmationSFX;
+
 
         private void Awake()
         {
             EnsureComponents();
-            InitializeRocking(); 
+            InitializeRocking();
+        }
+
+        private void Start()
+        {
+            _baseRot = defaultState.transform.localRotation;
+            _basePos = defaultState.transform.localPosition;
+            _defaultStateLocalPos = defaultState.transform.localPosition;
+
+            if (IsPlayer)
+                _shipMovement = gameObject.AddComponent<ShipMovement>();
         }
 
         private void EnsureComponents()
         {
             if (_shipHealth == null) _shipHealth = GetComponent<ShipHealth>();
-            if (_collider == null)   _collider   = GetComponentInChildren<Collider>(true);
+            if (_collider == null) _collider = GetComponentInChildren<Collider>(true);
         }
+
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
         {
-            _originBoardView = boardView;
+            Board = boardView;
             _shipHealth = GetComponent<ShipHealth>();
             shipModel = model;
             IsPlayer = isPlayer;
             SetShipOnGrid(!IsPlayer);
+            if(IsPlayer)
+                LoadPlayerShipData();
             if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
+        }
+
+        private void LoadPlayerShipData()
+        {
+            var pd = PlayerData.Instance;
+            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Armor));
+            if (armorData != null)
+            {
+                shipModel.SetArmorLevelData(armorData);
+            }
         }
 
         public void Hide()
@@ -89,6 +128,7 @@ namespace Core.Ship
         {
             transform.GetChild(0).gameObject.SetActive(true);
         }
+
         void Update()
         {
             UpdateRock(Time.deltaTime);
@@ -98,7 +138,8 @@ namespace Core.Ship
         /// <summary>Seed phases & subtle per-ship variation. Call once after creating the model.</summary>
         public void InitializeRocking()
         {
-            int s = (shipModel.id?.GetHashCode() ?? 0) ^ ((int)shipModel.type * 73856093) ^ (shipModel.length * 19349663);
+            int s = (shipModel.id?.GetHashCode() ?? 0) ^ ((int)shipModel.type * 73856093) ^
+                    (shipModel.length * 19349663);
             var rng = new System.Random(s);
 
             _rockPhase = (float)rng.NextDouble() * (float)(Math.PI * 2.0);
@@ -111,6 +152,7 @@ namespace Core.Ship
             rockAmplitudeDeg *= jitterA;
             bobAmplitude *= jitterB;
         }
+
         public void UpdateRock(float deltaTime)
         {
             if (!rockingEnabled)
@@ -129,7 +171,8 @@ namespace Core.Ship
 
             // Primary + subtle secondary component for natural motion
             float rockPrimary = (float)Math.Sin(TwoPi * rockFrequencyHz * _rockTime + _rockPhase);
-            float rockSecondary = 0.35f * (float)Math.Sin(TwoPi * (rockFrequencyHz * 1.9f) * _rockTime + _rockPhase * 0.37f);
+            float rockSecondary =
+                0.35f * (float)Math.Sin(TwoPi * (rockFrequencyHz * 1.9f) * _rockTime + _rockPhase * 0.37f);
             RockAngleDeg = rockAmplitudeDeg * (rockPrimary + rockSecondary);
 
             float bobPrimary = (float)Math.Sin(TwoPi * bobFrequencyHz * _bobTime + _bobPhase);
@@ -141,35 +184,41 @@ namespace Core.Ship
         private void ApplyRockPose(float dt)
         {
             // Target pose layered on base (grid) pose
-            Quaternion targetRot = _baseRot * Quaternion.AngleAxis(RockAngleDeg, Vector3.forward); // roll around local Z
-            Vector3 targetPos = _basePos + new Vector3(0f, BobOffset, 0f);                         // bob along world Y
+            Quaternion targetRot =
+                _baseRot * Quaternion.AngleAxis(RockAngleDeg, Vector3.forward); // roll around local Z
+            Vector3 targetPos = _basePos + new Vector3(0f, BobOffset, 0f); // bob along world Y
 
             if (rotationLerp > 0f)
             {
                 float k = 1f - Mathf.Exp(-rotationLerp * dt);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, k);
+                defaultState.transform.localRotation =
+                    Quaternion.Slerp(defaultState.transform.localRotation, targetRot, k);
             }
             else
             {
-                transform.rotation = targetRot;
+                defaultState.transform.localRotation = targetRot;
             }
 
             if (bobLerp > 0f)
             {
                 float k = 1f - Mathf.Exp(-bobLerp * dt);
-                transform.position = Vector3.Lerp(transform.position, targetPos, k);
+                defaultState.transform.localPosition = Vector3.Lerp(defaultState.transform.localPosition, targetPos, k);
             }
             else
             {
-                transform.position = targetPos;
+                defaultState.transform.localPosition = targetPos;
             }
         }
 
-        
 
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
-            var coords = shipModel.GetAttackCoordinates(enemyBoard, _originBoardView.IsLastShip);
+            var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
+            // Check if the current ship is the player's submarine
+            if (IsPlayer && shipModel.type == ShipType.Submarine && coords.Count>0)
+            {
+                FireTorpedo();
+            }
             foreach (var gridPos in coords)
             {
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
@@ -191,98 +240,149 @@ namespace Core.Ship
                         if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
                         {
                             int damage = 1;
-                            if (shipModel.type == ShipType.Destroyer && _originBoardView.IsLastShip)
+                            if (shipModel.type == ShipType.Destroyer && Board.IsLastShip)
                             {
                                 damage = 9999;
                             }
-                            bool justSunk = enemyShip.ApplyDamage(damage);
 
-                            enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
+                            bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, out bool justSunk);
 
-                            //award per-segment points for HITS (player → enemy only)
-                            if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                            if (isDamaged)
                             {
-                                GameEvents.RaiseHitSegment(enemyShip.shipModel.type);
-                            }
-
-
-                            if (justSunk)
-                            {
-                                //sunk 
-                                VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
-                                enemyBoard.RevealAShip(enemyShip.shipModel);
-                                enemyBoard.OnShipSunk(enemyShip);
-                                enemyShip.defaultState.SetActive(false);
-                                enemyShip.brokenState.SetActive(true);
-                                
-                                //award SINK bonus (player → enemy only)
+                                enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
                                 if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
                                 {
-                                    GameEvents.RaiseDestroyedShip(enemyShip.shipModel.type);
+                                    GameEvents.RaiseHitSegment(enemyShip.shipModel.type);
                                 }
+                                if (justSunk)
+                                {
+                                    //sunk 
+                                    VFXManager.Instance.SpawnSunkEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                    enemyBoard.RevealAShip(enemyShip.shipModel);
+                                    enemyBoard.OnShipSunk(enemyShip);
+                                    enemyShip.defaultState.SetActive(false);
+                                    enemyShip.brokenState.SetActive(true);
+
+                                    //award SINK bonus (player → enemy only)
+                                    if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
+                                    {
+                                        GameEvents.RaiseDestroyedShip(enemyShip.shipModel.type);
+                                    }
+                                }
+                                else
+                                {
+                                    //hit 
+                                    VFXManager.Instance.PlayHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                }
+                                
                             }
                             else
                             {
-                                //hit 
-                                VFXManager.Instance.SpawnHitEffect(enemyBoard.GridToWorld(gridPos, 0.5f));
+                                VFXManager.Instance.PlayArmorHitSound();
 
                             }
+
+                            //award per-segment points for HITS (player → enemy only)
+                            
+
+
+                            
                         }
                     }
-                    else if(!ignoreSound)
+                    else if (!ignoreSound)
                     {
                         VFXManager.Instance.PlayFireSound();
                     }
-
                 }
 
 
                 yield return _waitForSeconds0_1;
             }
+
             SetPosition(); // reset position
+            UpdateSubPosition();
         }
 
-        public bool ApplyDamage(int damage)
+        public bool ApplyDamage(int damage, ShipType type, out bool isSunk)
         {
-            bool isSunk = shipModel.ApplyDamage(damage);
-            if(IsPlayer)
+            isSunk = false;
+            if (!shipModel.CanReceiveDamage(type))
+            {
+                return false;
+            }
+            
+            isSunk = shipModel.ApplyDamage(damage);
+            if (IsPlayer)
                 _shipHealth.UpdateHealthBar();
-            else if(!IsPlayer && isSunk)
+            else if (!IsPlayer && isSunk)
             {
                 _shipHealth.EnableDestroyedState(true);
             }
-            return isSunk;
+
+            return true;
         }
 
-
-        public void UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
+        private void FireTorpedo()
         {
+            if (torpedoPrefab != null && torpedoSpawnPoint != null)
+            {
+                // Instantiate the torpedo at the spawn point's position and rotation
+                Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
+            }
+        }
 
-             _originBoardView.Model.ResetShipCells(shipModel);
-             if (showCells)
-                 _originBoardView.Tint(shipModel.GetCells());
+        public bool UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
+        {
+            if (shipModel.root.x < 0 || shipModel.root.y < 0)
+            {
+                OnBeforeShipPlacedOnGrid?.Invoke(this);
+                SnapShipOnGrid(newPos, newOrientation, showCells);
+                return true;
+            }
 
+
+            Board.Model.ResetShipCells(shipModel);
+            if (showCells)
+                Board.Tint(shipModel.GetCells());
+
+            if (_shipMovement != null)
+            {
+                bool success = _shipMovement.TryToStartMovement(newPos, newOrientation);
+                UpdateSubPosition();
+
+                return success;
+            }
+
+
+            SnapShipOnGrid(newPos, newOrientation, showCells);
+            return true;
+        }
+
+        private void UpdateSubPosition()
+        {
+            if (shipModel.type == ShipType.Submarine && IsPlayer)
+            {
+                _basePos = shipModel.submerged
+                    ? _defaultStateLocalPos - new Vector3(0f, 0.5f, 0f)
+                    : _defaultStateLocalPos;
+                defaultState.transform.DOLocalMove(_basePos, 0.5f).SetEase(Ease.InSine);
+
+            }
+        }
+
+        public void SnapShipOnGrid(GridPos newPos, Orientation newOrientation, bool showCells = false)
+        {
             shipModel.orientation = newOrientation;
             shipModel.root = newPos;
-            _originBoardView.Model.TryPlaceShip(shipModel);
+            Board.Model.TryPlaceShip(shipModel);
             if (showCells)
-                _originBoardView.Tint(shipModel.GetCells());
-            
+                Board.Tint(shipModel.GetCells());
+
             SetPosition();
         }
 
         private void SetPosition()
         {
-            if (shipModel.submerged)
-            {
-                // Set the position of the submerged submarine
-                transform.position = _originBoardView.GridToWorld(shipModel.root, -0.5f);
-                Debug.Log(transform.position);
-            }
-            else
-            {
-                transform.position = _originBoardView.GridToWorld(shipModel.root);
-            }
             float yAngle = shipModel.orientation switch
             {
                 Orientation.North => 0,
@@ -292,13 +392,14 @@ namespace Core.Ship
                 _ => 0
             };
 
+
+            transform.position = Board.GridToWorld(shipModel.root);
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
-            _baseRot = transform.rotation;
-            _basePos = transform.position;
         }
 
         public void SelectShip()
         {
+            //shipConfirmationSFX.Play();
             EnsureComponents();
             if (_collider) _collider.enabled = false;
             else Debug.LogWarning("ShipView.SelectShip(): No Collider found on ship instance.");
@@ -319,6 +420,10 @@ namespace Core.Ship
             if (ValidateRotation(targetOrientation))
             {
                 UpdatePosition(shipModel.root, targetOrientation);
+
+                if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
+                    shipModel.movementPattern.hasAlreadyRotated = true;
+
                 return true;
             }
 
@@ -332,16 +437,24 @@ namespace Core.Ship
             if (ValidateRotation(targetOrientation))
             {
                 UpdatePosition(shipModel.root, targetOrientation);
+
+                if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
+                    shipModel.movementPattern.hasAlreadyRotated = true;
+
                 return true;
             }
+
             return false;
         }
 
         private bool ValidateRotation(Orientation orientation)
         {
+            if (!shipModel.canRotate)
+                return false;
+
             var shipModelCopy = shipModel.Copy();
             shipModelCopy.orientation = orientation;
-            return _originBoardView.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
+            return Board.Model.ValidateShipPlacement(shipModelCopy, new List<GridPos> { shipModelCopy.root });
         }
 
 

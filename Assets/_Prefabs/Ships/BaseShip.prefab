@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7188997284388319423}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BrokenShipModelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9071194118322993481}
   - component: {fileID: 7133455884396350364}
-  m_Layer: 0
+  - component: {fileID: -865248615779685098}
+  m_Layer: 3
   m_Name: BaseShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,15 +82,52 @@ MonoBehaviour:
     id: 
     type: 0
     length: 3
+    submerged: 0
     hp: 0
     orientation: 0
     root:
       x: 5
       y: 5
+    reserved:
+      x: -1000
+      y: -1000
     isDestroyed: 0
-  playerView: {fileID: 0}
   defaultState: {fileID: 7284658678121241804}
   brokenState: {fileID: 4297834889547011565}
+  rockingEnabled: 1
+  rockAmplitudeDeg: 2
+  rockFrequencyHz: 0.2
+  bobAmplitude: 0.06
+  bobFrequencyHz: 0.33
+  rotationLerp: 12
+  bobLerp: 12
+--- !u!54 &-865248615779685098
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4813498074127623595}
+  serializedVersion: 4
+  m_Mass: 100
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 84
+  m_CollisionDetection: 0
 --- !u!1 &7284658678121241804
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,7 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2826074501886197628}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ShipModelContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
