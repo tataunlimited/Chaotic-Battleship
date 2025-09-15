@@ -32,7 +32,7 @@ namespace Core.Ship
         private static readonly float[] avoidancePercent = { 0f, 0.1f, 0.3f, 0.5f };
         private static readonly float[] targetingPercent = { 0f, 0.2f, 0.4f, 0.7f };
 
-        // for intelligenceLevel's 0 to 3, the Percentage chance of targeting a ship's bow 
+        // for intelligenceLevel's 0 to 3, the Destroyer's Percentage chance of targeting a ship's bow 
         private static readonly float[] destroyerTargetingPercent = { 1/9, 1/4, 2/7, 1/3 };
 
 

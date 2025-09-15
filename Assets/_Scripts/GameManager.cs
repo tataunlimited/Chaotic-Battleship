@@ -197,8 +197,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case PHASE_STATE.ENEMY_FIRING:
-                phaseState = PHASE_STATE.ENEMY_MOVING;
-                Debug.Log("Phase changed to: ENEMY_MOVING");
+                phaseState = PHASE_STATE.PLAYER_MOVING;
+                Debug.Log("Phase changed to: PLAYER_MOVING");
                 break;
 
             case PHASE_STATE.PLAYER_MOVING:
@@ -218,8 +218,6 @@ public class GameManager : MonoBehaviour
                 // Snapshot after player commits movement
                 SaveSnapshot();
 
-                phaseState = PHASE_STATE.ENEMY_MOVING;
-                Debug.Log("Phase changed to: ENEMY_MOVING");
                 if (nextPhaseBtn != null) nextPhaseBtn.interactable = false;
                 StartCoroutine(AttackingPhase());
                 break;
@@ -338,6 +336,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player Fired!");
 
         yield return new WaitForSeconds(.5f);
+        Debug.Log("Phase changed to: ENEMY_FIRING");
         phaseState = PHASE_STATE.ENEMY_FIRING;
 
         // Enemy fires
@@ -385,8 +384,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("Wave end conditions not met, continuing...");
-            phaseState = PHASE_STATE.PLAYER_MOVING;
-            Debug.Log("Phase changed to: PLAYER_MOVING");
             PlayerMoves();
 
             if (cameraController != null) cameraController.GoToDefaultView();
@@ -402,9 +399,6 @@ public class GameManager : MonoBehaviour
     {
         if (boardController != null) boardController.UpdateEnemyShips();
         Debug.Log("Enemy is moving...");
-        phaseState = PHASE_STATE.PLAYER_MOVING;
-        Debug.Log("Phase changed to: PLAYER_MOVING");
-        PlayerMoves();
 
         // Snapshot after enemy movement (optional but useful)
         SaveSnapshot();
