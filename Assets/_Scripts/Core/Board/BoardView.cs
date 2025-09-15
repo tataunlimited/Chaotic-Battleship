@@ -488,6 +488,19 @@ namespace Core.Board
             
             return validPositions;
         }
+        
+        public float ComputeTotalHealth()
+        {
+            float totalHealth = 0f;
+
+            foreach (ShipView shipView in SpawnedShips.Values)
+            {
+                totalHealth += shipView.shipModel.hp + shipView.shipModel.currentArmor;
+            }
+
+            Debug.Log("ComputeTotalHealth board: " + SpawnedShips + ", totalHealth: " + totalHealth);
+            return totalHealth;
+        }
     }
 
 }
