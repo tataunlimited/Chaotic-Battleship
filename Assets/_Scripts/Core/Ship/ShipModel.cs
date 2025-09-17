@@ -35,7 +35,7 @@ namespace Core.Ship
         public bool isDestroyed = false;
         private int _round = 0;
         public ShipMovementPattern movementPattern = null;
-        
+
         public bool canMove => !isDestroyed && movementPattern != null && movementPattern.canMove;
         public bool canRotate => !isDestroyed && movementPattern != null && movementPattern.canRotate;
 
@@ -76,6 +76,7 @@ namespace Core.Ship
 
             return cells;
         }
+
         public void ResetHP()
         {
             hp = length;
@@ -102,30 +103,31 @@ namespace Core.Ship
                     coords.AddRange(boardView.GetRandomPositions(count));
                     break;
                 case ShipType.Submarine:
+                {
+                    if (_round % 2 == 0 || isSpecialAttack)
                     {
-                        if (_round % 2 == 0 || isSpecialAttack)
-                        {
-                            submerged = true;
-                            List<GridPos> line = orientation is Orientation.West or Orientation.East
-                                ? boardView.GetRow(root.y, orientation)
-                                : boardView.GetColumn(root.x, orientation);
+                        submerged = true;
+                        List<GridPos> line = orientation is Orientation.West or Orientation.East
+                            ? boardView.GetRow(root.y, orientation)
+                            : boardView.GetColumn(root.x, orientation);
 
-                            foreach (var pos in line)
-                            {
-                                coords.Add(pos);
-                                // Stop if this grid cell has a ship
-                                if (boardView.HasShipAt(pos))
-                                    break;
-                            }
-                        }
-                        else
+                        foreach (var pos in line)
                         {
-                            // Submarine is reloading
-                            submerged = false;
+                            coords.Add(pos);
+                            // Stop if this grid cell has a ship
+                            if (boardView.HasShipAt(pos))
+                                break;
                         }
-                        _round++;
-                        break;
                     }
+                    else
+                    {
+                        // Submarine is reloading
+                        submerged = false;
+                    }
+
+                    _round++;
+                    break;
+                }
                 case ShipType.Cruiser:
                     coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
                     if (isSpecialAttack)
@@ -134,13 +136,15 @@ namespace Core.Ship
                         coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[0]), orientation));
                         coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[1]), orientation));
                     }
+
                     break;
             }
 
             return coords;
         }
 
-        internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords, out bool chance)
+        internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords,
+            out bool chance)
         {
             List<GridPos> coords = new List<GridPos>();
             selectedCoords = new List<GridPos>();
@@ -269,14 +273,14 @@ namespace Core.Ship
                 armor -= 1;
                 return false;
             }
+
             if (armor > 0)
             {
                 var chance = UnityEngine.Random.Range(0, 1f);
+                bool result = !(chance <= armor);
+
                 armor = 0;
-                if (chance <= armor)
-                {
-                    return false;
-                }
+                return result;
             }
 
             return true;
@@ -294,13 +298,38 @@ namespace Core.Ship
     {
         public static readonly Dictionary<ShipType, ShipModel> DefaultShips = new()
         {
-            { ShipType.Battleship, new ShipModel { id = "battleship", type = ShipType.Battleship, length = 4, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Battleship) } },
-            { ShipType.Submarine, new ShipModel { id = "submarine", type = ShipType.Submarine, length = 1, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Submarine) } },
-            { ShipType.Destroyer, new ShipModel { id = "destroyer", type = ShipType.Destroyer, length = 2, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Destroyer) } },
-            { ShipType.Cruiser, new ShipModel { id = "cruiser", type = ShipType.Cruiser, length = 3, movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser) } }
+            {
+                ShipType.Battleship,
+                new ShipModel
+                {
+                    id = "battleship", type = ShipType.Battleship, length = 4,
+                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Battleship)
+                }
+            },
+            {
+                ShipType.Submarine,
+                new ShipModel
+                {
+                    id = "submarine", type = ShipType.Submarine, length = 1,
+                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Submarine)
+                }
+            },
+            {
+                ShipType.Destroyer,
+                new ShipModel
+                {
+                    id = "destroyer", type = ShipType.Destroyer, length = 2,
+                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Destroyer)
+                }
+            },
+            {
+                ShipType.Cruiser,
+                new ShipModel
+                {
+                    id = "cruiser", type = ShipType.Cruiser, length = 3,
+                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser)
+                }
+            }
         };
     }
-    
-    
-    
 }
