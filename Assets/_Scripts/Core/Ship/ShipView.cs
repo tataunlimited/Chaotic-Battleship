@@ -72,6 +72,8 @@ namespace Core.Ship
         // //AUDIO SFX
         // public AudioSource shipConfirmationSFX;
 
+        public GameObject fireVFX;
+
 
         private void Awake()
         {
@@ -213,6 +215,20 @@ namespace Core.Ship
 
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
+
+            if (fireVFX != null)
+            {
+
+                // Get ALL particle systems in this prefab (including children)
+                ParticleSystem[] particles = fireVFX.GetComponentsInChildren<ParticleSystem>();
+
+                foreach (var ps in particles)
+                {
+                    ps.Play();
+                }
+            }
+
+
             var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
             // Check if the current ship is the player's submarine
             if (IsPlayer && shipModel.type == ShipType.Submarine && coords.Count>0)
