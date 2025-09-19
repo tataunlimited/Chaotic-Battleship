@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.Board;
 using Core.GridSystem;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = System.Random;
 
@@ -21,6 +20,12 @@ namespace Core.Ship
 
     // just making it Serializable, so can expose it in the BoardController to change intelligenceLevel
     [System.Serializable]
+
+    // EnemyWaveManager handles enemy AI behavior
+    //
+    // IntelligenceMode is described here:
+    //      https://docs.google.com/document/d/1GcoqxzFUJKC-komFlCzL5_cIS60NXxgO4zf4hF_iFTg/edit?tab=t.0
+    //
     public class EnemyWaveManager
     {
         public enum IntelligenceMode  { AttackAvoidance, Targeting }
@@ -208,22 +213,44 @@ namespace Core.Ship
         {
             Debug.Log("CalculatePlayerImminentHitSet");
 
+            ShipModel ship;
             List<GridPos> coords;
             List<GridPos> playerImminentHitSet = new List<GridPos>();
+            List<GridPos> destroyerCoords;  // not used. Just needed for GetPossibleAreaOfAttack call
+            bool chance;                    // not used. Just needed for GetPossibleAreaOfAttack call
 
             // Note: future improvement: a smarter approach is to actually order the ships by Destroyers, 
             //      Submarines, and then Cruisers since this is the order of accuracy of the ships attacks
             foreach (ShipView shipView in playerBoard.SpawnedShips.Values)
             {
-                // ignore the Battleship since it can hit the entire board
-                if (shipView.shipModel.isDestroyed || shipView.shipModel.type == ShipType.Battleship)
+                ship = shipView.shipModel;
+                if (ship.isDestroyed)
                     continue;
 
-                // if Cruiser, we don't include its specialAttack because it's random 
-                if (shipView.shipModel.type == ShipType.Cruiser)
-                    coords = shipView.shipModel.GetAttackCoordinates(AIBoard, false);
-                else
-                    coords = shipView.shipModel.GetAttackCoordinates(AIBoard, playerBoard.IsLastShip);
+                switch (ship.type)
+                {
+                    case ShipType.Battleship:
+                        continue;    // ignore the Battleship since it can hit the entire board
+
+                    case ShipType.Cruiser:
+                        coords = ship.GetPossibleAreaOfAttack(AIBoard, out destroyerCoords, out chance);
+                        break;
+
+                    case ShipType.Destroyer:
+                        ship.GetPossibleAreaOfAttack(AIBoard, out coords, out chance);  // destroyer returns its coords through the out parameter
+                        break;
+
+                    case ShipType.Submarine:
+                        if (!ship.SubIsFiringThisRound(AIBoard.IsLastShip))
+                            continue;       // currently Sub only fires on rounds % 2 == 0 or if IsLastShip, but this may change with upgrades
+
+                        coords = ship.GetPossibleAreaOfAttack(AIBoard, out destroyerCoords, out chance);
+                        break;
+
+                    default:
+                        Debug.LogError("CalculatePlayerImminentHitSet found unhandled ship type: " + ship.type);
+                        continue;
+                }
 
                 playerImminentHitSet.AddRange(coords);
             }
@@ -272,23 +299,25 @@ namespace Core.Ship
                 return false;
 
             // Check if applying AttackAvoidance and if so reduce possibleMoves to avoid the most dangerous
-            if (intelligenceMode == IntelligenceMode.AttackAvoidance || ship.type == ShipType.Battleship || ship.type == ShipType.Destroyer)
+            if (intelligenceMode == IntelligenceMode.AttackAvoidance || 
+                ship.type == ShipType.Battleship || 
+                ship.type == ShipType.Destroyer || 
+                (ship.type == ShipType.Submarine && !ship.SubIsFiringThisRound(AIBoard.IsLastShip)))
+            {
                 AvoidMostDangerousMoves(ship, playerImminentHitSet, possibleMoves);
+            }
 
-            // TODO: this needs to be changed to meet:
-            //      https://docs.google.com/document/d/1GcoqxzFUJKC-komFlCzL5_cIS60NXxgO4zf4hF_iFTg/edit?tab=t.0
             // Destroyer always applies its own specific type of targeting
             if (ship.type == ShipType.Destroyer)
                 ship.reserved = GetDestroyerAttackCellForAI(playerBoard, playerShipsLocations);
 
             // Check if applying Targeting (only for Sub and Cruiser) and if so reduce possibleMoves to be the most advantageous
-            if (intelligenceMode == IntelligenceMode.Targeting && (ship.type == ShipType.Submarine || ship.type == ShipType.Cruiser))
+            if (intelligenceMode == IntelligenceMode.Targeting && 
+                (ship.type == ShipType.Cruiser ||
+                ship.type == ShipType.Submarine && ship.SubIsFiringThisRound(AIBoard.IsLastShip)))
+            { 
                 TargetEnemyShips(ship, AIBoard, playerBoard, playerShipsLocations, possibleMoves);
-
-
-
-
-
+            }
 
             // for debugging, reporting remaining moves to console
             alllMoves = "";
@@ -320,9 +349,14 @@ namespace Core.Ship
             Debug.Log("TargetEnemyShips");
 
             int numHits;
-            List<GridPos> cellsAttacked = ship.GetCells();
+            GridPos originalLocation = ship.root;
+            Orientation originalOrientation = ship.orientation;
+            List<GridPos> cellsAttacked;
             PositionAndOrientation removedMove;
-            int numMovesToAvoid = (int)MathF.Ceiling(possibleMoves.Count * targetingPercent[intelligenceLevel]);
+            int numMovesToAvoid = (int)MathF.Ceiling(possibleMoves.Count * targetingPercent[intelligenceLevel]); 
+            List<GridPos> destroyerCoords;  // not used. Just needed for GetPossibleAreaOfAttack call
+            bool chance;                    // not used. Just needed for GetPossibleAreaOfAttack call
+
 
             if (numMovesToAvoid <= 0)
                 return;
@@ -333,12 +367,40 @@ namespace Core.Ship
             {
                 numHits = 0;
 
+                // temporarily move the ship to possibleMove's position and orientation
+                ship.root = possibleMove.position;
+                ship.orientation = possibleMove.orientation;
+
                 // get cells our ship is threatening
-                // if Cruiser, we don't include its specialAttack because it's random 
-                if (ship.type == ShipType.Cruiser)
-                    cellsAttacked = ship.GetAttackCoordinates(playerBoard, false);
-                else
-                    cellsAttacked = ship.GetAttackCoordinates(playerBoard, AIBoard.IsLastShip);
+                switch (ship.type)
+                {
+                    case ShipType.Cruiser:
+                        cellsAttacked = ship.GetPossibleAreaOfAttack(playerBoard, out destroyerCoords, out chance);
+                        break;
+
+                    case ShipType.Submarine:
+                        if (!ship.SubIsFiringThisRound(playerBoard.IsLastShip))
+                        {
+                            // currently Sub only fires on rounds % 2 == 0 or if IsLastShip, but this may change with upgrades
+                            Debug.Log("TargetEnemyShips shouldn't be called when Submarine is not firing");
+                            return;      
+                        }
+
+                        cellsAttacked = ship.GetPossibleAreaOfAttack(playerBoard, out destroyerCoords, out chance);
+                        break;
+
+                    case ShipType.Battleship:
+                        Debug.Log("TargetEnemyShips shouldn't be called for Battleship");
+                        return;    // ignore the Battleship since it can hit the entire board
+
+                    case ShipType.Destroyer:
+                        Debug.Log("TargetEnemyShips shouldn't be called for Destroyer");
+                        return;    // ignore the Destroyer since it has its own targetting method
+
+                    default:
+                        Debug.LogError("TargetEnemyShips found unhandled ship type: " + ship.type);
+                        continue;
+                }
 
                 // for each cell that's potentially attacked, see if it hits a player ship and if so increment numHits
                 foreach (GridPos pos in cellsAttacked)
@@ -356,6 +418,9 @@ namespace Core.Ship
                 weightedMoves.Add(possibleMove, numHits);
             }
 
+            // put the ship back at its original position and orientation
+            ship.root = originalLocation;
+            ship.orientation = originalOrientation;
 
             // change possibleMoves so that it's sorted by numHits
             possibleMoves.Clear();
@@ -371,15 +436,18 @@ namespace Core.Ship
             {
                 // have to leave at least one move
                 if (possibleMoves.Count <= 1)
+                {
+                    numMovesToAvoid = i - 1;    // for reporting/debugging purposes
                     break;
+                }
 
-                removedMove = possibleMoves[possibleMoves.Count - i]; // Get the last element
+                removedMove = possibleMoves[possibleMoves.Count - 1]; // Get the last element
                 avoidedMoves += "(" + removedMove.position.x + "," + removedMove.position.y + "," + removedMove.orientation + "), ";
-
-                possibleMoves.RemoveAt(possibleMoves.Count - i);
+                
+                possibleMoves.RemoveAt(possibleMoves.Count - 1);
             }
 
-            Debug.Log(possibleMoves.Count + " avoided moves: " + avoidedMoves);
+            Debug.Log(numMovesToAvoid + " avoided moves: " + avoidedMoves);
         }
 
 
@@ -390,9 +458,13 @@ namespace Core.Ship
                                              List<GridPos> playerImminentHitSet,
                                              List<PositionAndOrientation> possibleMoves)
         {
+            Debug.Log("AvoidMostDangerousMoves");
+
             int numHits;
             PositionAndOrientation removedMove;
-            List <GridPos> shipCells = ship.GetCells();
+            GridPos originalLocation = ship.root;
+            Orientation originalOrientation = ship.orientation;
+            List <GridPos> shipCells;
             int numMovesToAvoid = (int)MathF.Ceiling(possibleMoves.Count * avoidancePercent[intelligenceLevel]);
 
             if (numMovesToAvoid <= 0) 
@@ -404,6 +476,11 @@ namespace Core.Ship
             {
                 numHits = 0;
 
+                // temporarily move the ship to possibleMove's position and orientation
+                ship.root = possibleMove.position;
+                ship.orientation = possibleMove.orientation;
+                shipCells = ship.GetCells();
+
                 // for each player targeted position that would hit the ship if it made this possibleMove, increment numHits
                 foreach (GridPos pos in playerImminentHitSet)
                 {
@@ -413,6 +490,10 @@ namespace Core.Ship
 
                 weightedMoves.Add(possibleMove, numHits);
             }
+
+            // put the ship back at its original position and orientation
+            ship.root = originalLocation;
+            ship.orientation = originalOrientation;
 
             // change possibleMoves so that it's sorted by numHits
             possibleMoves.Clear();
@@ -425,21 +506,28 @@ namespace Core.Ship
             // removing the last numMovesToAvoid moves
             string avoidedMoves = "";        // for debugging, reporting avoidedMoves to console
             for (int i = 1;  i <= numMovesToAvoid; ++i)
-            { 
-                removedMove = possibleMoves[possibleMoves.Count - i]; // Get the last element
+            {
+                // have to leave at least one move
+                if (possibleMoves.Count <= 1)
+                {
+                    numMovesToAvoid = i - 1;    // for reporting/debugging purposes
+                    break;
+                }
+                removedMove = possibleMoves[possibleMoves.Count - 1]; // Get the last element
 
                 // if the next move to remove was not threatened, no reason to remove it. 
                 if (weightedMoves.GetValueOrDefault(removedMove) < 1)
                 {
                     Debug.Log("This move was not threatened, so no reason to avoid.");
+                    numMovesToAvoid = i - 1;    // for reporting/debugging purposes
                     break;
                 }
                 avoidedMoves += "(" + removedMove.position.x + "," + removedMove.position.y + "," + removedMove.orientation + "), ";
                 
-                possibleMoves.RemoveAt(possibleMoves.Count - i);
+                possibleMoves.RemoveAt(possibleMoves.Count - 1);
             }
 
-            Debug.Log(possibleMoves.Count + " avoided moves: " + avoidedMoves);
+            Debug.Log(numMovesToAvoid + " avoided moves: " + avoidedMoves);
         }
 
         public List<PositionAndOrientation> GetAllPossibleMoveAndTurnLocations(BoardView board, ShipView shipView)
@@ -495,35 +583,6 @@ namespace Core.Ship
             return bowPosition;
         }
 
-        /*
-         * old version for reference - Don't check in
-         * 
-        private GridPos GetDestroyerAttackCellForAI(BoardView boardView)
-        {
-            var shipViews = boardView.SpawnedShips.Values.ToList();
-            int randomIndex = UnityEngine.Random.Range(0, shipViews.Count);
-            var rndShip = shipViews[randomIndex];
-            var bowPosition = rndShip.shipModel.root;
-
-            var listOfCells = new List<GridPos>();
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
-                    var newCell = new GridPos(bowPosition.x + i, bowPosition.y + j);
-                    if (boardView.Model.InBounds(newCell))
-                    {
-                        listOfCells.Add(newCell);
-                    }
-                }
-            }
-
-            var randomPos = listOfCells[UnityEngine.Random.Range(0, listOfCells.Count)];
-            Debug.Log("GetDestroyerAttackCellForAI:: Type: " + rndShip.shipModel.type + "  Name: " + rndShip.name + " is shooting at " + randomPos);
-            return randomPos;
-        }
-        */
-
         public bool RandomlyMoveShips(BoardView AIBoard, BoardView playerBoard, List<GridPos> playerShipsLocations)
         {
             Debug.Log("RandomlyMoveShips works the same as before except the Destroyer has a chance to target a ship directly");
@@ -545,8 +604,7 @@ namespace Core.Ship
         private bool RandomlyMoveAShip(BoardView board, ShipView shipView)
         {
             if (shipView.shipModel.IsSunk) return true;  // don't move sunk ships
-            ShipMovementPattern pattern = ShipMovementPattern.CreateMovementPattern(shipView.shipModel.type);
-            return pattern.RandomlyTurnAndMove(board, shipView);
+            return shipView.shipModel.movementPattern.RandomlyTurnAndMove(board, shipView);
         }
 
     }

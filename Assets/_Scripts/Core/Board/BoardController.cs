@@ -177,8 +177,8 @@ namespace Core.Board
             _enemyWaveManager = new EnemyWaveManager();
 
             // DEBUG ONLY: do not check in with the next 2 lines
-            _enemyWaveManager.intelligenceLevel = 0;
-            Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
+            //_enemyWaveManager.intelligenceLevel = 3;
+            //Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
 
             List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 
