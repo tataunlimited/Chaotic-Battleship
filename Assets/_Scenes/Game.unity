@@ -7985,7 +7985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 415712b62fd94df4699c027678eb0201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MasterVolumeAudioMixer: {fileID: 0}
+  MasterVolumeAudioMixer: {fileID: 24100000, guid: 108b3c1be846db3428c16b6f6109de00, type: 2}
 --- !u!114 &1002225493
 MonoBehaviour:
   m_ObjectHideFlags: 0
