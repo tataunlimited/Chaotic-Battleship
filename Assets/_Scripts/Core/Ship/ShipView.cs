@@ -201,7 +201,11 @@ namespace Core.Ship
             // Check if the current ship is the player's submarine
             if (IsPlayer && shipModel.type == ShipType.Submarine)
             {
-                FireTorpedo();
+                // Torpedo attack always targets the first coordinate in the list
+                if (coords.Count > 0)
+                {
+                    FireTorpedo(enemyBoard, coords[0]);
+                }
             }
             foreach (var gridPos in coords)
             {
@@ -289,18 +293,22 @@ namespace Core.Ship
             return isSunk;
         }
 
-        private void FireTorpedo()
+        private void FireTorpedo(BoardView enemyBoard, GridPos targetGridPos)
         {
             if (torpedoPrefab != null && torpedoSpawnPoint != null)
             {
-                // Get the forward direction of the submarine
-                Vector3 forwardDirection = transform.forward;
+                // Instantiate the torpedo on the player's board
+                GameObject torpedoInstance = Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
 
-
-                // Instantiate the torpedo at the spawn point's position and rotation
-                Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
-
-                Debug.Log("Fire Torpedo");
+                // Get the TorpedoVisual component and initialize it
+                TorpedoVisual torpedoVisual = torpedoInstance.GetComponent<TorpedoVisual>();
+                if (torpedoVisual != null)
+                {
+                    // The isHit parameter is determined by checking if the target cell has a ship
+                    bool isHit = enemyBoard.HasShipAt(targetGridPos);
+                    torpedoVisual.Init(enemyBoard, transform, targetGridPos, isHit);
+                }
+                Debug.Log("Torpedo, Fired!!!");
             }
         }
 
