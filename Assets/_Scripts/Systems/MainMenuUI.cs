@@ -6,18 +6,20 @@ using static SceneTypes;
 
 public class MainMenuUI : MonoBehaviour
 {
-    [Header("Feature Flags")]
-    [SerializeField] bool optionsEnabled = false; 
+    [Header("Feature Flags")] [SerializeField]
+    bool optionsEnabled = false;
 
-    [Header("Panels (optional)")]
-    [SerializeField] GameObject optionsPanel;
+    [Header("Panels (optional)")] [SerializeField]
+    GameObject optionsPanel;
 
-    [Header("Options UI (optional)")]
-    [SerializeField] Slider masterVolumeSlider;
+    [Header("Options UI (optional)")] [SerializeField]
+    Slider masterVolumeSlider;
+
     [SerializeField] Toggle fullscreenToggle;
 
-    [Header("Audio (optional)")]
-    [SerializeField] AudioSource uiAudio;
+    [Header("Audio (optional)")] [SerializeField]
+    AudioSource uiAudio;
+
     [SerializeField] AudioClip clickSfx;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -34,6 +36,7 @@ public class MainMenuUI : MonoBehaviour
             ApplyVolume(vol);
         }
     }
+
     public void OnPlay()
     {
         PlayClick();
@@ -54,15 +57,20 @@ public class MainMenuUI : MonoBehaviour
             Debug.Log("Options are coming soon.");
             return;
         }
+
         if (optionsPanel) optionsPanel.SetActive(true);
     }
 
     public void OnQuit()
     {
         PlayClick();
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+        return;
+#endif
         Application.Quit();
     }
+
     public void OnBackFromOptions()
     {
         PlayClick();
@@ -81,6 +89,11 @@ public class MainMenuUI : MonoBehaviour
         if (!optionsEnabled) return;
         Screen.fullScreen = on;
     }
+
     void ApplyVolume(float v) => AudioListener.volume = Mathf.Clamp01(v);
-    void PlayClick() { if (uiAudio && clickSfx) uiAudio.PlayOneShot(clickSfx); }
+
+    void PlayClick()
+    {
+        if (uiAudio && clickSfx) uiAudio.PlayOneShot(clickSfx);
+    }
 }

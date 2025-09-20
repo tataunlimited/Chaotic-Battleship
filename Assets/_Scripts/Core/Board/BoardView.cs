@@ -501,6 +501,41 @@ namespace Core.Board
             Debug.Log("ComputeTotalHealth board: " + SpawnedShips + ", totalHealth: " + totalHealth);
             return totalHealth;
         }
+
+        public IEnumerable<GridPos> GetRandomPositionAroundThePoint(GridPos shipModelReserved, int count)
+        {
+            var neighbors = GetNeighbors(shipModelReserved);
+            var randomPositions = new List<GridPos>();
+            if(neighbors.Count == 0)
+                return randomPositions;
+            //Debug.Log("GetRandomPositionAroundThePoint: " + neighbors.Count)
+            for (int i = 0; i < count; i++)
+            {
+                randomPositions.Add(neighbors[Random.Range(0, neighbors.Count)]);
+            }
+            return randomPositions;
+        }
+        
+        private List<GridPos> GetNeighbors(GridPos node)
+        {
+            List<GridPos> neighbors = new List<GridPos>();
+
+            // Combined orthogonal and diagonal directions
+            int[] dx = { 0, 0, 1, -1,  1, 1, -1, -1 };
+            int[] dy = { 1, -1, 0, 0,  1, -1, 1, -1 };
+
+            for (int i = 0; i < 8; i++) 
+            {
+                int checkX = node.x + dx[i];
+                int checkY = node.y + dy[i];
+                var newPos = new GridPos(checkX, checkY);
+                if (Model.InBounds(newPos))
+                {
+                    neighbors.Add(new GridPos(checkX, checkY));
+                }
+            }
+            return neighbors;
+        }
     }
 
 }

@@ -123,12 +123,12 @@ namespace Core.Ship
 
         public void Hide()
         {
-            transform.GetChild(0).gameObject.SetActive(false);
+            defaultState.SetActive(false);
         }
 
         public void Show()
         {
-            transform.GetChild(0).gameObject.SetActive(true);
+            defaultState.SetActive(true);
         }
 
         void Update()
