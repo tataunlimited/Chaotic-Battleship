@@ -245,7 +245,15 @@ public class GameManager : MonoBehaviour
         if (!enemyShipsPlaced)
         {
             Debug.Log("Placing enemy ships...");
-            if (boardController != null) boardController.SpawnEnemyShips();
+            //if the enemy wave spawner exists, spawn the wave
+            if (EnemyWaveSpawner.Instance != null)
+            {
+                EnemyWaveSpawner.Instance.SpawnWave();
+            }
+            else
+            {
+                Debug.LogError("EnemyWaveSpawner instance not found!");
+            }
             enemyShipsPlaced = true;
         }
 
