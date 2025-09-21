@@ -19,6 +19,8 @@ public class NextWave : MonoBehaviour
                 SaveManager.SaveGame();
             }
             if (NextWavePanel) NextWavePanel.SetActive(false);
+            
+            SceneManager.Instance.LoadScene(SceneTypes.SceneType.Harbor);
             return;
         }
 

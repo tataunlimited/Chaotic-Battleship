@@ -52,7 +52,7 @@ MonoBehaviour:
   - type: 2
     sceneName: Credits
   - type: 3
-    sceneName: Anchorage
+    sceneName: Harbor
   fadeImage: {fileID: 0}
   progressBar: {fileID: 0}
   fadeDuration: 0.5

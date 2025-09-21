@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1667d44260a791042afef9393011a63d, type: 3}
+  m_Name: SpecialAttackUpgradeSO
+  m_EditorClassIdentifier: 
+  specialAttackUpgrades:
+  - ShipType: 1
+    SpecialAttackUpgrade:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Level 1
+      Description: 'Destroying a ship launches a 2nd shot automatically hitting a
+        random tile in a 3x3 zone around the destroyed ship.
+
+'
+    - Cost: 0
+      Icon: {fileID: 0}
+      UpgradeName: 
+      Description: 'If the shot is a near miss it reveals a 3x3 zone around its shot.
+
+'
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Level 3
+      Description: 'Attacks ignore Armor.
+
+'
+  - ShipType: 4
+    SpecialAttackUpgrade:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Level 1
+      Description: '10% chance of attacking both x and y axis at the same time.
+
+        
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: 
+      Description: '20% chance of attacking both x and y axis at the same time.
+
+'
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Level 3
+      Description: '30% chance of attacking both x and y axis at the same time.
+
+'
+  - ShipType: 3
+    SpecialAttackUpgrade:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Level 1
+      Description: 'Gains a 4th 3x3 attack zone (12 shots total).
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: 
+      Description: "Missed shots temporarily mark zones as \u201Cscorched\u201D for
+        2 rounds preventing opponents from placing ships there.\r\n"
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Level 3
+      Description: 'Instead of attacking random tiles, attack the entire 3x3 zone.
+
+'
+  - ShipType: 2
+    SpecialAttackUpgrade:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Level 1
+      Description: 'Fires 4x as many shots.
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: 
+      Description: 'If a ship is damaged, it renders that ship unable to attack next
+        round.
+
+        
+
+'
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Level 3
+      Description: 'When destroyed, unleash one final massive salvo (6x the shots).
+
+'

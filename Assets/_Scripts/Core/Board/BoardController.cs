@@ -254,6 +254,12 @@ namespace Core.Board
             ClearSelectedShip();
         }
 
+        public void UnfreezeFrozenShips()
+        {
+            enemyView.Unfreeze();
+            playerView.Unfreeze();
+        }
+
         // In BoardController
         public void SpawnEnemyShipsFromModels(List<ShipModel> ships, bool reveal = false)
         {

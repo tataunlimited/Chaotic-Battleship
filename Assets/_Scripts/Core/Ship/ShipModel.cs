@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Core.Board;
 using Core.GridSystem;
-using UnityEngine;
+using Core.Ship.Upgrade;
 
 namespace Core.Ship
 {
@@ -34,10 +33,11 @@ namespace Core.Ship
         public GridPos reserved = new GridPos(-1000, -1000); // Destroyer's attack position   
         public bool isDestroyed = false;
         private int _round = 0;
-        public ShipMovementPattern movementPattern = null;
+        public ShipMovementPattern MovementPattern = null;
+        public ShipAttackPattern AttackPattern = null;
 
-        public bool canMove => !isDestroyed && movementPattern != null && movementPattern.canMove;
-        public bool canRotate => !isDestroyed && movementPattern != null && movementPattern.canRotate;
+        public bool canMove => !isDestroyed && MovementPattern != null && MovementPattern.canMove;
+        public bool canRotate => !isDestroyed && MovementPattern != null && MovementPattern.canRotate;
 
 
         /// <summary>Apply damage and return true if the ship just sunk.</summary>
@@ -59,7 +59,7 @@ namespace Core.Ship
             return GetCells(root);
         }
 
-        private List<GridPos> GetCells(GridPos rootCell)
+        public List<GridPos> GetCells(GridPos rootCell)
         {
             var cells = new List<GridPos>();
             for (int i = 0; i < length; i++)
@@ -85,65 +85,38 @@ namespace Core.Ship
 
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
-            List<GridPos> coords = new List<GridPos>();
-            switch (type)
+            var coords = new List<GridPos>();
+            if (AttackPattern.IsInCapacitated)
             {
-                case ShipType.Destroyer:
-                    if (reserved.x < 0 || reserved.y < 0)
-                    {
-                        reserved = root;
-                    }
-
-                    // AI destroyer target is set during AI movement/placement now
-
-                    coords.Add(reserved);
-                    SFXManager.Instance?.PlayDestroyerAttack();
-                    break;
-                case ShipType.Battleship:
-                    int count = isSpecialAttack ? 12 : 4;
-                    coords.AddRange(boardView.GetRandomPositions(count));
-                    SFXManager.Instance?.PlayBattleshipAttack();
-                    break;
-                case ShipType.Submarine:
-                {
-                    if (SubIsFiringThisRound(isSpecialAttack))
-                    {
-                        submerged = true;
-                        List<GridPos> line = orientation is Orientation.West or Orientation.East
-                            ? boardView.GetRow(root.y, orientation)
-                            : boardView.GetColumn(root.x, orientation);
-
-                        foreach (var pos in line)
-                        {
-                            coords.Add(pos);
-                            // Stop if this grid cell has a ship
-                            if (boardView.HasShipAt(pos))
-                                break;
-                        }
-                            SFXManager.Instance?.PlaySubmarineAttack();
-                        }
-                    else
-                    {
-                        // Submarine is reloading
-                        submerged = false;
-                    }
-
-                    _round++;
-                    break;
-                }
-                case ShipType.Cruiser:
-                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation));
-                    if (isSpecialAttack)
-                    {
-                        var randomRoots = boardView.GetRandomPositions(2);
-                        coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[0]), orientation));
-                        coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[1]), orientation));
-                    }
-                    SFXManager.Instance?.PlayCruiserAttack();
-
-                    break;
+                AttackPattern.IsInCapacitated = false;
+                return coords;
             }
 
+            
+
+            coords = AttackPattern.GetAttackPositions(boardView);
+
+            if (coords.Count > 0)
+            {
+                switch (type)
+                {
+                    case ShipType.Destroyer:
+                        SFXManager.Instance?.PlayDestroyerAttack();
+                        break;
+                    case ShipType.Battleship:
+                        SFXManager.Instance?.PlayBattleshipAttack();
+                        break;
+                    case ShipType.Submarine:
+                        SFXManager.Instance?.PlaySubmarineAttack();
+                        break;
+                    case ShipType.Cruiser:
+                        SFXManager.Instance?.PlayCruiserAttack();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            
             return coords;
         }
 
@@ -173,7 +146,7 @@ namespace Core.Ship
                     chance = false;
                     break;
                 case ShipType.Cruiser:
-                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, true));
+                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, 0, true));
                     chance = true;
                     break;
             }
@@ -193,8 +166,19 @@ namespace Core.Ship
                 hp = hp,
                 isDestroyed = isDestroyed,
                 _round = _round,
-                movementPattern = ShipMovementPattern.CreateMovementPattern(type)
+                submerged = submerged,
+                currentArmor = currentArmor,
+                armor = armor,
+                armorDestroyerChance = armorDestroyerChance,
+                armorCruiserChance = armorCruiserChance,
+                reserved = reserved,
+                MovementPattern = ShipMovementPattern.CreateMovementPattern(type),
             };
+            if (AttackPattern != null)
+            {
+                copy.AttackPattern = AttackPattern.Copy();
+            }
+
             return copy;
         }
 
@@ -215,7 +199,7 @@ namespace Core.Ship
         public void UpdateMovementStatus()
         {
             if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
-                movementPattern.hasAlreadyMoved = true;
+                MovementPattern.hasAlreadyMoved = true;
         }
 
         public Orientation RotateLeft()
@@ -250,7 +234,7 @@ namespace Core.Ship
 
         public List<GridPos> GetMovablePositions(BoardView playerView)
         {
-            return movementPattern.GetAllPossibleMovePositions(playerView, this);
+            return MovementPattern.GetAllPossibleMovePositions(playerView, this);
         }
 
         public bool CanReceiveDamage(ShipType attackerType)
@@ -302,44 +286,103 @@ namespace Core.Ship
         {
             return (_round % 2 == 0 || isSpecialAttack);
         }
+
+        public void InitAttackPattern(int attackLevel, int specialAbilityLevel)
+        {
+            AttackPattern = type switch
+            {
+                ShipType.Destroyer => new DestroyerAttackPattern(this, attackLevel, specialAbilityLevel),
+                ShipType.Battleship => new BattleShipAttackPattern(this, attackLevel, specialAbilityLevel),
+                ShipType.Cruiser => new CruiserAttackPattern(this, attackLevel, specialAbilityLevel),
+                ShipType.Submarine => new SubAttackPattern(this, attackLevel, specialAbilityLevel),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
     }
 
-    public static class ShipDatabase
+    public static class ShipFactory
     {
         public static readonly Dictionary<ShipType, ShipModel> DefaultShips = new()
         {
             {
                 ShipType.Battleship,
-                new ShipModel
-                {
-                    id = "battleship", type = ShipType.Battleship, length = 4,
-                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Battleship)
-                }
+                CreateBattleship()
             },
             {
                 ShipType.Submarine,
-                new ShipModel
-                {
-                    id = "submarine", type = ShipType.Submarine, length = 1,
-                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Submarine)
-                }
+                CreateSubmarine()
             },
             {
                 ShipType.Destroyer,
-                new ShipModel
-                {
-                    id = "destroyer", type = ShipType.Destroyer, length = 2,
-                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Destroyer)
-                }
+                CreateDestroyer()
             },
             {
                 ShipType.Cruiser,
-                new ShipModel
-                {
-                    id = "cruiser", type = ShipType.Cruiser, length = 3,
-                    movementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser)
-                }
+                CreateCruiser()
             }
         };
+
+        public static ShipModel CreateShipModel(ShipType type)
+        {
+            return DefaultShips[type].Copy();
+        }
+
+        private static ShipModel CreateBattleship()
+        {
+            var ship = new ShipModel
+            {
+                id = "battleship",
+                type = ShipType.Battleship,
+                length = 4,
+                MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Battleship)
+            };
+
+            ship.AttackPattern = new BattleShipAttackPattern(ship, 0, 0);
+
+            return ship;
+        }
+
+        private static ShipModel CreateSubmarine()
+        {
+            var ship = new ShipModel
+            {
+                id = "submarine",
+                type = ShipType.Submarine,
+                length = 1,
+                MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Submarine)
+            };
+            ship.AttackPattern = new SubAttackPattern(ship, 0, 0);
+
+            return ship;
+        }
+
+        private static ShipModel CreateDestroyer()
+        {
+            var ship = new ShipModel
+            {
+                id = "destroyer",
+                type = ShipType.Destroyer,
+                length = 2,
+                MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Destroyer)
+            };
+            ship.AttackPattern = new DestroyerAttackPattern(ship, 0, 0);
+
+            return ship;
+        }
+
+        private static ShipModel CreateCruiser()
+        {
+            var ship = new ShipModel
+            {
+                id = "cruiser",
+                type = ShipType.Cruiser,
+                length = 3,
+                MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser)
+            };
+            ship.AttackPattern = new CruiserAttackPattern(ship, 0, 0);
+
+
+            return ship;
+        }
     }
 }

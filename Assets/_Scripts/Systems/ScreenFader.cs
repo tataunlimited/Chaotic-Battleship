@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenFadder : MonoBehaviour
+public class ScreenFader : MonoBehaviour
 {
-    public static ScreenFadder Instance { get; private set; }
+    public static ScreenFader Instance { get; private set; }
 
     [SerializeField] float defaultFadeOut = 0.4f;
     [SerializeField] float defaultFadeIn = 0.4f;
