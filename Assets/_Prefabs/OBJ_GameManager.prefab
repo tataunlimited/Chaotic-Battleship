@@ -573,6 +573,8 @@ MonoBehaviour:
   boardController: {fileID: 0}
   cameraController: {fileID: 0}
   armorUpgradeSO: {fileID: 11400000, guid: c7ec02a74a533cb4eab8a2a5243a7b5b, type: 2}
+  attackUpgradeSO: {fileID: 11400000, guid: 8a60170a3c59b5b4b8ede5dfbfda9eb6, type: 2}
+  specialUpgradeSO: {fileID: 11400000, guid: e78511e704bd2ec43bb5dfb7c0315a1e, type: 2}
   phaseState: 0
   playerShipsPlaced: 0
   enemyShipsPlaced: 0

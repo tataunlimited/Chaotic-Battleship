@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public CameraController cameraController;
     
     public ArmorUpgradeSO armorUpgradeSO;
+    public AttackPatternUpgradeSO attackUpgradeSO;
+    public SpecialAttackUpgradeSO specialUpgradeSO;
 
     public enum PHASE_STATE
     {
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text roundNumber;
     
     private int _roundNumber = 1;
+    public int RoundNumber => _roundNumber;
 
     // set true when we load a snapshot so we can bypass placement UI gating
     private bool _loadedFromSnapshot = false;

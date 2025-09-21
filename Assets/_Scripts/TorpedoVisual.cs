@@ -1,5 +1,6 @@
 //Torpedo
 
+using Core.Ship;
 using DG.Tweening;
 using UnityEngine;
 
@@ -46,5 +47,10 @@ public class TorpedoVisual : MonoBehaviour
         //         Destroy(gameObject);
         //     }
         // }
+    }
+
+    public void Init(TorpedoData torpedoData)
+    {
+        throw new System.NotImplementedException();
     }
 }

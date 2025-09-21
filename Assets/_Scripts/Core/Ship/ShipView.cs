@@ -109,7 +109,11 @@ namespace Core.Ship
             if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
+
+            shipModel.AttackPattern.OnTorpedoFired += FireTorpedo;
         }
+
+ 
 
         private void LoadPlayerShipData()
         {
@@ -119,6 +123,9 @@ namespace Core.Ship
             {
                 shipModel.SetArmorLevelData(armorData);
             }
+
+            shipModel.InitAttackPattern(pd.GetUpgrade(shipModel.type, UpgradeType.AttackPattern), pd.GetUpgrade(shipModel.type, UpgradeType.SpecialAttack));
+
         }
 
         public void Hide()
@@ -255,11 +262,7 @@ namespace Core.Ship
                         //Find which enemy ship we hit
                         if (enemyBoard.TryGetShipAt(gridPos, out var enemyShip))
                         {
-                            int damage = 1;
-                            if (shipModel.type == ShipType.Destroyer && Board.IsLastShip)
-                            {
-                                damage = 9999;
-                            }
+                            int damage = shipModel.AttackPattern.GetAttackDamage(enemyShip.shipModel.type);
 
                             bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, out bool justSunk);
 
@@ -346,7 +349,15 @@ namespace Core.Ship
                 Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
             }
         }
-
+        private void FireTorpedo(TorpedoData torpedoData)
+        {
+            if (torpedoPrefab != null && torpedoSpawnPoint != null)
+            {
+                // Instantiate the torpedo at the spawn point's position and rotation
+                var torpedo = Instantiate(torpedoPrefab, torpedoSpawnPoint.position, transform.rotation);
+                torpedo.GetComponent<TorpedoVisual>().Init(torpedoData);
+            }
+        }
         public bool UpdatePosition(GridPos newPos, Orientation newOrientation, bool showCells = true)
         {
             if (shipModel.root.x < 0 || shipModel.root.y < 0)
@@ -412,7 +423,8 @@ namespace Core.Ship
             transform.position = Board.GridToWorld(shipModel.root);
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
         }
-
+        
+        private 
         public void SelectShip()
         {
             //shipConfirmationSFX.Play();
@@ -438,7 +450,7 @@ namespace Core.Ship
                 UpdatePosition(shipModel.root, targetOrientation);
 
                 if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
-                    shipModel.movementPattern.hasAlreadyRotated = true;
+                    shipModel.MovementPattern.hasAlreadyRotated = true;
 
                 return true;
             }
@@ -455,7 +467,7 @@ namespace Core.Ship
                 UpdatePosition(shipModel.root, targetOrientation);
 
                 if (GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
-                    shipModel.movementPattern.hasAlreadyRotated = true;
+                    shipModel.MovementPattern.hasAlreadyRotated = true;
 
                 return true;
             }
