@@ -4627,6 +4627,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &540402129 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1191221061219183255, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+  m_PrefabInstance: {fileID: 1267680412855025866}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &543932137
 GameObject:
   m_ObjectHideFlags: 0
@@ -9318,6 +9323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669a7113f930dc643947dd8d887a9f41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipGridConfirmMovementPhaseSFX: {fileID: 1563643522}
 --- !u!4 &1112626306
 Transform:
   m_ObjectHideFlags: 0
@@ -11131,6 +11137,7 @@ MonoBehaviour:
   Destroyers_left_to_place_Button: {fileID: 1531933744}
   Cruisers_left_to_place_Button: {fileID: 647250774}
   Battleships_left_to_place_Button: {fileID: 1218524582}
+  shipConfirmOnGridSFX: {fileID: 540402129}
 --- !u!1 &1336849442
 GameObject:
   m_ObjectHideFlags: 0
@@ -12884,6 +12891,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1544371825}
   m_CullTransparentMesh: 1
+--- !u!82 &1563643522 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 318245519825083247, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+  m_PrefabInstance: {fileID: 1267680412855025866}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1594105418
 GameObject:
   m_ObjectHideFlags: 0
@@ -16912,6 +16924,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6121325836595661982, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
+      propertyPath: shipSelectMovementPhaseSFX
+      value: 
+      objectReference: {fileID: 413992944}
     - target: {fileID: 7972588326881394704, guid: 1bb0c0ef946747947947aa2bcc3425f1, type: 3}
       propertyPath: cellPrefab
       value: 

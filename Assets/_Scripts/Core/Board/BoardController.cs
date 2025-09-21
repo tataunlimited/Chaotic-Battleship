@@ -23,12 +23,12 @@ namespace Core.Board
         
         private Camera _camera;
         public LayerMask shipLayer;
-
         // exposing this for debugging purposes
         [SerializeField]
         private EnemyWaveManager _enemyWaveManager;
         public static BoardController Instance;
-
+        //SFX
+        public AudioSource shipSelectMovementPhaseSFX;
        
         void Awake()
         {
@@ -117,7 +117,7 @@ namespace Core.Board
                 highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
             
             OnShipSelected?.Invoke(true);
-
+            shipSelectMovementPhaseSFX.Play();
 
             // enable/disable the rotate buttons
             GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
@@ -177,8 +177,8 @@ namespace Core.Board
             _enemyWaveManager = new EnemyWaveManager();
 
             // DEBUG ONLY: do not check in with the next 2 lines
-            _enemyWaveManager.intelligenceLevel = 0;
-            Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
+            //_enemyWaveManager.intelligenceLevel = 3;
+            //Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
 
             List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 

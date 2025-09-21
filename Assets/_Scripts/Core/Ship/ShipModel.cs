@@ -106,7 +106,7 @@ namespace Core.Ship
                     break;
                 case ShipType.Submarine:
                 {
-                    if (_round % 2 == 0 || isSpecialAttack)
+                    if (SubIsFiringThisRound(isSpecialAttack))
                     {
                         submerged = true;
                         List<GridPos> line = orientation is Orientation.West or Orientation.East
@@ -295,6 +295,12 @@ namespace Core.Ship
             armor = armorData.ArmorPoints;
             armorDestroyerChance = armorData.DestroyerArmorChance;
             armorCruiserChance = armorData.CruiserArmorChance;
+        }
+
+        // currently Sub only fires on rounds % 2 == 0 or if IsLastShip, but this may change with upgrades
+        public bool SubIsFiringThisRound(bool isSpecialAttack)
+        {
+            return (_round % 2 == 0 || isSpecialAttack);
         }
     }
 
