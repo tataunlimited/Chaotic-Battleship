@@ -1961,6 +1961,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: OBJ_GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6453031327005268669, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: m_Resource
+      value: 
+      objectReference: {fileID: 8300000, guid: 79a14ecb0e698964787891a7a558eab4, type: 3}
     - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: phaseText
       value: 
