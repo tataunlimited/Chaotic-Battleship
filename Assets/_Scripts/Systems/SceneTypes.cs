@@ -2,5 +2,5 @@ using UnityEngine;
 
 public class SceneTypes
 {
-    public enum SceneType { MainMenu, Game, Credits, Anchorage };
+    public enum SceneType { MainMenu, Game, Credits, Harbor };
 }

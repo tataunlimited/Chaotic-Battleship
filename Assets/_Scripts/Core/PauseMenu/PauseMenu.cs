@@ -32,11 +32,7 @@ public class PauseMenu : MonoBehaviour
     }
     public void Quit()
     {
-        #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-        #else
-        Application.Quit();
-        #endif
+        SceneManager.Instance.LoadScene(SceneTypes.SceneType.MainMenu);
     }
 
     // OPTIONS MENU
