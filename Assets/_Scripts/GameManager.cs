@@ -439,7 +439,8 @@ public class GameManager : MonoBehaviour
     {
         boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
         boardController.playerView.BeginMovementPhase();    // resets their ability to move and rotate
-
+        phaseState = PHASE_STATE.PLAYER_MOVING;
+        phaseText.text = nameof(PlayerData.Phase.Movement);
         if (boardController != null) boardController.playerView.SaveShipLocations();
         Debug.Log("Waiting for Player to move...");
     }
