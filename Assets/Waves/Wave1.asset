@@ -18,5 +18,7 @@ MonoBehaviour:
   overrideIntelligence: 1
   intelligenceLevel: 1
   revealOnSpawn: 0
-  typeAI: []
+  typeAI:
+  - type: 1
+    intelligenceLevel: 2
   perShipAI: []
