@@ -108,7 +108,7 @@ namespace Core.Board
                     if (SelectedShip.UpdatePosition(cell, shipView.shipModel.orientation))
                     {
                         shipView.shipModel.UpdateMovementStatus();
-                        ClearSelectedShip();
+                        UpdatePlayerSelectedShip(SelectedShip);
                     }
 
                 });
