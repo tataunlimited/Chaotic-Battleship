@@ -19,6 +19,8 @@ public class SceneManager : MonoBehaviour
     {
         new SceneMap{ type = SceneType.MainMenu,  sceneName = "MainMenu" },
         new SceneMap{ type = SceneType.Game,      sceneName = "Game" },
+        new SceneMap{ type = SceneType.Story,      sceneName = "Story" },
+        new SceneMap{ type = SceneType.Options,      sceneName = "Options" },
         new SceneMap{ type = SceneType.Credits,   sceneName = "Credits" },
         new SceneMap{ type = SceneType.Anchorage, sceneName = "Anchorage" },
     };
