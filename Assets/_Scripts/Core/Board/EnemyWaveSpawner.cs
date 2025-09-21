@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core.Board;
 using Core.Ship;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine;
 public class EnemyWaveSpawner : MonoBehaviour
 {
     [Header("Use a WaveDefinition (preferred)")]
+    public List<WaveDefinition> waves = new();
 
     [Header("OR: Counts (fallback if no WaveDefinition)")]
     [Min(0)] public int numSubmarines = 0;
@@ -18,14 +20,12 @@ public class EnemyWaveSpawner : MonoBehaviour
     public BoardController controller;   // optional; will try BoardController.Instance if null
     public BoardView enemyBoard;         // optional; will use controller.enemyView if null
 
-    [Header("AI Settings (used if no override in WaveDefinition)")]
+    [Header("AI Settings (used if no WaveDefinition)")]
     [Range(0, 3)] public int intelligenceLevel = 0;
     public bool revealOnSpawn = false;
 
     [SerializeField] private EnemyWaveManager waveManager = new EnemyWaveManager();
     public static EnemyWaveSpawner Instance;
-
-    public List<WaveDefinition> waves = new();
 
     void OnValidate()
     {
@@ -46,8 +46,7 @@ public class EnemyWaveSpawner : MonoBehaviour
     [ContextMenu("Spawn Wave Now")]
     public void SpawnWave()
     {
-        // choose wave definition based on PlayerData current wave.
-        WaveDefinition current_wave = GetCurrentWaveDefinition();
+        var def = GetCurrentWaveDefinition();
 
         if (controller == null) controller = BoardController.Instance;
         if (controller == null)
@@ -63,33 +62,62 @@ public class EnemyWaveSpawner : MonoBehaviour
             return;
         }
 
-        // Build the ship models list
-        List<ShipModel> ships = (current_wave != null) ? BuildWaveFromDefinition(current_wave)
-                                                         : BuildWaveFromCounts();
-
+        // --- Build models ---
+        List<ShipModel> ships = (def != null) ? BuildWaveFromDefinition(def)
+                                              : BuildWaveFromCounts();
         if (ships.Count == 0)
         {
             Debug.LogWarning("EnemyWaveSpawner: Nothing to spawn (0 ships).");
             return;
         }
 
-        // If the asset overrides AI, apply it
-        if (current_wave != null && current_wave.overrideIntelligence)
-            waveManager.intelligenceLevel = Mathf.Clamp(current_wave.intelligenceLevel, 0, 3);
+        // --- Set the wave default AI level ---
+        waveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
+            ? Mathf.Clamp(def.intelligenceLevel, 0, 3)
+            : Mathf.Clamp(intelligenceLevel, 0, 3);
 
-        // Place ships in valid positions/orientations
+        // --- Clear & apply per-type overrides (they’re just integers) ---
+        AIOverrideRegistry.Clear();
+        if (def != null && def.typeAI != null)
+        {
+            foreach (var t in def.typeAI)
+                AIOverrideRegistry.TypeLevels[t.type] = Mathf.Clamp(t.intelligenceLevel, 0, 3);
+        }
+
+        // --- Place ships ---
         bool placedAll = waveManager.RandomlySetShipsLocations(enemyBoard, ships);
         if (!placedAll)
-        {
             Debug.LogWarning("EnemyWaveSpawner: Not all ships could be placed on the board.");
-        }
-                
 
-        // Reveal flag: asset value OR local flag
-        bool reveal = (current_wave != null && current_wave.revealOnSpawn) || revealOnSpawn;
+        bool reveal = (def != null && def.revealOnSpawn) || revealOnSpawn;
 
-        // Convert models to live ShipViews
+        // Track which ships are added by this spawn so we can bind per-ship AI
+        var preExisting = new HashSet<ShipView>(enemyBoard.SpawnedShips.Values);
         controller.SpawnEnemyShipsFromModels(ships, reveal);
+        var justSpawned = enemyBoard.SpawnedShips.Values.Where(sv => !preExisting.Contains(sv)).ToList();
+
+        // --- Per-ship overrides (assign to any N ships of the type) ---
+        if (def != null && def.perShipAI != null && def.perShipAI.Count > 0)
+        {
+            var byType = justSpawned.GroupBy(sv => sv.shipModel.type)
+                                    .ToDictionary(g => g.Key, g => new Queue<ShipView>(g));
+
+            foreach (var o in def.perShipAI)
+            {
+                if (!byType.TryGetValue(o.type, out var q) || q.Count == 0) continue;
+
+                int toAssign = Mathf.Min(o.count, q.Count);
+                int lvl = Mathf.Clamp(o.intelligenceLevel, 0, 3);
+                for (int i = 0; i < toAssign; i++)
+                {
+                    var sv = q.Dequeue();
+                    if (sv != null && sv.shipModel != null && !string.IsNullOrEmpty(sv.shipModel.id))
+                    {
+                        AIOverrideRegistry.ShipLevels[sv.shipModel.id] = lvl; // << just setting the integer
+                    }
+                }
+            }
+        }
     }
 
     private List<ShipModel> BuildWaveFromDefinition(WaveDefinition def)
@@ -103,10 +131,10 @@ public class EnemyWaveSpawner : MonoBehaviour
     private List<ShipModel> BuildWaveFromCounts()
     {
         var list = new List<ShipModel>(numSubmarines + numDestroyers + numBattleships + numCruisers);
-        AddCopies(list, ShipType.Submarine, numSubmarines);
-        AddCopies(list, ShipType.Destroyer, numDestroyers);
+        AddCopies(list, ShipType.Submarine,  numSubmarines);
+        AddCopies(list, ShipType.Destroyer,  numDestroyers);
         AddCopies(list, ShipType.Battleship, numBattleships);
-        AddCopies(list, ShipType.Cruiser, numCruisers);
+        AddCopies(list, ShipType.Cruiser,    numCruisers);
         return list;
     }
 
@@ -123,8 +151,7 @@ public class EnemyWaveSpawner : MonoBehaviour
         for (int i = 0; i < count; i++)
             list.Add(model.Copy());
     }
-    
-    // Get the current wave definition based on PlayerData wave number, if it exists
+
     public WaveDefinition GetCurrentWaveDefinition()
     {
         if (waves == null || waves.Count == 0) return null;

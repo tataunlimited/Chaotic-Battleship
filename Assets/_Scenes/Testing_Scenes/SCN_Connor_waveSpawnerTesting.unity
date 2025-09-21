@@ -6896,66 +6896,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913294989}
   m_CullTransparentMesh: 1
---- !u!1 &924272500
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 924272502}
-  - component: {fileID: 924272501}
-  m_Layer: 0
-  m_Name: WaveSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &924272501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924272500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb586f017c8f7bd4696ffe923ba20465, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numSubmarines: 0
-  numDestroyers: 0
-  numBattleships: 0
-  numCruisers: 0
-  controller: {fileID: 64301709}
-  enemyBoard: {fileID: 1891316889}
-  intelligenceLevel: 0
-  revealOnSpawn: 1
-  waveManager:
-    intelligenceLevel: 0
-    intelligenceMode: 0
-    DEFAULT_SHIP_TYPES: 02000000030000000100000004000000
-  waves:
-  - {fileID: 11400000, guid: ff96e60d3381948409ac56f5b4fd2ef2, type: 2}
-  - {fileID: 11400000, guid: fc0878ee9e1b9934ea1de42c5682f1c5, type: 2}
-  - {fileID: 11400000, guid: 152f26fe6ea2dde4682c1512e4e16b7e, type: 2}
---- !u!4 &924272502
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924272500}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &949234567
 GameObject:
   m_ObjectHideFlags: 0
@@ -12541,6 +12481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PauseMenuPanel: {fileID: 1775954020}
   OptionsMenuPanel: {fileID: 2113436477}
+  QuitConfirmPanel: {fileID: 0}
 --- !u!114 &1775954023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14738,6 +14679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PauseMenuPanel: {fileID: 1775954020}
   OptionsMenuPanel: {fileID: 2113436477}
+  QuitConfirmPanel: {fileID: 0}
 --- !u!1 &2124152011
 GameObject:
   m_ObjectHideFlags: 0
@@ -14938,6 +14880,139 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &699711722913987861
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: controller
+      value: 
+      objectReference: {fileID: 64301709}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: enemyBoard
+      value: 
+      objectReference: {fileID: 1891316889}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c0a996309b6bb0942bef43868f4d5c5c, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d03e7f7584e759e4486873c4ec731bcf, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 47262e76514d1864c92719547d053630, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 587280e355b9b4f4d9a20d1bb33cfee4, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[7]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6ea14748c393a524e87ea91de7a50fe1, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[8]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 55b244b4ee1fade49860c7dba7372326, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[9]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 00737f2c94dcec544a4d05f9537a8190, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[10]'
+      value: 
+      objectReference: {fileID: 11400000, guid: e34209ce1442e3c41ab1cf8b2b906e91, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[11]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b0fc1fbc437ddfe468fafbf4eeaacffe, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[12]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f412c442d488f8443abb2c8b05fb04d7, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[13]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 239529b1c3efc994588899c21c094d3c, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[14]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0fb75eca35a7d78409db39dfbdac1e86, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[15]'
+      value: 
+      objectReference: {fileID: 11400000, guid: e9056c43fe7aec54b9f7de57cec2fbb8, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[16]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 1731a815bd740f1449f2c41d442338ca, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[17]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b0b2affa7ff5af44592e62feaf066ad9, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[18]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 53c8ce1ae9e2e1542938fa76d5327362, type: 2}
+    - target: {fileID: 2804931895864887025, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: 'waves.Array.data[19]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 02f89f2e7cafaf741bf55c3fd23a6412, type: 2}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6228017471984930153, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8173153860152313809, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
+      propertyPath: m_Name
+      value: WaveSpawner
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0be522b487a0c51449e35a870bfbe4ce, type: 3}
 --- !u!1001 &785932791298956241
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15244,4 +15319,4 @@ SceneRoots:
   - {fileID: 88140927}
   - {fileID: 1517596995}
   - {fileID: 1112626306}
-  - {fileID: 924272502}
+  - {fileID: 699711722913987861}
