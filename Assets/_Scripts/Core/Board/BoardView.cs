@@ -45,7 +45,7 @@ namespace Core.Board
             // reset the ship's movementPatterns so they can move again
             foreach (var pair in SpawnedShips)
             {
-                pair.Value.shipModel.movementPattern.Reset();
+                pair.Value.shipModel.MovementPattern.Reset();
             }
         }
 
@@ -81,7 +81,7 @@ namespace Core.Board
             {
                 wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
                 pair.Value.SnapShipOnGrid(previousShipData.root, previousShipData.orientation);
-                pair.Value.shipModel.movementPattern.Reset();
+                pair.Value.shipModel.MovementPattern.Reset();
             }
 
             return wasSuccessful;
@@ -215,7 +215,7 @@ namespace Core.Board
 
             string id = name + _lastShipId;
 
-            var shipModel = prefab.shipModel.Copy();
+            var shipModel = ShipFactory.CreateShipModel(prefab.shipModel.type);
             shipModel.id = id;
             shipModel.orientation = orientation;
             shipModel.root = pos;
@@ -315,7 +315,7 @@ namespace Core.Board
             return col;
         }
 
-        public List<GridPos> CruiserAttack(List<GridPos> shipCells, Orientation orientaion, bool allPossibilities = false)
+        public List<GridPos> CruiserAttack(List<GridPos> shipCells, Orientation orientaion, int hitCount, bool allPossibilities = false)
         {
             var attackCells = new List<GridPos>();
 
@@ -351,11 +351,11 @@ namespace Core.Board
                 }
             }
 
-            if (allPossibilities)
+            if (allPossibilities || hitCount == 9)
                 return attackCells;
             
             var randomCells = new List<GridPos>();
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < hitCount; i++)
             {
                 if (attackCells.Count == 0)
                     break;
@@ -502,7 +502,7 @@ namespace Core.Board
             return totalHealth;
         }
 
-        public IEnumerable<GridPos> GetRandomPositionAroundThePoint(GridPos shipModelReserved, int count)
+        public List<GridPos> GetRandomPositionAroundThePoint(GridPos shipModelReserved, int count)
         {
             var neighbors = GetNeighbors(shipModelReserved);
             var randomPositions = new List<GridPos>();
@@ -535,6 +535,14 @@ namespace Core.Board
                 }
             }
             return neighbors;
+        }
+
+        public void Unfreeze()
+        {
+            foreach (var ship in SpawnedShips)
+            {
+                ship.Value.shipModel.MovementPattern.IsFrozen = false;
+            }
         }
     }
 

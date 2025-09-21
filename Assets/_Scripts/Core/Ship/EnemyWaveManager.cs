@@ -58,7 +58,7 @@ namespace Core.Ship
 
             for (int i=0; i < DEFAULT_NUM_SHIPS; i++)
             {
-                isValid = ShipDatabase.DefaultShips.TryGetValue(DEFAULT_SHIP_TYPES[i], out ship);
+                isValid = ShipFactory.DefaultShips.TryGetValue(DEFAULT_SHIP_TYPES[i], out ship);
                 if (isValid)
                 {
                     ships.Add(ship.Copy());
@@ -534,14 +534,14 @@ namespace Core.Ship
         {
             ShipModel ship = shipView.shipModel;
             List<PositionAndOrientation> locations = new();
-            List<GridPos> coords = ship.movementPattern.GetAllPossibleMovePositions(board, ship);
+            List<GridPos> coords = ship.MovementPattern.GetAllPossibleMovePositions(board, ship);
             Orientation newOrientation;
 
             // include the choice of not moving or rotating, or then just rotating left or right without moving
             locations.Add(new PositionAndOrientation { position = ship.root, orientation = ship.orientation });
-            if (ship.movementPattern.CanRotateLeft(board, shipView, out newOrientation))
+            if (ship.MovementPattern.CanRotateLeft(board, shipView, out newOrientation))
                 locations.Add(new PositionAndOrientation { position = ship.root, orientation = newOrientation });
-            if (ship.movementPattern.CanRotateRight(board, shipView, out newOrientation))
+            if (ship.MovementPattern.CanRotateRight(board, shipView, out newOrientation))
                 locations.Add(new PositionAndOrientation { position = ship.root, orientation = newOrientation });
 
             foreach (GridPos coord in coords)
@@ -550,11 +550,11 @@ namespace Core.Ship
                 locations.Add(new PositionAndOrientation { position = coord, orientation = ship.orientation });
 
                 // if canMoveAfterRotating, include every valid rotation after moving
-                if (ship.movementPattern.canMoveAfterRotating)
+                if (ship.MovementPattern.canMoveAfterRotating)
                 {
-                    if (ship.movementPattern.CanRotateLeft(board, shipView, out newOrientation))
+                    if (ship.MovementPattern.CanRotateLeft(board, shipView, out newOrientation))
                         locations.Add(new PositionAndOrientation { position = coord, orientation = newOrientation });
-                    if (ship.movementPattern.CanRotateRight(board, shipView, out newOrientation))
+                    if (ship.MovementPattern.CanRotateRight(board, shipView, out newOrientation))
                         locations.Add(new PositionAndOrientation { position = coord, orientation = newOrientation });
                 }
             }
@@ -604,7 +604,7 @@ namespace Core.Ship
         private bool RandomlyMoveAShip(BoardView board, ShipView shipView)
         {
             if (shipView.shipModel.IsSunk) return true;  // don't move sunk ships
-            return shipView.shipModel.movementPattern.RandomlyTurnAndMove(board, shipView);
+            return shipView.shipModel.MovementPattern.RandomlyTurnAndMove(board, shipView);
         }
 
     }

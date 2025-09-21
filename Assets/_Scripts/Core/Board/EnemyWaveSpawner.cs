@@ -142,7 +142,7 @@ public class EnemyWaveSpawner : MonoBehaviour
     {
         if (count <= 0) return;
 
-        if (!ShipDatabase.DefaultShips.TryGetValue(type, out var model))
+        if (!ShipFactory.DefaultShips.TryGetValue(type, out var model))
         {
             Debug.LogError($"EnemyWaveSpawner: Default ship not found for {type}");
             return;
