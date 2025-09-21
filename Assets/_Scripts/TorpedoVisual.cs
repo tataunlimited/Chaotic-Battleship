@@ -51,6 +51,6 @@ public class TorpedoVisual : MonoBehaviour
 
     public void Init(TorpedoData torpedoData)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

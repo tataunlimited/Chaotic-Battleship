@@ -213,9 +213,9 @@ public class GameManager : MonoBehaviour
                 phaseState = PHASE_STATE.ENEMY_MOVING;
                 Debug.Log("Phase changed to: ENEMY_MOVING");
                 EnemyMoves();
-
+            
                 Debug.Log("Player Movement Confirmed");
-
+                boardController.UnfreezeFrozenShips();
                 // Count a turn when player completes movement
                 var scorerB = FindOne<GameManagerScore>();
                 if (scorerB != null) scorerB.RegisterPlayerTurn();

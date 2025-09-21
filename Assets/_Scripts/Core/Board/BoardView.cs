@@ -536,6 +536,14 @@ namespace Core.Board
             }
             return neighbors;
         }
+
+        public void Unfreeze()
+        {
+            foreach (var ship in SpawnedShips)
+            {
+                ship.Value.shipModel.MovementPattern.IsFrozen = false;
+            }
+        }
     }
 
 }

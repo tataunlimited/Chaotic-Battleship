@@ -253,5 +253,11 @@ namespace Core.Board
         {
             ClearSelectedShip();
         }
+
+        public void UnfreezeFrozenShips()
+        {
+            enemyView.Unfreeze();
+            playerView.Unfreeze();
+        }
     }
 }

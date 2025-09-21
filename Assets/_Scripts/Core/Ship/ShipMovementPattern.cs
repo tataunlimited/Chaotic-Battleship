@@ -23,12 +23,13 @@ namespace Core.Ship
         public bool hasAlreadyMoved = false;
         public bool hasAlreadyRotated = false;
 
-        public bool canMove => !hasAlreadyMoved && (!hasAlreadyRotated || canMoveAfterRotating);
+        public bool canMove => !IsFrozen && !hasAlreadyMoved && (!hasAlreadyRotated || canMoveAfterRotating);
 
         // The initial design used to be that if it rotated, it would subtract 1 from the movesRemaining
         //      and it could only rotate if it hadn't moved it's full maxMovementPoints, but I don't see that in the GDD anymore
         //public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating && movesRemaining > 0);
-        public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating);
+        public bool canRotate => !IsFrozen && !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating);
+        public bool IsFrozen { get; set; }
 
 
         public static ShipMovementPattern CreateMovementPattern(ShipType type)

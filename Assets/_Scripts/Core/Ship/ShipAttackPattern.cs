@@ -12,11 +12,14 @@ namespace Core.Ship
         protected readonly int AttackLevel;
         protected readonly int SpecialAbilityLevel;
 
+        public bool IsInCapacitated { get; set; }
+
         protected ShipAttackPattern(ShipModel shipModel, int attackLevel, int specialAbilityLevel)
         {
             ShipModel = shipModel;
             AttackLevel = attackLevel;
             SpecialAbilityLevel = specialAbilityLevel;
+            IsInCapacitated = false;
         }
 
         public event Action<TorpedoData> OnTorpedoFired;
@@ -37,7 +40,7 @@ namespace Core.Ship
         }
 
         // if true prevent the target from attacking next round
-        public virtual bool CanStunTarget(ShipType targetType)
+        public virtual bool CanIncapacitate(ShipType targetType)
         {
             return false;
         }
@@ -61,8 +64,8 @@ namespace Core.Ship
         protected List<GridPos> GetAttackLinePositions(BoardView enemyBoard, Orientation orientation)
         {
             List<GridPos> line = orientation is Orientation.West or Orientation.East
-                ? enemyBoard.GetRow(ShipModel.root.y, ShipModel.orientation)
-                : enemyBoard.GetColumn(ShipModel.root.x, ShipModel.orientation);
+                ? enemyBoard.GetRow(ShipModel.root.y, orientation)
+                : enemyBoard.GetColumn(ShipModel.root.x, orientation);
 
             var coords = new List<GridPos>();
             foreach (var pos in line)
@@ -225,7 +228,7 @@ namespace Core.Ship
         }
 
 
-        public override bool CanStunTarget(ShipType targetType)
+        public override bool CanIncapacitate(ShipType targetType)
         {
             return AttackLevel > 1;
         }
@@ -346,7 +349,7 @@ namespace Core.Ship
             return numOfHits;
         }
 
-        public override bool CanStunTarget(ShipType targetType)
+        public override bool CanIncapacitate(ShipType targetType)
         {
             if (SpecialAbilityLevel > 1) return true;
             return false;

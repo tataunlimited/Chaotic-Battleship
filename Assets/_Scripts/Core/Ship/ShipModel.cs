@@ -85,63 +85,13 @@ namespace Core.Ship
 
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
-            return AttackPattern.GetAttackPositions(boardView);
-            List<GridPos> coords = new List<GridPos>();
-            switch (type)
+            if (AttackPattern.IsInCapacitated)
             {
-                case ShipType.Destroyer:
-                    if (reserved.x < 0 || reserved.y < 0)
-                    {
-                        reserved = root;
-                    }
-
-                    // AI destroyer target is set during AI movement/placement now
-
-                    coords.Add(reserved);
-                    break;
-                case ShipType.Battleship:
-                    int count = isSpecialAttack ? 12 : 4;
-                    coords.AddRange(boardView.GetRandomPositions(count));
-                    break;
-                case ShipType.Submarine:
-                {
-                    if (SubIsFiringThisRound(isSpecialAttack))
-                    {
-                        submerged = true;
-                        List<GridPos> line = orientation is Orientation.West or Orientation.East
-                            ? boardView.GetRow(root.y, orientation)
-                            : boardView.GetColumn(root.x, orientation);
-
-                        foreach (var pos in line)
-                        {
-                            coords.Add(pos);
-                            // Stop if this grid cell has a ship
-                            if (boardView.HasShipAt(pos))
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        // Submarine is reloading
-                        submerged = false;
-                    }
-
-                    _round++;
-                    break;
-                }
-                case ShipType.Cruiser:
-                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, 3));
-                    if (isSpecialAttack)
-                    {
-                        var randomRoots = boardView.GetRandomPositions(2);
-                        coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[0]), orientation,3 ));
-                        coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[1]), orientation,3 ));
-                    }
-
-                    break;
+                AttackPattern.IsInCapacitated = false;
+                return new List<GridPos>();
             }
-
-            return coords;
+            return AttackPattern.GetAttackPositions(boardView);
+          
         }
 
         internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords,
