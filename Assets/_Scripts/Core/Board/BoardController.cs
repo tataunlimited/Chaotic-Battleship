@@ -23,13 +23,13 @@ namespace Core.Board
 
         private Camera _camera;
         public LayerMask shipLayer;
-
         // exposing this for debugging purposes
         [SerializeField]
         private EnemyWaveManager _enemyWaveManager;
         public static BoardController Instance;
-
-
+        //SFX
+        public AudioSource shipSelectMovementPhaseSFX;
+       
         void Awake()
         {
             _camera = Camera.main;
@@ -117,7 +117,7 @@ namespace Core.Board
                 highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
 
             OnShipSelected?.Invoke(true);
-
+            shipSelectMovementPhaseSFX.Play();
 
             // enable/disable the rotate buttons
             GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
