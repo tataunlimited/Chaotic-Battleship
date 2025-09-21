@@ -362,6 +362,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6254224606078766032, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6594544162023635681, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
       propertyPath: m_Name
       value: Submarine (1)
