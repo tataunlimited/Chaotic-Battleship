@@ -42,12 +42,16 @@ public class ShipPlacementUI : MonoBehaviour
 
     private ShipView _spawnedShip;
 
+    //SFX
+
+    public AudioSource shipConfirmOnGridSFX; 
+
     private void Awake()
     {
         // Capture Inspector defaults so we can restore them each new wave
-        _defSubs        = subs_left;
-        _defDestroyers  = destroyers_left;
-        _defCruisers    = cruisers_left;
+        _defSubs = subs_left;
+        _defDestroyers = destroyers_left;
+        _defCruisers = cruisers_left;
         _defBattleships = battleships_left;
     }
 
@@ -227,11 +231,11 @@ public class ShipPlacementUI : MonoBehaviour
     {
         _spawnedShip = shipView;
         _spawnedShip.OnBeforeShipPlacedOnGrid += OnShipPlacedOnTheGrid;
-
     }
 
     private void OnShipPlacedOnTheGrid(ShipView shipView)
     {
+        shipConfirmOnGridSFX.Play();
         shipView.OnBeforeShipPlacedOnGrid -= OnShipPlacedOnTheGrid;
         _spawnedShip = null;
     }
