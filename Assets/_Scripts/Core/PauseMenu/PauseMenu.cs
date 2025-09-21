@@ -4,6 +4,7 @@ public class PauseMenu : MonoBehaviour
 {
     public GameObject PauseMenuPanel;
     public GameObject OptionsMenuPanel;
+    public GameObject QuitConfirmPanel;
 
     // Update is called once per frame
     void Update()
@@ -23,6 +24,12 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void QuitConfirm()
+    {
+        PauseMenuPanel.SetActive(false);
+        QuitConfirmPanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
     public void Quit()
     {
         #if UNITY_EDITOR
@@ -43,5 +50,6 @@ public class PauseMenu : MonoBehaviour
     {
         PauseMenuPanel.SetActive(true);
         OptionsMenuPanel.SetActive(false);
+        QuitConfirmPanel.SetActive(false);
     }
 }
