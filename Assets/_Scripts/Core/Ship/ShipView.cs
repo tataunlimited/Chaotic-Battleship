@@ -265,6 +265,7 @@ namespace Core.Ship
 
                             if (isDamaged)
                             {
+                                
                                 enemyBoard.SpawnPersistentHitFire(enemyShip, gridPos, 0.5f);
                                 if (IsPlayer && enemyBoard.side == BoardSide.Enemy)
                                 {
@@ -307,7 +308,8 @@ namespace Core.Ship
                     }
                     else if (!ignoreSound)
                     {
-                        VFXManager.Instance.PlayFireSound();
+                        // NEEDED TO SILENCE THIS TO HEAR SHIP FIRING!
+                        //VFXManager.Instance.PlayFireSound();
                     }
                 }
 

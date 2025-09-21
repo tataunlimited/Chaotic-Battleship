@@ -97,10 +97,12 @@ namespace Core.Ship
                     // AI destroyer target is set during AI movement/placement now
 
                     coords.Add(reserved);
+                    SFXManager.Instance?.PlayDestroyerAttack();
                     break;
                 case ShipType.Battleship:
                     int count = isSpecialAttack ? 12 : 4;
                     coords.AddRange(boardView.GetRandomPositions(count));
+                    SFXManager.Instance?.PlayBattleshipAttack();
                     break;
                 case ShipType.Submarine:
                 {
@@ -118,7 +120,8 @@ namespace Core.Ship
                             if (boardView.HasShipAt(pos))
                                 break;
                         }
-                    }
+                            SFXManager.Instance?.PlaySubmarineAttack();
+                        }
                     else
                     {
                         // Submarine is reloading
@@ -136,6 +139,7 @@ namespace Core.Ship
                         coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[0]), orientation));
                         coords.AddRange(boardView.CruiserAttack(GetCells(randomRoots[1]), orientation));
                     }
+                    SFXManager.Instance?.PlayCruiserAttack();
 
                     break;
             }
