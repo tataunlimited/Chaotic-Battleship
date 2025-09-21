@@ -19,6 +19,9 @@ public class PlayerData : MonoBehaviour
     // NEW: score baseline captured at the start of each wave
     public int scoreAtWaveStart = 0;
 
+    //list of wave definitions that have been completed
+    
+
     // Upgrade data container
     [System.Serializable]
     public class UpgradeLevels
@@ -97,6 +100,8 @@ public class PlayerData : MonoBehaviour
             case UpgradeType.Armor:         lvl.Armor         = newLevel; break;
         }
     }
+
+    
 
     // Expose upgrades for SaveManager
     public IReadOnlyDictionary<ShipType, UpgradeLevels> UpgradesReadonly => upgrades;
