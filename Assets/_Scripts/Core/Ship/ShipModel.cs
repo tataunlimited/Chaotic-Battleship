@@ -85,13 +85,39 @@ namespace Core.Ship
 
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
+            var coords = new List<GridPos>();
             if (AttackPattern.IsInCapacitated)
             {
                 AttackPattern.IsInCapacitated = false;
-                return new List<GridPos>();
+                return coords;
             }
-            return AttackPattern.GetAttackPositions(boardView);
-          
+
+            
+
+            coords = AttackPattern.GetAttackPositions(boardView);
+
+            if (coords.Count > 0)
+            {
+                switch (type)
+                {
+                    case ShipType.Destroyer:
+                        SFXManager.Instance?.PlayDestroyerAttack();
+                        break;
+                    case ShipType.Battleship:
+                        SFXManager.Instance?.PlayBattleshipAttack();
+                        break;
+                    case ShipType.Submarine:
+                        SFXManager.Instance?.PlaySubmarineAttack();
+                        break;
+                    case ShipType.Cruiser:
+                        SFXManager.Instance?.PlayCruiserAttack();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            
+            return coords;
         }
 
         internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords,
@@ -120,7 +146,7 @@ namespace Core.Ship
                     chance = false;
                     break;
                 case ShipType.Cruiser:
-                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, 0,true));
+                    coords.AddRange(boardView.CruiserAttack(GetCells(), orientation, 0, true));
                     chance = true;
                     break;
             }
@@ -152,6 +178,7 @@ namespace Core.Ship
             {
                 copy.AttackPattern = AttackPattern.Copy();
             }
+
             return copy;
         }
 
@@ -276,39 +303,40 @@ namespace Core.Ship
     public static class ShipFactory
     {
         public static readonly Dictionary<ShipType, ShipModel> DefaultShips = new()
-                  {
-                      {
-                          ShipType.Battleship,
-                          CreateBattleship()
-                      },
-                      {
-                          ShipType.Submarine,
-                          CreateSubmarine()
-                      },
-                      {
-                          ShipType.Destroyer,
-                          CreateDestroyer()
-                      },
-                      {
-                          ShipType.Cruiser,
-                          CreateCruiser()
-                      }
-                  };
+        {
+            {
+                ShipType.Battleship,
+                CreateBattleship()
+            },
+            {
+                ShipType.Submarine,
+                CreateSubmarine()
+            },
+            {
+                ShipType.Destroyer,
+                CreateDestroyer()
+            },
+            {
+                ShipType.Cruiser,
+                CreateCruiser()
+            }
+        };
+
         public static ShipModel CreateShipModel(ShipType type)
         {
             return DefaultShips[type].Copy();
         }
-        
+
         private static ShipModel CreateBattleship()
         {
             var ship = new ShipModel
             {
-                id = "battleship", 
-                type = ShipType.Battleship, 
+                id = "battleship",
+                type = ShipType.Battleship,
                 length = 4,
                 MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Battleship)
             };
-        
+
             ship.AttackPattern = new BattleShipAttackPattern(ship, 0, 0);
 
             return ship;
@@ -318,23 +346,22 @@ namespace Core.Ship
         {
             var ship = new ShipModel
             {
-                id = "submarine", 
-                type = ShipType.Submarine, 
+                id = "submarine",
+                type = ShipType.Submarine,
                 length = 1,
                 MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Submarine)
             };
             ship.AttackPattern = new SubAttackPattern(ship, 0, 0);
-            
-            return ship;
 
+            return ship;
         }
 
         private static ShipModel CreateDestroyer()
         {
             var ship = new ShipModel
             {
-                id = "destroyer", 
-                type = ShipType.Destroyer, 
+                id = "destroyer",
+                type = ShipType.Destroyer,
                 length = 2,
                 MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Destroyer)
             };
@@ -347,14 +374,14 @@ namespace Core.Ship
         {
             var ship = new ShipModel
             {
-                id = "cruiser", 
-                type = ShipType.Cruiser, 
+                id = "cruiser",
+                type = ShipType.Cruiser,
                 length = 3,
                 MovementPattern = ShipMovementPattern.CreateMovementPattern(ShipType.Cruiser)
             };
             ship.AttackPattern = new CruiserAttackPattern(ship, 0, 0);
 
-            
+
             return ship;
         }
     }

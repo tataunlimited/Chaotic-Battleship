@@ -266,6 +266,7 @@ namespace Core.Ship
 
                             if (isDamaged)
                             {
+                                
                                 if (shipModel.AttackPattern.CanIncapacitate(enemyShipType))
                                 {
                                     enemyShip.shipModel.AttackPattern.IsInCapacitated = true;
@@ -316,7 +317,8 @@ namespace Core.Ship
                     }
                     else if (!ignoreSound)
                     {
-                        VFXManager.Instance.PlayFireSound();
+                        // NEEDED TO SILENCE THIS TO HEAR SHIP FIRING!
+                        //VFXManager.Instance.PlayFireSound();
                     }
                 }
 
