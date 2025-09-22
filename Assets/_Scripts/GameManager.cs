@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public CameraController cameraController;
 
     public ArmorUpgradeSO armorUpgradeSO;
+    public AttackPatternUpgradeSO attackUpgradeSO;
+    public SpecialAttackUpgradeSO specialUpgradeSO;
     public MovementUpgradeSO movementUpgradeSO;
 
     public enum PHASE_STATE
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text roundNumber;
     
     private int _roundNumber = 1;
+    public int RoundNumber => _roundNumber;
 
     // set true when we load a snapshot so we can bypass placement UI gating
     private bool _loadedFromSnapshot = false;
@@ -211,9 +214,9 @@ public class GameManager : MonoBehaviour
                 phaseState = PHASE_STATE.ENEMY_MOVING;
                 Debug.Log("Phase changed to: ENEMY_MOVING");
                 EnemyMoves();
-
+            
                 Debug.Log("Player Movement Confirmed");
-
+                boardController.UnfreezeFrozenShips();
                 // Count a turn when player completes movement
                 var scorerB = FindOne<GameManagerScore>();
                 if (scorerB != null) scorerB.RegisterPlayerTurn();
@@ -244,7 +247,15 @@ public class GameManager : MonoBehaviour
         if (!enemyShipsPlaced)
         {
             Debug.Log("Placing enemy ships...");
-            if (boardController != null) boardController.SpawnEnemyShips();
+            //if the enemy wave spawner exists, spawn the wave
+            if (EnemyWaveSpawner.Instance != null)
+            {
+                EnemyWaveSpawner.Instance.SpawnWave();
+            }
+            else
+            {
+                Debug.LogError("EnemyWaveSpawner instance not found!");
+            }
             enemyShipsPlaced = true;
         }
 
@@ -429,7 +440,8 @@ public class GameManager : MonoBehaviour
     {
         boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
         boardController.playerView.BeginMovementPhase();    // resets their ability to move and rotate
-
+        phaseState = PHASE_STATE.PLAYER_MOVING;
+        phaseText.text = nameof(PlayerData.Phase.Movement);
         if (boardController != null) boardController.playerView.SaveShipLocations();
         Debug.Log("Waiting for Player to move...");
     }

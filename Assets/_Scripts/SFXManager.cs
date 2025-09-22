@@ -4,10 +4,20 @@ using UnityEngine.Audio;
 
 public class SFXManager : MonoBehaviour
 {
+    public static SFXManager Instance;
+    [SerializeField] private AudioSource destroyerAttack;
+    [SerializeField] private AudioSource battleshipAttack;
+    [SerializeField] private AudioSource cruiserAttack;
+    [SerializeField] private AudioSource submarineAttack;
     [SerializeField] private AudioMixer MasterVolumeAudioMixer;
     //public Slider volumeSlider;
     //public AudioSource hitSoundSource;
     //public AudioSource shipSunkSource;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     //    void Start()
     //{
@@ -48,4 +58,25 @@ public class SFXManager : MonoBehaviour
     //        shipSunkSource.volume = volume;
     //    }
     //}
+
+    public void PlayDestroyerAttack()
+    {
+        destroyerAttack.Play();
+
+    }
+    public void PlayBattleshipAttack()
+    {
+        battleshipAttack.Play();
+
+    }
+    public void PlayCruiserAttack()
+    {
+        cruiserAttack.Play();
+
+    }
+    public void PlaySubmarineAttack()
+    {
+        submarineAttack.Play();
+
+    }
 }

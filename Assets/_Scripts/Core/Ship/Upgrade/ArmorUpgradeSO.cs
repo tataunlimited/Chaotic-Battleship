@@ -39,5 +39,4 @@ namespace Core.Ship.Upgrade
         public float DestroyerArmorChance;
         public float CruiserArmorChance;
     }
-
 }

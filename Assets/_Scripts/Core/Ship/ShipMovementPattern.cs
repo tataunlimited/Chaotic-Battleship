@@ -26,14 +26,9 @@ namespace Core.Ship
         public bool hasAlreadyMoved = false;
         public bool hasAlreadyRotated = false;
 
-        public MovementUpgrade moveData = null;
-
-        public bool canMove => !hasAlreadyMoved && (!hasAlreadyRotated || moveData.CanRotateAndMove);
-
-        // The initial design used to be that if it rotated, it would subtract 1 from the movesRemaining
-        //      and it could only rotate if it hadn't moved it's full maxMovementPoints, but I don't see that in the GDD anymore
-        //public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || moveData.CanRotateAndMove && movesRemaining > 0);
-        public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || moveData.CanRotateAndMove);
+        public bool canMove => !IsFrozen && !hasAlreadyMoved && (!hasAlreadyRotated || moveData.CanRotateAndMove);
+        public bool canRotate => !IsFrozen && !hasAlreadyRotated && (!hasAlreadyMoved || moveData.CanRotateAndMove);
+        public bool IsFrozen { get; set; }
 
 
         public static ShipMovementPattern CreateMovementPattern(ShipType type)

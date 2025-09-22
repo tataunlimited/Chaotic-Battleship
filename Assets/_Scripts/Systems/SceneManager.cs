@@ -20,7 +20,7 @@ public class SceneManager : MonoBehaviour
         new SceneMap{ type = SceneType.MainMenu,  sceneName = "MainMenu" },
         new SceneMap{ type = SceneType.Game,      sceneName = "Game" },
         new SceneMap{ type = SceneType.Credits,   sceneName = "Credits" },
-        new SceneMap{ type = SceneType.Anchorage, sceneName = "Anchorage" },
+        new SceneMap{ type = SceneType.Harbor, sceneName = "Harbor" },
     };
 
     [Header("Transition UI")]
@@ -34,8 +34,8 @@ public class SceneManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (ScreenFadder.Instance)
-            StartCoroutine(ScreenFadder.Instance.FadeIn());
+        if (ScreenFader.Instance)
+            StartCoroutine(ScreenFader.Instance.FadeIn());
     }
 
     // public API
@@ -58,8 +58,8 @@ public class SceneManager : MonoBehaviour
             yield break;
         }
 
-        if (ScreenFadder.Instance)
-            yield return ScreenFadder.Instance.FadeOut();
+        if (ScreenFader.Instance)
+            yield return ScreenFader.Instance.FadeOut();
 
         var op = USceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         op.allowSceneActivation = false;
@@ -78,8 +78,8 @@ public class SceneManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
 
-        if (ScreenFadder.Instance)
-            yield return ScreenFadder.Instance.FadeIn();
+        if (ScreenFader.Instance)
+            yield return ScreenFader.Instance.FadeIn();
 
         if (progressBar) progressBar.value = 0f;
     }

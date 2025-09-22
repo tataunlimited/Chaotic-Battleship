@@ -19,16 +19,16 @@ namespace Core.Board
         public Action<bool> OnShipSelected;
 
         public List<ShipView> shipPrefabs;
-        public ShipView SelectedShip {get; private set;}
-        
+        public ShipView SelectedShip { get; private set; }
+
         private Camera _camera;
         public LayerMask shipLayer;
-
         // exposing this for debugging purposes
         [SerializeField]
         private EnemyWaveManager _enemyWaveManager;
         public static BoardController Instance;
-
+        //SFX
+        public AudioSource shipSelectMovementPhaseSFX;
        
         void Awake()
         {
@@ -108,16 +108,16 @@ namespace Core.Board
                     if (SelectedShip.UpdatePosition(cell, shipView.shipModel.orientation))
                     {
                         shipView.shipModel.UpdateMovementStatus();
-                        ClearSelectedShip();
+                        UpdatePlayerSelectedShip(SelectedShip);
                     }
-                    
+
                 });
             }
-            if(playerView.Model.InBounds(SelectedShip.shipModel.root))
+            if (playerView.Model.InBounds(SelectedShip.shipModel.root))
                 highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
-            
-            OnShipSelected?.Invoke(true);
 
+            OnShipSelected?.Invoke(true);
+            shipSelectMovementPhaseSFX.Play();
 
             // enable/disable the rotate buttons
             GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
@@ -172,31 +172,31 @@ namespace Core.Board
                 enemyView.RevealShips();
         }
 
-        public void SpawnEnemyShips()
-        {
-            _enemyWaveManager = new EnemyWaveManager();
+        // public void SpawnEnemyShips()
+        // {
+        //     _enemyWaveManager = new EnemyWaveManager();
 
-            // DEBUG ONLY: do not check in with the next 2 lines
-            //_enemyWaveManager.intelligenceLevel = 3;
-            //Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
+        //     // DEBUG ONLY: do not check in with the next 2 lines
+        //     _enemyWaveManager.intelligenceLevel = 0;
+        //     Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
 
-            List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
+        //     List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
 
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            _enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
+        //     // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+        //     _enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
 
-            // Note: the designer said not to move intelligently during enemy placement
-            // Give the AI a chance to move to "smarter" locations
-            //_enemyWaveManager.MoveEnemyShips(enemyView, playerView);
+        //     // Note: the designer said not to move intelligently during enemy placement
+        //     // Give the AI a chance to move to "smarter" locations
+        //     //_enemyWaveManager.MoveEnemyShips(enemyView, playerView);
 
-            enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
-            foreach (ShipModel ship in enemyShips)
-                SpawnShip(ship.type, ship.root, ship.orientation, enemyView);
+        //     enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
+        //     foreach (ShipModel ship in enemyShips)
+        //         SpawnShip(ship.type, ship.root, ship.orientation, enemyView);
 
-            // use revealShips for testing purposes to show where the enemy ships are placed
-            if (enemyView.revealShips)
-                enemyView.RevealShips();
-        }
+        //     // use revealShips for testing purposes to show where the enemy ships are placed
+        //     if (enemyView.revealShips)
+        //         enemyView.RevealShips();
+        // }
 
         public ShipView SpawnPlayerShip(ShipType shipType)
         {
@@ -219,7 +219,7 @@ namespace Core.Board
                 yield return new WaitForSeconds(0.5f);
             }
         }
-        
+
         public IEnumerator EnemyAttack()
         {
             foreach (var ship in enemyView.SpawnedShips)
@@ -239,7 +239,7 @@ namespace Core.Board
         public void UpdateBoards()
         {
             playerView.UpdateBoard();
-            
+
         }
 
         public void EnsureEnemyWaveManager()
@@ -253,5 +253,34 @@ namespace Core.Board
         {
             ClearSelectedShip();
         }
+
+        public void UnfreezeFrozenShips()
+        {
+            enemyView.Unfreeze();
+            playerView.Unfreeze();
+        }
+
+        // In BoardController
+        public void SpawnEnemyShipsFromModels(List<ShipModel> ships, bool reveal = false)
+        {
+            if (ships == null || ships.Count == 0)
+            {
+                Debug.LogWarning("SpawnEnemyShipsFromModels: No ships to spawn.");
+                return;
+            }
+            
+            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+            _enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
+            enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
+            foreach (ShipModel ship in ships)
+                SpawnShip(ship.type, ship.root, ship.orientation, enemyView);
+
+            // use revealShips for testing purposes to show where the enemy ships are placed
+            if (reveal || enemyView.revealShips)
+            {
+                enemyView.RevealShips();
+            }
+        }
+
     }
 }

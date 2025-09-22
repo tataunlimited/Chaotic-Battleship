@@ -310,6 +310,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8473658908489662290}
     m_Modifications:
+    - target: {fileID: 5583213504113147267, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5822967767421886555, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
       propertyPath: m_LocalScale.x
       value: 10
@@ -364,11 +368,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6254224606078766032, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6594544162023635681, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
       propertyPath: m_Name
       value: Submarine (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8289571372458618479, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 8289571372458618479, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8289571372458618479, guid: 200fd90d39e9af24f9d090cf3f3823bc, type: 3}
       propertyPath: m_LocalPosition.x
