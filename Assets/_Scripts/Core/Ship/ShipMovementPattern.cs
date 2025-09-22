@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
+using Core.Ship;
+using Core.Ship.Upgrade;
+using UnityEditor.Overlays;
 using UnityEngine;
 using Random = System.Random;
 
@@ -11,42 +14,43 @@ namespace Core.Ship
 {
 
     // 
-    public abstract class ShipMovementPattern
+    //public abstract class ShipMovementPattern
+    public class ShipMovementPattern
     {
         private Random rnd = new Random();
 
         public float chanceToStayStill = 0.5f;
         public float chanceToRotate = 0.5f;
-        public bool canMoveAfterRotating = false;
-        public int maxMovementPoints = 1;
-        public int movesRemaining = 1;
+        //public int maxMovementPoints = 1;
+        //public int movesRemaining = 1;
         public bool hasAlreadyMoved = false;
         public bool hasAlreadyRotated = false;
 
-        public bool canMove => !IsFrozen && !hasAlreadyMoved && (!hasAlreadyRotated || canMoveAfterRotating);
+        public MovementUpgrade moveData = null;
 
-        // The initial design used to be that if it rotated, it would subtract 1 from the movesRemaining
-        //      and it could only rotate if it hadn't moved it's full maxMovementPoints, but I don't see that in the GDD anymore
-        //public bool canRotate => !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating && movesRemaining > 0);
-        public bool canRotate => !IsFrozen && !hasAlreadyRotated && (!hasAlreadyMoved || canMoveAfterRotating);
+        public bool canMove => !IsFrozen && !hasAlreadyMoved && (!hasAlreadyRotated || moveData.CanRotateAndMove);
+        public bool canRotate => !IsFrozen && !hasAlreadyRotated && (!hasAlreadyMoved || moveData.CanRotateAndMove);
         public bool IsFrozen { get; set; }
 
 
         public static ShipMovementPattern CreateMovementPattern(ShipType type)
         {
-            switch (type)
-            {
-                case ShipType.Battleship: return new BattleShipMovementPattern();
-                case ShipType.Cruiser: return new CruiserMovementPattern();
-                case ShipType.Destroyer: return new DestroyerMovementPattern();
-                case ShipType.Submarine: return new SubmarineMovementPattern();
-                default: return new BattleShipMovementPattern();
-            }
+            /*
+                        switch (type)
+                        {
+                            case ShipType.Battleship: return new BattleShipMovementPattern();
+                            case ShipType.Cruiser: return new CruiserMovementPattern();
+                            case ShipType.Destroyer: return new DestroyerMovementPattern();
+                            case ShipType.Submarine: return new SubmarineMovementPattern();
+                            default: return new BattleShipMovementPattern();
+                        }
+            */
+            return new ShipMovementPattern();
         }
 
         public void Reset()
         {
-            movesRemaining = maxMovementPoints;
+            //movesRemaining = maxMovementPoints;
             hasAlreadyRotated = false;
             hasAlreadyMoved = false;
         }
@@ -77,7 +81,7 @@ namespace Core.Ship
             if (rnd.NextDouble() < chanceToRotate && RandomlyRotateLeftOrRight(board, shipView))
             {
                 Debug.Log("rotated to " + ship.orientation);
-                if (!canMoveAfterRotating)
+                if (!moveData.CanRotateAndMove)
                     return true;
             }
 
@@ -198,17 +202,15 @@ namespace Core.Ship
             return hasBeenSuccessfullyPlaced;
         }
 
-        public abstract List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship);
+        //public abstract List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship);
 
-    }
-
-    // Battleship: 1 space forward; 1 space backward.
-    class BattleShipMovementPattern : ShipMovementPattern
-    {
-        public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
+        public List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
         {
+            Debug.Log("GetAllPossibleMovePositions");
+
             List<GridPos> locations = new();
-            if (!ship.canMove)    // destroyed ships can't move. and can't move again if already moved or rotated
+
+            if (!ship.canMove || moveData == null)    // destroyed ships can't move. and can't move again if already moved or rotated
                 return locations;
 
             GridPos originalPosition = ship.root;
@@ -216,14 +218,11 @@ namespace Core.Ship
             // remove the current ship location so it doesn't block possible locations
             board.Model.ResetShipCells(ship);
 
-            ship.MoveTowards(ship.orientation, 1);      // forward 1
-            if (board.Model.ValidateShipPlacement(ship))
-                locations.Add(ship.root);
-
-            ship.root = originalPosition;
-            ship.MoveTowards(ship.orientation, -1);     // back 1
-            if (board.Model.ValidateShipPlacement(ship))
-                locations.Add(ship.root);
+            AddOrthogonalMovements(board, ship, locations);
+            AddDiagonalMovements(board, ship, locations);
+            AddAnyDirectionMovements(board, ship, locations);
+            AddForwardAndBackwardMovements(board, ship, locations);
+            AddForwardAndBackwardDiagonalMovements(board, ship, locations);
 
             // place the ship back in its originalPosition
             ship.root = originalPosition;
@@ -231,62 +230,17 @@ namespace Core.Ship
 
             return locations;
         }
-    }
 
-    // Cruiser: Up to 2 spaces forward, 1 space backward.
-    class CruiserMovementPattern : ShipMovementPattern
-    {
-        public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
+        // Add GridPos's to locations if OrthogonalMovementPoints is > 0 in moveData
+        // Note that it won't duplicate a GridPos if it already exists in locations
+        //
+        private void AddOrthogonalMovements(BoardView board, ShipModel ship, List<GridPos> locations)
         {
-            List<GridPos> locations = new();
-            if (!ship.canMove)   // destroyed ships can't move. and can't move again if already moved or rotated
-                return locations;
+            if (moveData.OrthogonalMovementPoints <= 0)
+                return;
 
             GridPos originalPosition = ship.root;
-
-            // remove the current ship location so it doesn't block possible locations
-            board.Model.ResetShipCells(ship);
-
-            ship.MoveTowards(ship.orientation, 1);      // forward 1
-            if (board.Model.ValidateShipPlacement(ship))
-                locations.Add(ship.root);
-            ship.MoveTowards(ship.orientation, 1);      // forward 1 more
-            if (board.Model.ValidateShipPlacement(ship))
-                locations.Add(ship.root);
-
-            ship.root = originalPosition;
-            ship.MoveTowards(ship.orientation, -1);     // back 1
-            if (board.Model.ValidateShipPlacement(ship))
-                locations.Add(ship.root);
-
-            // place the ship back in its originalPosition
-            ship.root = originalPosition;
-            board.Model.TryPlaceShip(ship);
-
-            return locations;
-        }
-    }
-
-    // Destroyer: Up to 2 spaces any direction from the bow. May rotate and move in the same Movement Phase.
-    class DestroyerMovementPattern : ShipMovementPattern
-    {
-        public DestroyerMovementPattern()
-        {
-            canMoveAfterRotating = true;
-            maxMovementPoints = 2;
-            movesRemaining = 2;
-        }
-
-        public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
-        {
-            List<GridPos> locations = new();
-            if (!ship.canMove)    // destroyed ships can't move.
-                return locations;
-
-            GridPos originalPosition = ship.root;     
-
-            // remove the current ship location so it doesn't block possible locations
-            board.Model.ResetShipCells(ship);
+            int movesRemaining = moveData.OrthogonalMovementPoints;
 
             // checking east and west moves
             for (int i = originalPosition.x - movesRemaining; i <= originalPosition.x + movesRemaining; i++)
@@ -294,7 +248,7 @@ namespace Core.Ship
                 if (i == originalPosition.x) continue;
 
                 ship.root.x = i;
-                if (board.Model.ValidateShipPlacement(ship))
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
                     locations.Add(ship.root);
             }
             ship.root = originalPosition;
@@ -305,22 +259,34 @@ namespace Core.Ship
                 if (i == originalPosition.y) continue;
 
                 ship.root.y = i;
-                if (board.Model.ValidateShipPlacement(ship))
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
                     locations.Add(ship.root);
             }
-            ship.root = originalPosition;
 
-            // checking northeast and southwest diagonal moves
+            ship.root = originalPosition;
+        }
+
+        // Add GridPos's to locations if DiagonalMovementPoints is > 0 in moveData
+        // Note that it won't duplicate a GridPos if it already exists in locations
+        //
+        private void AddDiagonalMovements(BoardView board, ShipModel ship, List<GridPos> locations)
+        {
+            if (moveData.DiagonalMovementPoints <= 0)
+                return;
+
+            GridPos originalPosition = ship.root;
+            int movesRemaining = moveData.DiagonalMovementPoints;
+
+            // checking northwest and southeast diagonal moves
             for (int i = -movesRemaining; i <= movesRemaining; i++)
             {
                 if (i == 0) continue;
 
                 ship.root.x = originalPosition.x + i;
                 ship.root.y = originalPosition.y + i;
-                if (board.Model.ValidateShipPlacement(ship))
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
                     locations.Add(ship.root);
             }
-            ship.root = originalPosition;
 
             // checking northeast and southwest diagonal moves
             for (int i = -movesRemaining; i <= movesRemaining; i++)
@@ -329,67 +295,132 @@ namespace Core.Ship
 
                 ship.root.x = originalPosition.x + i;
                 ship.root.y = originalPosition.y - i;
-                if (board.Model.ValidateShipPlacement(ship))
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
                     locations.Add(ship.root);
             }
+
             ship.root = originalPosition;
-
-            // place the ship back in its originalPosition
-            board.Model.TryPlaceShip(ship);
-
-            return locations;
-        }
-    }
-
-    // Submarine: Up to 3 spaces (N/S/E/W). May rotate and move in the same Movement Phase.
-    class SubmarineMovementPattern : ShipMovementPattern
-    {
-        public SubmarineMovementPattern()
-        {
-            canMoveAfterRotating = true;
-            maxMovementPoints = 3;
-            movesRemaining = 3;
         }
 
-        public override List<GridPos> GetAllPossibleMovePositions(BoardView board, ShipModel ship)
+
+        // Add GridPos's to locations if AnyDirectionMovementPoints is > 0 in moveData
+        // Note that it won't duplicate a GridPos if it already exists in locations
+        //
+        private void AddAnyDirectionMovements(BoardView board, ShipModel ship, List<GridPos> locations)
         {
-            List<GridPos> locations = new();
-            if (!ship.canMove)    // destroyed ships can't move.
-                return locations;
+            if (moveData.AnyDirectionMovementPoints <= 0)
+                return;
+
+            GridPos originalPosition = ship.root;
+            int movesRemaining = moveData.AnyDirectionMovementPoints;
+
+            // checking all moves in a square
+            for (int i = -movesRemaining; i <= movesRemaining; i++)
+            {
+                // checking all moves in a square
+                for (int j = -movesRemaining; j <= movesRemaining; j++)
+                {
+                    if (i == 0 && j == 0) continue;
+
+                    ship.root.x = originalPosition.x + i;
+                    ship.root.y = originalPosition.y + j;
+                    if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
+                        locations.Add(ship.root);
+                }
+            }
+
+            ship.root = originalPosition;
+        }
+
+        // Add GridPos's to locations if ForwardMovementPoints is > 0  or BackwardMovementPoints is > 0 in moveData
+        // Note that it won't duplicate a GridPos if it already exists in locations
+        //
+        private void AddForwardAndBackwardMovements(BoardView board, ShipModel ship, List<GridPos> locations)
+        {
+            if (moveData.ForwardMovementPoints <= 0 && moveData.BackwardMovementPoints <= 0)
+                return;
 
             GridPos originalPosition = ship.root;
 
-            // remove the current ship location so it doesn't block possible locations
-            board.Model.ResetShipCells(ship);
-
-            // checking east and west moves
-            for (int i = originalPosition.x - movesRemaining; i <= originalPosition.x + movesRemaining; i++)
-            {
-                if (i == originalPosition.x) continue;
-
-                ship.root.x = i;
-                if (board.Model.ValidateShipPlacement(ship))
-                    locations.Add(ship.root);
-            }
-            ship.root = originalPosition;
-
             // checking north and south moves
-            for (int i = originalPosition.y - movesRemaining; i <= originalPosition.y + movesRemaining; i++)
+            for (int i = -moveData.BackwardMovementPoints; i <= moveData.ForwardMovementPoints; i++)
             {
-                if (i == originalPosition.y) continue;
+                if (i == 0) continue;
 
-                ship.root.y = i;
-                if (board.Model.ValidateShipPlacement(ship))
+                ship.MoveTowards(ship.orientation, i);
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
+                ship.root = originalPosition;
+            }
+
+        }
+
+        // Add GridPos's to locations if ForwardDiagonalMovementPoints is > 0 or BackwardDiagonalMovementPoints is > 0 in moveData
+        // Note that it won't duplicate a GridPos if it already exists in locations
+        //
+        private void AddForwardAndBackwardDiagonalMovements(BoardView board, ShipModel ship, List<GridPos> locations)
+        {
+            if (moveData.ForwardDiagonalMovementPoints <= 0 && moveData.BackwardDiagonalMovementPoints <= 0)
+                return;
+
+            GridPos originalPosition = ship.root;
+
+            // how many moves to make in each of the 4 diagonal directions
+            int northEast;
+            int northWest;
+            int southEast;
+            int southWest;
+
+            if (ship.orientation == Orientation.North)
+            {
+                northEast = northWest = moveData.ForwardDiagonalMovementPoints;
+                southEast = southWest = moveData.BackwardDiagonalMovementPoints;
+            }
+            else if (ship.orientation == Orientation.South)
+            {
+                southEast = southWest = moveData.ForwardDiagonalMovementPoints;
+                northEast = northWest = moveData.BackwardDiagonalMovementPoints;
+            }
+            else if (ship.orientation == Orientation.East)
+            {
+                southEast = northEast = moveData.ForwardDiagonalMovementPoints;
+                southWest = northWest = moveData.BackwardDiagonalMovementPoints;
+            }
+            else if (ship.orientation == Orientation.West)
+            {
+                southWest = northWest = moveData.ForwardDiagonalMovementPoints;
+                southEast = northEast = moveData.BackwardDiagonalMovementPoints;
+            }
+            else
+            {
+                Debug.LogError("ShipMovementPattern.AddForwardAndBackwardDiagonalMovements can't handle orientation: " + ship.orientation);
+                return;
+            }
+
+            // checking southWest and northEast diagonal moves
+            for (int i = -southWest; i <= northEast; i++)
+            {
+                if (i == 0) continue;
+
+                ship.root.x = originalPosition.x + i;
+                ship.root.y = originalPosition.y + i;
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
                     locations.Add(ship.root);
             }
+
+            // checking northWest and southEast diagonal moves
+            for (int i = -northWest; i <= southEast; i++)
+            {
+                if (i == 0) continue;
+
+                ship.root.x = originalPosition.x + i;
+                ship.root.y = originalPosition.y - i;
+                if (!locations.Contains(ship.root) && board.Model.ValidateShipPlacement(ship))
+                    locations.Add(ship.root);
+            }
+
             ship.root = originalPosition;
-
-            // place the ship back in its originalPosition
-            board.Model.TryPlaceShip(ship);
-
-            return locations;
         }
+
     }
-
-
 }

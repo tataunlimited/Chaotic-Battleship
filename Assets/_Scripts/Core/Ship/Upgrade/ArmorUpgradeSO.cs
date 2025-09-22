@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Core.Ship;
 using UnityEngine;
 
 namespace Core.Ship.Upgrade
@@ -25,24 +24,13 @@ namespace Core.Ship.Upgrade
             return null;
         }
     }
+
     [Serializable]
-    public class UpgradeList
-    {
-        public ShipType ShipType;
-    }
-    [Serializable]
-    public class ArmorUpgradeList: UpgradeList
+    public class ArmorUpgradeList : UpgradeList
     {
         public List<ArmorUpgrade> ArmorUpgrades;
     }
-    [Serializable]
-    public class BaseShipUpgrade{
-        public int Cost;
-        public Sprite Icon;
-        public string UpgradeName; 
-        [TextArea]
-        public string Description;
-    }
+
     [Serializable]
     public class ArmorUpgrade : BaseShipUpgrade
     {

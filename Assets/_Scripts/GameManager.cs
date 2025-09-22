@@ -13,10 +13,11 @@ public class GameManager : MonoBehaviour
 
     public BoardController boardController;
     public CameraController cameraController;
-    
+
     public ArmorUpgradeSO armorUpgradeSO;
     public AttackPatternUpgradeSO attackUpgradeSO;
     public SpecialAttackUpgradeSO specialUpgradeSO;
+    public MovementUpgradeSO movementUpgradeSO;
 
     public enum PHASE_STATE
     {

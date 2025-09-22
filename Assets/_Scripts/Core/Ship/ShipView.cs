@@ -126,6 +126,11 @@ namespace Core.Ship
 
             shipModel.InitAttackPattern(pd.GetUpgrade(shipModel.type, UpgradeType.AttackPattern), pd.GetUpgrade(shipModel.type, UpgradeType.SpecialAttack));
 
+            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Movement));
+            if (movementData != null)
+            {
+                shipModel.SetMovementLevelData(movementData);
+            }
         }
 
         public void Hide()
