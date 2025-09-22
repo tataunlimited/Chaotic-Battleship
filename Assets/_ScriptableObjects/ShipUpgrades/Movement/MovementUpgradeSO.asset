@@ -1,0 +1,220 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c7df1fc69097974a85a795ad5edcebb, type: 3}
+  m_Name: MovementUpgradeSO
+  m_EditorClassIdentifier: 
+  Upgrades:
+  - ShipType: 4
+    MovementUpgrades:
+    - Cost: 0
+      Icon: {fileID: 0}
+      UpgradeName: Default Sub Movement
+      Description: Up to 3 spaces (N/S/E/W). May rotate and move in the same Movement
+        Phase.
+      OrthogonalMovementPoints: 3
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 400
+      Icon: {fileID: 0}
+      UpgradeName: Level 1 Sub Movement Upgrade
+      Description: Can move 4 spaces orthogonally
+      OrthogonalMovementPoints: 4
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 800
+      Icon: {fileID: 0}
+      UpgradeName: Level 2 Sub Movement Upgrade
+      Description: Can move 5 spaces orthogonally
+      OrthogonalMovementPoints: 5
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 1600
+      Icon: {fileID: 0}
+      UpgradeName: Level 3 Sub Movement Upgrade
+      Description: Can move 6 spaces orthogonally
+      OrthogonalMovementPoints: 6
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+  - ShipType: 1
+    MovementUpgrades:
+    - Cost: 0
+      Icon: {fileID: 0}
+      UpgradeName: Default Destroyer Movement
+      Description: Up to 2 spaces any direction from the bow. May rotate and move
+        in the same Movement Phase.
+      OrthogonalMovementPoints: 2
+      DiagonalMovementPoints: 2
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 500
+      Icon: {fileID: 0}
+      UpgradeName: Level 1 Destroyer Movement Upgrade
+      Description: can move anywhere in radius 2
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 2
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Level 2 Destroyer Movement Upgrade
+      Description: can move 3 vertically or orthogonally, or 2 in any direction
+      OrthogonalMovementPoints: 3
+      DiagonalMovementPoints: 3
+      AnyDirectionMovementPoints: 2
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 2000
+      Icon: {fileID: 0}
+      UpgradeName: Level 3 Destroyer Movement Upgrade
+      Description: can move 3 in any direction
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 3
+      ForwardMovementPoints: 0
+      BackwardMovementPoints: 0
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+  - ShipType: 3
+    MovementUpgrades:
+    - Cost: 0
+      Icon: {fileID: 0}
+      UpgradeName: Default Cruiser Movement
+      Description: Up to 2 spaces forward, 1 space backward.
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 2
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 0
+    - Cost: 700
+      Icon: {fileID: 0}
+      UpgradeName: Level 1 Cruiser Movement Upgrade
+      Description: can move and rotate in a single move
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 2
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 1400
+      Icon: {fileID: 0}
+      UpgradeName: Level 2 Cruiser Movement Upgrade
+      Description: ' can move forward 3 or back 1 or forward diagonal 1, and can
+        move and rotate in a single move'
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 3
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 1
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 1
+    - Cost: 2800
+      Icon: {fileID: 0}
+      UpgradeName: Level 3 Cruiser Movement Upgrade
+      Description: can move forward 3, back 2, or forward diagonal 2 or back diagonal
+        1, and can move and rotate in a single move
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 3
+      BackwardMovementPoints: 2
+      ForwardDiagonalMovementPoints: 2
+      BackwardDiagonalMovementPoints: 1
+      CanRotateAndMove: 1
+  - ShipType: 2
+    MovementUpgrades:
+    - Cost: 0
+      Icon: {fileID: 0}
+      UpgradeName: Default Battleship Movement
+      Description: 1 space forward; 1 space backward.
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 1
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 0
+    - Cost: 800
+      Icon: {fileID: 0}
+      UpgradeName: Level 1 Battleship Movement Upgrade
+      Description: can move forward 2 or back 1
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 2
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 0
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 0
+    - Cost: 1600
+      Icon: {fileID: 0}
+      UpgradeName: Level 2 Battleship Movement Upgrade
+      Description: can move forward 2, forward diagonal 1, or back 1
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 2
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 1
+      BackwardDiagonalMovementPoints: 0
+      CanRotateAndMove: 0
+    - Cost: 3200
+      Icon: {fileID: 0}
+      UpgradeName: Level 3 Battleship Movement Upgrade
+      Description: can move forward 2, forward diagonal 2, back 1, or back diagonal
+        1
+      OrthogonalMovementPoints: 0
+      DiagonalMovementPoints: 0
+      AnyDirectionMovementPoints: 0
+      ForwardMovementPoints: 2
+      BackwardMovementPoints: 1
+      ForwardDiagonalMovementPoints: 2
+      BackwardDiagonalMovementPoints: 1
+      CanRotateAndMove: 0

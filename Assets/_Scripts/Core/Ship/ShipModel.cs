@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Board;
 using Core.GridSystem;
 using UnityEngine;
+using Core.Ship.Upgrade;
 
 namespace Core.Ship
 {
@@ -24,11 +25,13 @@ namespace Core.Ship
         public bool submerged = false;
         public int hp;
         public int MaxHP => length;
-        public int currentArmor;
         public bool IsSunk => isDestroyed || hp <= 0;
+
+        // armor
         public float armor = 0f;
         public float armorDestroyerChance = 0f;
         public float armorCruiserChance = 0f;
+
         public Orientation orientation = Orientation.North;
         public GridPos root; // bow (front) position   
         public GridPos reserved = new GridPos(-1000, -1000); // Destroyer's attack position   
@@ -291,6 +294,11 @@ namespace Core.Ship
             armor = armorData.ArmorPoints;
             armorDestroyerChance = armorData.DestroyerArmorChance;
             armorCruiserChance = armorData.CruiserArmorChance;
+        }
+
+        public void SetMovementLevelData(MovementUpgrade movementData)
+        {
+            movementPattern.moveData = movementData;
         }
 
         // currently Sub only fires on rounds % 2 == 0 or if IsLastShip, but this may change with upgrades

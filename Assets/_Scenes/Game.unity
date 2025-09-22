@@ -16269,6 +16269,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1738965340}
     - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: movementUpgradeSO
+      value: 
+      objectReference: {fileID: 11400000, guid: c97d56c4fcd8f6b4f95488ac7df4ef3a, type: 2}
+    - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: rotateRightButton
       value: 
       objectReference: {fileID: 13049830}

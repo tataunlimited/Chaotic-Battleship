@@ -119,6 +119,12 @@ namespace Core.Ship
             {
                 shipModel.SetArmorLevelData(armorData);
             }
+
+            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Movement));
+            if (movementData != null)
+            {
+                shipModel.SetMovementLevelData(movementData);
+            }
         }
 
         public void Hide()

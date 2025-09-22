@@ -495,7 +495,7 @@ namespace Core.Board
 
             foreach (ShipView shipView in SpawnedShips.Values)
             {
-                totalHealth += shipView.shipModel.hp + shipView.shipModel.currentArmor;
+                totalHealth += shipView.shipModel.hp + shipView.shipModel.armor;
             }
 
             Debug.Log("ComputeTotalHealth board: " + SpawnedShips + ", totalHealth: " + totalHealth);

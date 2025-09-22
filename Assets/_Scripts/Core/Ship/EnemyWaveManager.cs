@@ -184,26 +184,13 @@ namespace Core.Ship
          */
         private void ComputeIntelligenceMode(BoardView AIBoard, BoardView playerBoard)
         {
-            float ratio = ComputeTotalHealth(AIBoard) / ComputeTotalHealth(playerBoard);
+            float ratio = AIBoard.ComputeTotalHealth() / playerBoard.ComputeTotalHealth();
             if (ratio >= 0.25 && ratio <= 1.01)
                 intelligenceMode = IntelligenceMode.AttackAvoidance;
             else
                 intelligenceMode = IntelligenceMode.Targeting;
 
             Debug.Log("ComputeIntelligenceMode ratio: " + ratio + ", intelligenceMode: " + intelligenceMode);
-        }
-
-        private float ComputeTotalHealth(BoardView board)
-        {
-            float totalHealth = 0f;
-
-            foreach (ShipView shipView in board.SpawnedShips.Values)
-            {
-                totalHealth += shipView.shipModel.hp + shipView.shipModel.currentArmor;
-            }
-
-            Debug.Log("ComputeTotalHealth board: " + board.name + ", totalHealth: " + totalHealth);
-            return totalHealth;
         }
 
         /* CalculatePlayerImminentHitSet
@@ -550,7 +537,7 @@ namespace Core.Ship
                 locations.Add(new PositionAndOrientation { position = coord, orientation = ship.orientation });
 
                 // if canMoveAfterRotating, include every valid rotation after moving
-                if (ship.movementPattern.canMoveAfterRotating)
+                if (ship.movementPattern.moveData.CanRotateAndMove)
                 {
                     if (ship.movementPattern.CanRotateLeft(board, shipView, out newOrientation))
                         locations.Add(new PositionAndOrientation { position = coord, orientation = newOrientation });
