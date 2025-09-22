@@ -1,11 +1,8 @@
 
-using System;
 using System.Collections.Generic;
 using Core.Board;
 using Core.GridSystem;
-using Core.Ship;
 using Core.Ship.Upgrade;
-using UnityEditor.Overlays;
 using UnityEngine;
 using Random = System.Random;
 
