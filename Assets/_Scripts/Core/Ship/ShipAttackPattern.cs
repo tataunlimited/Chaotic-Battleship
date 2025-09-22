@@ -24,7 +24,12 @@ namespace Core.Ship
 
         public event Action<TorpedoData> OnTorpedoFired;
         protected static int Round => GameManager.instance.RoundNumber;
-        protected bool IsSpecialAttack => BoardController.Instance.playerView.IsLastShip;
+        protected bool IsSpecialAttack;
+
+        public void EnableSpecialAttackState()
+        {
+            IsSpecialAttack = true;
+        }
 
 
         public abstract List<GridPos> GetAttackPositions(BoardView enemyBoard);

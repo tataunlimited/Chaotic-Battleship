@@ -149,7 +149,7 @@ public class EnemyWaveSpawner : MonoBehaviour
         // }
         var model = ShipFactory.CreateShipModel(type); // force creation (if not already created)
         for (int i = 0; i < count; i++)
-            list.Add(model);
+            list.Add(model.Copy());
     }
 
     public WaveDefinition GetCurrentWaveDefinition()

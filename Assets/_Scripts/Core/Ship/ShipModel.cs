@@ -86,6 +86,10 @@ namespace Core.Ship
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
             var coords = new List<GridPos>();
+            if (isSpecialAttack)
+            {
+                AttackPattern.EnableSpecialAttackState();
+            }
             if (AttackPattern.IsInCapacitated)
             {
                 AttackPattern.IsInCapacitated = false;
