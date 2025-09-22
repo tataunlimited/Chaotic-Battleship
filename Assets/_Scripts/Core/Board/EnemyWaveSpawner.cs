@@ -93,7 +93,7 @@ public class EnemyWaveSpawner : MonoBehaviour
 
         // Track which ships are added by this spawn so we can bind per-ship AI
         var preExisting = new HashSet<ShipView>(enemyBoard.SpawnedShips.Values);
-        controller.SpawnEnemyShipsFromModels(ships, reveal);
+        controller.SpawnEnemyShipsFromModels(ships, false);
         var justSpawned = enemyBoard.SpawnedShips.Values.Where(sv => !preExisting.Contains(sv)).ToList();
 
         // --- Per-ship overrides (assign to any N ships of the type) ---
