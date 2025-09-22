@@ -26,6 +26,8 @@ namespace Core.Ship
         public bool hasAlreadyMoved = false;
         public bool hasAlreadyRotated = false;
 
+        public MovementUpgrade moveData = null;
+
         public bool canMove => !IsFrozen && !hasAlreadyMoved && (!hasAlreadyRotated || moveData.CanRotateAndMove);
         public bool canRotate => !IsFrozen && !hasAlreadyRotated && (!hasAlreadyMoved || moveData.CanRotateAndMove);
         public bool IsFrozen { get; set; }

@@ -171,7 +171,6 @@ namespace Core.Ship
                 isDestroyed = isDestroyed,
                 _round = _round,
                 submerged = submerged,
-                currentArmor = currentArmor,
                 armor = armor,
                 armorDestroyerChance = armorDestroyerChance,
                 armorCruiserChance = armorCruiserChance,
@@ -287,7 +286,7 @@ namespace Core.Ship
 
         public void SetMovementLevelData(MovementUpgrade movementData)
         {
-            movementPattern.moveData = movementData;
+            MovementPattern.moveData = movementData;
         }
 
         // currently Sub only fires on rounds % 2 == 0 or if IsLastShip, but this may change with upgrades

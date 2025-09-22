@@ -537,7 +537,7 @@ namespace Core.Ship
                 locations.Add(new PositionAndOrientation { position = coord, orientation = ship.orientation });
 
                 // if canMoveAfterRotating, include every valid rotation after moving
-                if (ship.movementPattern.moveData.CanRotateAndMove)
+                if (ship.MovementPattern.moveData.CanRotateAndMove)
                 {
                     if (ship.MovementPattern.CanRotateLeft(board, shipView, out newOrientation))
                         locations.Add(new PositionAndOrientation { position = coord, orientation = newOrientation });
