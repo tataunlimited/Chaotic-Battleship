@@ -50,10 +50,14 @@ MonoBehaviour:
     sceneName: MainMenu
   - type: 1
     sceneName: Game
-  - type: 2
+  - type: 4
     sceneName: Credits
-  - type: 3
+  - type: 5
     sceneName: Harbor
+  - type: 3
+    sceneName: Story
+  - type: 2
+    sceneName: Options
   fadeImage: {fileID: 0}
   progressBar: {fileID: 0}
   fadeDuration: 0.5
