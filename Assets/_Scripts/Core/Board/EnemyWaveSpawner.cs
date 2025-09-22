@@ -142,12 +142,12 @@ public class EnemyWaveSpawner : MonoBehaviour
     {
         if (count <= 0) return;
 
-        if (!ShipFactory.DefaultShips.TryGetValue(type, out var model))
-        {
-            Debug.LogError($"EnemyWaveSpawner: Default ship not found for {type}");
-            return;
-        }
-
+        // if (!ShipFactory.DefaultShips.TryGetValue(type, out var model))
+        // {
+        //     Debug.LogError($"EnemyWaveSpawner: Default ship not found for {type}");
+        //     return;
+        // }
+        var model = ShipFactory.CreateShipModel(type); // force creation (if not already created)
         for (int i = 0; i < count; i++)
             list.Add(model.Copy());
     }

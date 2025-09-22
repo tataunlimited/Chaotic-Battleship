@@ -90,6 +90,10 @@ namespace Core.Ship
         internal List<GridPos> GetAttackCoordinates(BoardView boardView, bool isSpecialAttack)
         {
             var coords = new List<GridPos>();
+            if (isSpecialAttack)
+            {
+                AttackPattern.EnableSpecialAttackState();
+            }
             if (AttackPattern.IsInCapacitated)
             {
                 AttackPattern.IsInCapacitated = false;
@@ -177,10 +181,7 @@ namespace Core.Ship
                 reserved = reserved,
                 MovementPattern = ShipMovementPattern.CreateMovementPattern(type),
             };
-            if (AttackPattern != null)
-            {
-                copy.AttackPattern = AttackPattern.Copy();
-            }
+            copy.InitAttackPattern(0, 0);
 
             return copy;
         }
