@@ -1,300 +1,413 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class HarborSceneUIManager : MonoBehaviour
 {
     private PlayerData playerData;
-    private int current_points;
 
-    public enum ShipType { Submarine, Destroyer, Cruiser, Battleship }
-    [Header("Harbor Testing - Selected Ship")]
-    [SerializeField] private ShipType selectedShip = ShipType.Submarine;
+    public enum ShipType { None, Submarine, Destroyer, Cruiser, Battleship }
+    public enum UpgradeCategory { Armor, Movement, Attack, SpecialAbility }
 
-    [Header("Armor Panel UI")]
-    [SerializeField] private GameObject armorPanelRoot;
-    [SerializeField] private TMP_Text currentLevelLabel;
-    [SerializeField] private TMP_Text currentStatsLabel;
-    [SerializeField] private TMP_Text nextNameLabel;
-    [SerializeField] private TMP_Text nextDescLabel;
-    [SerializeField] private TMP_Text nextCostLabel;
-    [SerializeField] private TMP_Text nextGainsLabel;
-    [SerializeField] private Button upgradeButton;
+    // ---- Data (assign your ScriptableObjects here) ---------------------------------
+    [Header("Data (drag ScriptableObjects from Assets/_ScriptableObjects)")]
+    [SerializeField] private ScriptableObject armorData;
+    [SerializeField] private ScriptableObject movementData;
+    [SerializeField] private ScriptableObject attackData;
+    [SerializeField] private ScriptableObject specialData;
 
-    [Header("Optional hooks")]
+    // ---- Selection ----------------------------------------------------------------
+    [Header("Selection (no auto-select on start)")]
+    [SerializeField] private ShipType selectedShip = ShipType.None;
+    [SerializeField] private UpgradeCategory selectedCategory = UpgradeCategory.Armor;
+
+    // ---- Minimal Armor/Upgrade Panel UI -------------------------------------------
+    [Header("Upgrade Panel UI")]
+    [SerializeField] private GameObject panelRoot;           // GROUP_UpgradeInfo
+    [SerializeField] private TMP_Text nextNameLabel;         // TXT_NextName
+    [SerializeField] private TMP_Text nextDescLabel;         // LABEL_UpgradeDescription/TXT_NextDescription
+    [SerializeField] private TMP_Text nextCostLabel;         // TXT_NextCost
+    [SerializeField] private TMP_Text nextGainsLabel;        // TXT_NextGains (optional)
+    [SerializeField] private Button upgradeButton;           // BUTTON_Upgrade
+
+    // ---- Options ------------------------------------------------------------------
+    [Header("Options")]
+    [SerializeField] private bool hidePanelOnStart = true;
+    [SerializeField] private bool autoWireLeftButtons = true;   // wire 16 left buttons at runtime
+
+    // ---- Optional Audio ------------------------------------------------------------
+    [Header("Optional Audio")]
     [SerializeField] private AudioSource uiAudioSource;
     [SerializeField] private AudioClip sfxUpgradeSuccess;
 
-    private const string ARMOR_SUB_KEY = "armor_submarine";
-    private const string ARMOR_DES_KEY = "armor_destroyer";
-    private const string ARMOR_CRU_KEY = "armor_cruiser";
-    private const string ARMOR_BAT_KEY = "armor_battleship";
-
-    private int GetArmorTier(ShipType ship)
+    // ---- PlayerPrefs keys ----------------------------------------------------------
+    private string TierKey(UpgradeCategory cat, ShipType ship)
     {
-        string key = ship switch
+        // keys like: armor_submarine, movement_destroyer, attack_cruiser, special_battleship
+        string c = cat switch
         {
-            ShipType.Submarine => ARMOR_SUB_KEY,
-            ShipType.Destroyer => ARMOR_DES_KEY,
-            ShipType.Cruiser => ARMOR_CRU_KEY,
-            ShipType.Battleship => ARMOR_BAT_KEY,
-            _ => ARMOR_SUB_KEY
+            UpgradeCategory.Armor => "armor",
+            UpgradeCategory.Movement => "movement",
+            UpgradeCategory.Attack => "attack",
+            _ => "special"
         };
-        return PlayerPrefs.GetInt(key, 0);
+        return $"{c}_{ship.ToString().ToLower()}";
     }
 
-    private void SetArmorTier(ShipType ship, int tier)
+    private int GetTier(UpgradeCategory cat, ShipType ship) =>
+        PlayerPrefs.GetInt(TierKey(cat, ship), 0);
+
+    private void SetTier(UpgradeCategory cat, ShipType ship, int tier)
     {
-        string key = ship switch
-        {
-            ShipType.Submarine => ARMOR_SUB_KEY,
-            ShipType.Destroyer => ARMOR_DES_KEY,
-            ShipType.Cruiser => ARMOR_CRU_KEY,
-            ShipType.Battleship => ARMOR_BAT_KEY,
-            _ => ARMOR_SUB_KEY
-        };
-        PlayerPrefs.SetInt(key, Mathf.Clamp(tier, 0, 3));
+        PlayerPrefs.SetInt(TierKey(cat, ship), Mathf.Clamp(tier, 0, 3));
         PlayerPrefs.Save();
     }
 
-    #region upgrade prices
-    private int submarine_armor_level1_price = 400;
-    private int submarine_armor_level2_price = 800;
-    private int submarine_armor_level3_price = 1600;
-
-    private int destroyer_armor_level1_price = 1100;
-    private int destroyer_armor_level2_price = 1600;
-    private int destroyer_armor_level3_price = 2100;
-
-    private int cruiser_armor_level1_price = 1200;
-    private int cruiser_armor_level2_price = 1700;
-    private int cruiser_armor_level3_price = 2200;
-
-    private int battleship_armor_level1_price = 1300;
-    private int battleship_armor_level2_price = 1800;
-    private int battleship_armor_level3_price = 2300;
-    #endregion
-
-
 #if UNITY_EDITOR
-    private void Reset() { AutoBind(); }
-    private void OnValidate() { AutoBind(); }
+    private void Reset() { EditorAutobind(); }
+    private void OnValidate() { EditorAutobind(); }
 
-    private void AutoBind()
+    private void EditorAutobind()
     {
-        // Only fill missing fields; keeps manual assignments intact
-        if (armorPanelRoot == null) armorPanelRoot = transform.Find("GROUP_UpgradeInfo")?.gameObject;
-        if (currentLevelLabel == null) currentLevelLabel = transform.Find("GROUP_UpgradeInfo/TXT_CurrentLevel")?.GetComponent<TMPro.TMP_Text>();
-        if (currentStatsLabel == null) currentStatsLabel = transform.Find("GROUP_UpgradeInfo/TXT_CurrentStats")?.GetComponent<TMPro.TMP_Text>();
-        if (nextNameLabel == null) nextNameLabel = transform.Find("GROUP_UpgradeInfo/TXT_NextName")?.GetComponent<TMPro.TMP_Text>();
-        if (nextDescLabel == null) nextDescLabel = transform.Find("GROUP_UpgradeInfo/LABEL_UpgradeDescription/TXT_NextDescription")?.GetComponent<TMPro.TMP_Text>();
-        if (nextCostLabel == null) nextCostLabel = transform.Find("GROUP_UpgradeInfo/TXT_NextCost")?.GetComponent<TMPro.TMP_Text>();
-        if (nextGainsLabel == null) nextGainsLabel = transform.Find("GROUP_UpgradeInfo/TXT_NextGains")?.GetComponent<TMPro.TMP_Text>();
-        if (upgradeButton == null) upgradeButton = transform.Find("GROUP_UpgradeInfo/BUTTON_Upgrade")?.GetComponent<UnityEngine.UI.Button>();
+        // Bind UI by common names so the Inspector isn’t full of “Missing”
+        TryFindUIRefs(transform);
     }
 #endif
-    
+
+    private void Awake()
+    {
+        TryFindUIRefs(transform); // runtime safety
+    }
+
     private void Start()
     {
         playerData = PlayerData.Instance;
-        current_points = playerData != null ? playerData.currentScore : 0;
 
-        if (upgradeButton != null)
+        if (panelRoot) panelRoot.SetActive(!hidePanelOnStart);
+
+        if (upgradeButton)
+        {
+            upgradeButton.onClick.RemoveListener(OnUpgradeClicked);
             upgradeButton.onClick.AddListener(OnUpgradeClicked);
+        }
 
-        RefreshArmorPanel();
+        if (autoWireLeftButtons) RuntimeWireLeftButtons();
+
+        // Do not auto-select; if panel is shown and something is preselected, refresh once
+        if (!hidePanelOnStart && selectedShip != ShipType.None) RefreshPanel();
     }
 
-    public void SetSelectedShipType(ShipType ship)
+    // ===== Public wrappers (keep compatibility if any were wired manually) ==========
+    public void SubmarineArmorUpgradePressed()       => Select(ShipType.Submarine,  UpgradeCategory.Armor);
+    public void DestroyerArmorUpgradePressed()       => Select(ShipType.Destroyer,  UpgradeCategory.Armor);
+    public void CruiserArmorUpgradePressed()         => Select(ShipType.Cruiser,    UpgradeCategory.Armor);
+    public void BattleshipArmorUpgradePressed()      => Select(ShipType.Battleship, UpgradeCategory.Armor);
+
+    public void SubmarineMovementUpgradePressed()    => Select(ShipType.Submarine,  UpgradeCategory.Movement);
+    public void DestroyerMovementUpgradePressed()    => Select(ShipType.Destroyer,  UpgradeCategory.Movement);
+    public void CruiserMovementUpgradePressed()      => Select(ShipType.Cruiser,    UpgradeCategory.Movement);
+    public void BattleshipMovementUpgradePressed()   => Select(ShipType.Battleship, UpgradeCategory.Movement);
+
+    public void SubmarineAttackButtonPressed()       => Select(ShipType.Submarine,  UpgradeCategory.Attack);
+    public void DestroyerAttackButtonPressed()       => Select(ShipType.Destroyer,  UpgradeCategory.Attack);
+    public void CruiserAttackButtonPressed()         => Select(ShipType.Cruiser,    UpgradeCategory.Attack);
+    public void BattleshipAttackButtonPressed()      => Select(ShipType.Battleship, UpgradeCategory.Attack);
+
+    public void SubmarineSpecialAbilityButtonPressed()=> Select(ShipType.Submarine,  UpgradeCategory.SpecialAbility);
+    public void DestroyerSpecialAbilityButtonPressed()=> Select(ShipType.Destroyer,  UpgradeCategory.SpecialAbility);
+    public void CruiserSpecialAbilityButtonPressed() => Select(ShipType.Cruiser,    UpgradeCategory.SpecialAbility);
+    public void BattleshipSpecialAbilityButtonPressed()=>Select(ShipType.Battleship, UpgradeCategory.SpecialAbility);
+
+    // ===== Core selection & refresh =================================================
+    private void Select(ShipType ship, UpgradeCategory cat)
     {
         selectedShip = ship;
-        RefreshArmorPanel();
+        selectedCategory = cat;
+
+        if (panelRoot) panelRoot.SetActive(true);
+        RefreshPanel();
     }
 
-    public void ShowArmorTab()
+    private void RefreshPanel()
     {
-        if (armorPanelRoot != null) armorPanelRoot.SetActive(true);
-        RefreshArmorPanel();
-    }
+        if (panelRoot == null || selectedShip == ShipType.None) return;
 
-    private void RefreshArmorPanel()
-    {
-        if (armorPanelRoot == null) return;
+        int cur = GetTier(selectedCategory, selectedShip);
+        int next = cur + 1;
 
-        int currentTier = GetArmorTier(selectedShip);
-        int nextTier;
-        int nextCost;
-        bool hasNext = TryGetNextArmorCost(selectedShip, out nextTier, out nextCost);
-
-        if (currentLevelLabel != null)
-            currentLevelLabel.text = $"Level {currentTier}";
-
-        if (currentStatsLabel != null)
-            currentStatsLabel.text = GetCurrentStatsText(selectedShip, currentTier);
-
-        if (hasNext)
+        if (TryGetUpgradeFromSO(GetDataFor(selectedCategory), selectedShip, next, out var u))
         {
-            if (nextNameLabel != null) nextNameLabel.text = GetTierDisplayName(selectedShip, nextTier);
-            if (nextDescLabel != null) nextDescLabel.text = GetTierDescription(selectedShip, nextTier);
-            if (nextCostLabel != null) nextCostLabel.text = $"Cost: {nextCost}";
-            if (nextGainsLabel != null) nextGainsLabel.text = GetTierGainsText(selectedShip, nextTier);
+            if (nextNameLabel)  nextNameLabel.text  = u.Name;
+            if (nextDescLabel)  nextDescLabel.text  = u.Description;
+            if (nextCostLabel)  nextCostLabel.text  = $"Cost: {u.Cost}";
+            if (nextGainsLabel) nextGainsLabel.text = u.Gains;
 
-            bool canAfford = (playerData != null) && (playerData.currentScore >= nextCost);
+            bool canAfford = (playerData != null) && (playerData.currentScore >= u.Cost);
             SetUpgradeButtonState(canAfford, true);
         }
         else
         {
-            if (nextNameLabel != null) nextNameLabel.text = "MAXED";
-            if (nextDescLabel != null) nextDescLabel.text = "Armor path complete.";
-            if (nextCostLabel != null) nextCostLabel.text = "—";
-            if (nextGainsLabel != null) nextGainsLabel.text = "—";
+            if (nextNameLabel)  nextNameLabel.text  = "MAXED";
+            if (nextDescLabel)  nextDescLabel.text  = $"{selectedCategory} path complete.";
+            if (nextCostLabel)  nextCostLabel.text  = "—";
+            if (nextGainsLabel) nextGainsLabel.text = "—";
             SetUpgradeButtonState(false, false);
         }
     }
 
     private void SetUpgradeButtonState(bool canAfford, bool interactable)
     {
-        if (upgradeButton == null) return;
-        upgradeButton.interactable = canAfford && interactable;
-    }
-
-    #region button events
-    public void SubmarineArmorUpgradePressed()
-    {
-        selectedShip = ShipType.Submarine;
-        ShowArmorTab();
-    }
-    public void DestroyerArmorUpgradePressed()
-    {
-        selectedShip = ShipType.Destroyer;
-        ShowArmorTab();
-    }
-    public void CruiserArmorUpgradePressed()
-    {
-        selectedShip = ShipType.Cruiser;
-        ShowArmorTab();
-    }
-    public void BattleshipArmorUpgradePressed()
-    {
-        selectedShip = ShipType.Battleship;
-        ShowArmorTab();
-    }
-    #endregion
-
-    public void ToBattle()
-    {
-        SceneTypes.SceneType nextScene = SceneTypes.SceneType.Game;
-        SceneManager.Instance.LoadScene(nextScene);
+        if (upgradeButton) upgradeButton.interactable = canAfford && interactable;
     }
 
     private void OnUpgradeClicked()
     {
-        if (!TryGetNextArmorCost(selectedShip, out int nextTier, out int cost))
+        if (selectedShip == ShipType.None) return;
+
+        int cur = GetTier(selectedCategory, selectedShip);
+        int next = cur + 1;
+
+        if (!TryGetUpgradeFromSO(GetDataFor(selectedCategory), selectedShip, next, out var u))
         {
-            ShowToast($"{selectedShip} Armor is MAXED");
+            Log("[HarborUI] Already maxed.");
             return;
         }
 
         if (playerData == null) return;
 
-        if (playerData.currentScore < cost)
+        if (playerData.currentScore < u.Cost)
         {
-            ShowToast($"Need {cost} points (have {playerData.currentScore})");
-            RefreshArmorPanel();
+            Log($"[HarborUI] Need {u.Cost} points (have {playerData.currentScore}).");
+            RefreshPanel();
             return;
         }
 
         string title = "Confirm Upgrade";
-        string body = $"Upgrade {selectedShip} Armor to Tier {nextTier} for {cost} points?";
+        string body  = $"Upgrade {selectedShip} {selectedCategory} to {u.Name} for {u.Cost} points?";
         ShowConfirm(title, body, () =>
         {
-            playerData.currentScore = Mathf.Max(0, playerData.currentScore - cost);
-            SetArmorTier(selectedShip, nextTier);
+            playerData.currentScore = Mathf.Max(0, playerData.currentScore - u.Cost);
+            SetTier(selectedCategory, selectedShip, next);
+
             SaveIfPossible();
             PlaySuccess();
-            ShowToast($"{selectedShip} Armor → Tier {nextTier}!");
-            RefreshArmorPanel();
+            Log($"[HarborUI] {selectedShip} {selectedCategory} → {u.Name}");
+            RefreshPanel();
         });
     }
 
-    private bool TryGetNextArmorCost(ShipType ship, out int nextTier, out int cost)
-    {
-        int cur = GetArmorTier(ship);
-        nextTier = cur + 1;
-        cost = 0;
-        if (nextTier > 3) return false;
+    // ===== Data access ==============================================================
+    [Serializable] private struct UpgradeInfo { public string Name; public string Description; public int Cost; public string Gains; }
 
-        switch (ship)
+    private ScriptableObject GetDataFor(UpgradeCategory cat) => cat switch
+    {
+        UpgradeCategory.Armor          => armorData,
+        UpgradeCategory.Movement       => movementData,
+        UpgradeCategory.Attack         => attackData,
+        UpgradeCategory.SpecialAbility => specialData,
+        _ => null
+    };
+
+    private bool TryGetUpgradeFromSO(ScriptableObject so, ShipType ship, int level, out UpgradeInfo info)
+    {
+        info = default;
+        if (so == null || level <= 0) return false;
+
+        object upgradeObj = null;
+
+        // Preferred: GetUpgrade(ship, level)
+        var getUpgrade = so.GetType().GetMethod("GetUpgrade",
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+
+        if (getUpgrade != null && getUpgrade.GetParameters().Length == 2)
         {
-            case ShipType.Submarine:
-                cost = nextTier == 1 ? submarine_armor_level1_price :
-                       nextTier == 2 ? submarine_armor_level2_price :
-                       submarine_armor_level3_price;
-                return true;
-            case ShipType.Destroyer:
-                cost = nextTier == 1 ? destroyer_armor_level1_price :
-                       nextTier == 2 ? destroyer_armor_level2_price :
-                       destroyer_armor_level3_price;
-                return true;
-            case ShipType.Cruiser:
-                cost = nextTier == 1 ? cruiser_armor_level1_price :
-                       nextTier == 2 ? cruiser_armor_level2_price :
-                       cruiser_armor_level3_price;
-                return true;
-            case ShipType.Battleship:
-                cost = nextTier == 1 ? battleship_armor_level1_price :
-                       nextTier == 2 ? battleship_armor_level2_price :
-                       battleship_armor_level3_price;
-                return true;
+            var p0 = getUpgrade.GetParameters()[0].ParameterType;
+            var p1 = getUpgrade.GetParameters()[1].ParameterType;
+
+            object shipArg = null;
+            if (p0.IsEnum) { try { shipArg = Enum.Parse(p0, ship.ToString(), true); } catch { } }
+            shipArg ??= (p0 == typeof(int) ? (object)(int)ship : (p0 == typeof(string) ? ship.ToString() : null));
+
+            object lvlArg = (p1 == typeof(int)) ? level : (object)level.ToString();
+
+            try { upgradeObj = getUpgrade.Invoke(so, new[] { shipArg, lvlArg }); } catch { upgradeObj = null; }
         }
-        return false;
-    }
 
-    private string GetCurrentStatsText(ShipType ship, int tier)
-    {
-        int baseHP = ship switch
+        // Fallback: arrays/lists per ship (e.g., SubmarineUpgrades[level-1])
+        if (upgradeObj == null)
         {
-            ShipType.Submarine => 100,
-            ShipType.Destroyer => 120,
-            ShipType.Cruiser => 140,
-            ShipType.Battleship => 160,
-            _ => 120
-        };
-        int hpGainPerTier = 20;
+            var field = so.GetType().GetField($"{ship}Upgrades",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field != null)
+            {
+                var list = field.GetValue(so) as IEnumerable;
+                if (list != null) upgradeObj = GetIndex(list, level - 1);
+            }
+        }
 
-        int baseDR = ship switch
+        if (upgradeObj == null) return false;
+
+        string name = ReadString(upgradeObj, new[] { "UpgradeName", "Name", "name", "title" });
+        string desc = ReadString(upgradeObj, new[] { "Description", "Desc", "description" });
+        int    cost = ReadInt   (upgradeObj, new[] { "Cost", "Price", "cost" }, 0);
+
+        // Gains: use explicit field if present, else synthesize from common stats, else description
+        string gains = ReadString(upgradeObj, new[] { "Gains", "gains" });
+        if (string.IsNullOrWhiteSpace(gains))
         {
-            ShipType.Submarine => 5,
-            ShipType.Destroyer => 8,
-            ShipType.Cruiser => 10,
-            ShipType.Battleship => 12,
-            _ => 8
-        };
-        int drGainPerTier = 5;
+            int armorPts = ReadInt(upgradeObj, new[] { "ArmorPoints", "armorPoints", "Armor", "armor" }, 0);
+            int speedPts = ReadInt(upgradeObj, new[] { "SpeedPoints", "speedPoints", "Speed", "speed" }, 0);
+            int attackPts= ReadInt(upgradeObj, new[] { "AttackPoints","attackPoints","Attack","attack" }, 0);
 
-        int hp = baseHP + tier * hpGainPerTier;
-        int dr = baseDR + tier * drGainPerTier;
+            var parts = new List<string>(3);
+            if (armorPts != 0)  parts.Add($"+{armorPts} armor");
+            if (speedPts != 0)  parts.Add($"+{speedPts} speed");
+            if (attackPts != 0) parts.Add($"+{attackPts} attack");
+            gains = parts.Count > 0 ? string.Join("  |  ", parts) : desc;
+        }
 
-        return $"HP {hp}  |  DR {dr}%";
+        info = new UpgradeInfo { Name = name, Description = desc, Cost = cost, Gains = gains };
+        return true;
     }
 
-    private string GetTierDisplayName(ShipType ship, int tier)
+    // ===== Runtime binding & wiring ================================================
+    private void TryFindUIRefs(Transform root)
     {
-        return $"{ship} Armor Tier {tier}";
+        if (!panelRoot)
+        {
+            var t = root.Find("GROUP_UpgradeInfo");
+            if (t) panelRoot = t.gameObject;
+        }
+
+        nextNameLabel  ??= FindTMP(root, "GROUP_UpgradeInfo/TXT_NextName");
+        nextDescLabel  ??= FindTMP(root, "GROUP_UpgradeInfo/LABEL_UpgradeDescription/TXT_NextDescription");
+        nextCostLabel  ??= FindTMP(root, "GROUP_UpgradeInfo/TXT_NextCost");
+        nextGainsLabel ??= FindTMP(root, "GROUP_UpgradeInfo/TXT_NextGains");
+
+        if (!upgradeButton)
+        {
+            var bt = root.Find("GROUP_UpgradeInfo/BUTTON_Upgrade");
+            if (bt) upgradeButton = bt.GetComponent<Button>();
+        }
     }
 
-    private string GetTierDescription(ShipType ship, int tier)
+    private void RuntimeWireLeftButtons()
     {
-        return $"Reinforced plating level {tier} improves survivability.";
+        var left = transform.Find("GROUP_Left");
+        if (!left) return;
+
+        // Submarine
+        Wire(left, "Sub",        UpgradeCategory.Armor,          ShipType.Submarine,  new[] { "armor" });
+        Wire(left, "Sub",        UpgradeCategory.Movement,       ShipType.Submarine,  new[] { "move", "movement", "speed" });
+        Wire(left, "Sub",        UpgradeCategory.Attack,         ShipType.Submarine,  new[] { "attack" });
+        Wire(left, "Sub",        UpgradeCategory.SpecialAbility, ShipType.Submarine,  new[] { "spec", "special" });
+
+        // Destroyer
+        Wire(left, "Destroyer",  UpgradeCategory.Armor,          ShipType.Destroyer,  new[] { "armor" });
+        Wire(left, "Destroyer",  UpgradeCategory.Movement,       ShipType.Destroyer,  new[] { "move", "movement", "speed" });
+        Wire(left, "Destroyer",  UpgradeCategory.Attack,         ShipType.Destroyer,  new[] { "attack" });
+        Wire(left, "Destroyer",  UpgradeCategory.SpecialAbility, ShipType.Destroyer,  new[] { "spec", "special" });
+
+        // Cruiser
+        Wire(left, "Cruiser",    UpgradeCategory.Armor,          ShipType.Cruiser,    new[] { "armor" });
+        Wire(left, "Cruiser",    UpgradeCategory.Movement,       ShipType.Cruiser,    new[] { "move", "movement", "speed" });
+        Wire(left, "Cruiser",    UpgradeCategory.Attack,         ShipType.Cruiser,    new[] { "attack" });
+        Wire(left, "Cruiser",    UpgradeCategory.SpecialAbility, ShipType.Cruiser,    new[] { "spec", "special" });
+
+        // Battleship
+        Wire(left, "Battleship", UpgradeCategory.Armor,          ShipType.Battleship, new[] { "armor" });
+        Wire(left, "Battleship", UpgradeCategory.Movement,       ShipType.Battleship, new[] { "move", "movement", "speed" });
+        Wire(left, "Battleship", UpgradeCategory.Attack,         ShipType.Battleship, new[] { "attack" });
+        Wire(left, "Battleship", UpgradeCategory.SpecialAbility, ShipType.Battleship, new[] { "spec", "special" });
     }
 
-    private string GetTierGainsText(ShipType ship, int tier)
+    private void Wire(Transform leftRoot, string shipKey, UpgradeCategory cat, ShipType ship, string[] tokens)
     {
-        int hpGainPerTier = 20;
-        int drGainPerTier = 5;
-        return $"+{hpGainPerTier} HP  |  +{drGainPerTier}% DR";
+        var buttons = leftRoot.GetComponentsInChildren<Button>(true);
+        foreach (var b in buttons)
+        {
+            string path = GetPath(b.transform, leftRoot).ToLowerInvariant();
+            if (!path.Contains(shipKey.ToLowerInvariant())) continue;
+
+            bool matches = false;
+            foreach (var t in tokens) { if (path.Contains(t)) { matches = true; break; } }
+            if (!matches) continue;
+
+            if (b.onClick.GetPersistentEventCount() == 0)
+                b.onClick.AddListener(() => Select(ship, cat));
+        }
+    }
+
+    private static TMP_Text FindTMP(Transform root, string path)
+    {
+        var t = root.Find(path);
+        return t ? t.GetComponent<TMP_Text>() : null;
+    }
+
+    private static string GetPath(Transform t, Transform stopAt)
+    {
+        var path = t.name;
+        while (t.parent && t.parent != stopAt)
+        {
+            t = t.parent;
+            path = t.name + "/" + path;
+        }
+        return path;
+    }
+
+    private static object GetIndex(IEnumerable enumerable, int index)
+    {
+        if (index < 0) return null;
+        int i = 0;
+        foreach (var o in enumerable) { if (i++ == index) return o; }
+        return null;
+    }
+
+    private static string ReadString(object obj, string[] names)
+    {
+        foreach (var n in names)
+        {
+            var f = obj.GetType().GetField(n, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (f != null && f.FieldType == typeof(string)) return (string)f.GetValue(obj);
+            var p = obj.GetType().GetProperty(n, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (p != null && p.PropertyType == typeof(string)) return (string)p.GetValue(obj, null);
+        }
+        return string.Empty;
+    }
+
+    private static int ReadInt(object obj, string[] names, int fallback)
+    {
+        foreach (var n in names)
+        {
+            var f = obj.GetType().GetField(n, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (f != null && f.FieldType == typeof(int)) return (int)f.GetValue(obj);
+            var p = obj.GetType().GetProperty(n, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (p != null && p.PropertyType == typeof(int)) return (int)p.GetValue(obj, null);
+        }
+        return fallback;
+    }
+
+    private static float ReadFloat01(object obj, string[] names, float fallback)
+    {
+        foreach (var n in names)
+        {
+            var f = obj.GetType().GetField(n, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (f != null && f.FieldType == typeof(float)) return (float)f.GetValue(obj);
+            var p = obj.GetType().GetProperty(n, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (p != null && p.PropertyType == typeof(float)) return (float)p.GetValue(obj, null);
+        }
+        return fallback;
+    }
+
+    // ===== Navigation / utilities ===================================================
+    public void ToBattle()
+    {
+        var nextScene = SceneTypes.SceneType.Game;
+        SceneManager.Instance.LoadScene(nextScene);
     }
 
     private void ShowConfirm(string title, string body, Action onConfirm)
@@ -302,29 +415,14 @@ public class HarborSceneUIManager : MonoBehaviour
         try
         {
             var modalType = Type.GetType("SimpleModal");
-            if (modalType != null)
-            {
-                MethodInfo mi = modalType.GetMethod("Show",
-                    BindingFlags.Public | BindingFlags.Static,
-                    null,
-                    new Type[] { typeof(string), typeof(string), typeof(Action) },
-                    null);
-
-                if (mi != null)
-                {
-                    mi.Invoke(null, new object[] { title, body, onConfirm });
-                    return;
-                }
-            }
+            var mi = modalType?.GetMethod("Show",
+                BindingFlags.Public | BindingFlags.Static, null,
+                new Type[] { typeof(string), typeof(string), typeof(Action) }, null);
+            mi?.Invoke(null, new object[] { title, body, onConfirm });
+            return;
         }
         catch { }
-
         onConfirm?.Invoke();
-    }
-
-    private void ShowToast(string msg)
-    {
-        Debug.Log("[HarborUI] " + msg);
     }
 
     private void SaveIfPossible()
@@ -340,7 +438,8 @@ public class HarborSceneUIManager : MonoBehaviour
 
     private void PlaySuccess()
     {
-        if (uiAudioSource != null && sfxUpgradeSuccess != null)
-            uiAudioSource.PlayOneShot(sfxUpgradeSuccess);
+        if (uiAudioSource && sfxUpgradeSuccess) uiAudioSource.PlayOneShot(sfxUpgradeSuccess);
     }
+
+    private static void Log(string msg) => Debug.Log(msg);
 }

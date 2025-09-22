@@ -356,6 +356,7 @@ GameObject:
   - component: {fileID: 8322257306501537975}
   - component: {fileID: 3506733921466764970}
   - component: {fileID: 677939547588343343}
+  - component: {fileID: 1625101159800211176}
   - component: {fileID: 6532418409437395342}
   m_Layer: 5
   m_Name: PFB_HarborUI
@@ -449,6 +450,34 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1625101159800211176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664252358444801121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f668aa4f71904745bacce39b0adb1de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  armorData: {fileID: 11400000, guid: c7ec02a74a533cb4eab8a2a5243a7b5b, type: 2}
+  movementData: {fileID: 0}
+  attackData: {fileID: 11400000, guid: 8a60170a3c59b5b4b8ede5dfbfda9eb6, type: 2}
+  specialData: {fileID: 11400000, guid: e78511e704bd2ec43bb5dfb7c0315a1e, type: 2}
+  selectedShip: 0
+  selectedCategory: 0
+  panelRoot: {fileID: 1522248706110016048}
+  nextNameLabel: {fileID: 7560584164258078910}
+  nextDescLabel: {fileID: 7969750596414078156}
+  nextCostLabel: {fileID: 3495244489465927742}
+  nextGainsLabel: {fileID: 5253521330868546651}
+  upgradeButton: {fileID: 354293644771865151}
+  hidePanelOnStart: 0
+  autoWireLeftButtons: 1
+  uiAudioSource: {fileID: 0}
+  sfxUpgradeSuccess: {fileID: 0}
 --- !u!114 &6532418409437395342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,15 +490,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f668aa4f71904745bacce39b0adb1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  armorData: {fileID: 0}
+  movementData: {fileID: 0}
+  attackData: {fileID: 0}
+  specialData: {fileID: 0}
   selectedShip: 0
-  armorPanelRoot: {fileID: 1522248706110016048}
-  currentLevelLabel: {fileID: 603266406790925938}
-  currentStatsLabel: {fileID: 7332526236577990619}
+  selectedCategory: 0
+  panelRoot: {fileID: 1522248706110016048}
   nextNameLabel: {fileID: 309531557542593558}
   nextDescLabel: {fileID: 0}
   nextCostLabel: {fileID: 4027458196701751382}
   nextGainsLabel: {fileID: 5253521330868546651}
   upgradeButton: {fileID: 354293644771865151}
+  hidePanelOnStart: 1
+  autoWireLeftButtons: 1
   uiAudioSource: {fileID: 0}
   sfxUpgradeSuccess: {fileID: 0}
 --- !u!1 &766411866483071270
