@@ -174,10 +174,7 @@ namespace Core.Ship
                 reserved = reserved,
                 MovementPattern = ShipMovementPattern.CreateMovementPattern(type),
             };
-            if (AttackPattern != null)
-            {
-                copy.AttackPattern = AttackPattern.Copy();
-            }
+            copy.InitAttackPattern(0, 0);
 
             return copy;
         }

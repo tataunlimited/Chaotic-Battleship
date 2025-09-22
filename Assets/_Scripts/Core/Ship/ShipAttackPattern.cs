@@ -78,10 +78,6 @@ namespace Core.Ship
             return coords;
         }
 
-        public ShipAttackPattern Copy()
-        {
-            return (ShipAttackPattern)MemberwiseClone();
-        }
     }
 
     public class SubAttackPattern : ShipAttackPattern
