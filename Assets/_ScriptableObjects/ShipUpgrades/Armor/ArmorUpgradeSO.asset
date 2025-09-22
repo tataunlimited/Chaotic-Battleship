@@ -61,14 +61,6 @@ MonoBehaviour:
       ArmorPoints: 3
       DestroyerArmorChance: 0.75
       CruiserArmorChance: 0.5
-    - Cost: 2300
-      Icon: {fileID: 0}
-      UpgradeName: Level 3 Armor
-      Description: 50% chance to ignore hits from cruisers always, 75% chance to
-        ignore hits from destroyers always, ignore the first 3 hits
-      ArmorPoints: 1
-      DestroyerArmorChance: 1
-      CruiserArmorChance: 1
   - ShipType: 3
     ArmorUpgrades:
     - Cost: 1200
