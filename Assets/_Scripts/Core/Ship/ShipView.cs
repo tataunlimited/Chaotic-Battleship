@@ -106,6 +106,10 @@ namespace Core.Ship
             SetShipOnGrid(!IsPlayer);
             if(IsPlayer)
                 LoadPlayerShipData();
+            else
+            {
+                LoadEnemyShipData();
+            }
             if (shipModel.hp <= shipModel.MaxHP) shipModel.ResetHP();
             if (!isPlayer) Hide();
             SetPosition();
@@ -113,7 +117,15 @@ namespace Core.Ship
                 shipModel.AttackPattern.OnTorpedoFired += FireTorpedo;
         }
 
- 
+        private void LoadEnemyShipData()
+        {
+            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, 0);
+            if (movementData != null)
+            {
+                shipModel.SetMovementLevelData(movementData);
+            }
+        }
+
 
         private void LoadPlayerShipData()
         {
