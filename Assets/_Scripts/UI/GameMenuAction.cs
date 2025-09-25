@@ -6,7 +6,8 @@ public class GameMenuActions : MonoBehaviour
     // Clear ONLY the mid-wave board snapshot so the next load spawns a fresh board.
     public void ClearSnapshot()
     {
-        SaveManager.ClearBoardState();
+        SaveManager.ResetAllData();
+        RestartWave();
         Debug.Log("[Menu] Cleared board snapshot.");
     }
 

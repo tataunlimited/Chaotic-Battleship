@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static SceneTypes;
-using UnityEditor;
-using static Unity.Burst.Intrinsics.X86.Avx;
 
 public class CreditsController : MonoBehaviour
 {
@@ -116,7 +114,7 @@ public class CreditsController : MonoBehaviour
     {
         if (!initialized || finished) return;
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape))
         {
             StartCoroutine(ExitToMenu());
             return;

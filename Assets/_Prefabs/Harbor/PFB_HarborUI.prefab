@@ -332,7 +332,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: BattleshipSpecialAbilityButtonPressed
         m_Mode: 1
@@ -357,7 +357,6 @@ GameObject:
   - component: {fileID: 3506733921466764970}
   - component: {fileID: 677939547588343343}
   - component: {fileID: 1625101159800211176}
-  - component: {fileID: 6532418409437395342}
   m_Layer: 5
   m_Name: PFB_HarborUI
   m_TagString: Untagged
@@ -463,7 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   armorData: {fileID: 11400000, guid: c7ec02a74a533cb4eab8a2a5243a7b5b, type: 2}
-  movementData: {fileID: 0}
+  movementData: {fileID: 11400000, guid: c97d56c4fcd8f6b4f95488ac7df4ef3a, type: 2}
   attackData: {fileID: 11400000, guid: 8a60170a3c59b5b4b8ede5dfbfda9eb6, type: 2}
   specialData: {fileID: 11400000, guid: e78511e704bd2ec43bb5dfb7c0315a1e, type: 2}
   selectedShip: 0
@@ -474,35 +473,8 @@ MonoBehaviour:
   nextCostLabel: {fileID: 3495244489465927742}
   nextGainsLabel: {fileID: 5253521330868546651}
   upgradeButton: {fileID: 354293644771865151}
+  pointsLabel: {fileID: 4192049405554448186}
   hidePanelOnStart: 0
-  autoWireLeftButtons: 1
-  uiAudioSource: {fileID: 0}
-  sfxUpgradeSuccess: {fileID: 0}
---- !u!114 &6532418409437395342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 664252358444801121}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f668aa4f71904745bacce39b0adb1de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  armorData: {fileID: 0}
-  movementData: {fileID: 0}
-  attackData: {fileID: 0}
-  specialData: {fileID: 0}
-  selectedShip: 0
-  selectedCategory: 0
-  panelRoot: {fileID: 1522248706110016048}
-  nextNameLabel: {fileID: 309531557542593558}
-  nextDescLabel: {fileID: 0}
-  nextCostLabel: {fileID: 4027458196701751382}
-  nextGainsLabel: {fileID: 5253521330868546651}
-  upgradeButton: {fileID: 354293644771865151}
-  hidePanelOnStart: 1
   autoWireLeftButtons: 1
   uiAudioSource: {fileID: 0}
   sfxUpgradeSuccess: {fileID: 0}
@@ -540,7 +512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 207, y: -58.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9185839396265396643
@@ -573,8 +545,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+  m_sharedMaterial: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -598,8 +570,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -614,7 +586,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -887,7 +859,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 207, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4531150168107666455
@@ -920,8 +892,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+  m_sharedMaterial: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -961,7 +933,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1032,7 +1004,6 @@ RectTransform:
   - {fileID: 8405555862518620665}
   - {fileID: 2809699132383384650}
   - {fileID: 7710204669438999859}
-  - {fileID: 6924222592428451214}
   m_Father: {fileID: 7638444245838164402}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
@@ -1297,7 +1268,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: SubmarineMovementUpgradePressed
         m_Mode: 1
@@ -1773,7 +1744,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: CruiserSpecialAbilityButtonPressed
         m_Mode: 1
@@ -1981,7 +1952,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: SubmarineArmorUpgradePressed
         m_Mode: 1
@@ -2607,7 +2578,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: DestroyerAttackButtonPressed
         m_Mode: 1
@@ -2653,7 +2624,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -240, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8929100767264686073
@@ -2686,8 +2657,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+  m_sharedMaterial: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2951,7 +2922,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: BattleshipArmorUpgradePressed
         m_Mode: 1
@@ -3205,7 +3176,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: DestroyerMovementUpgradePressed
         m_Mode: 1
@@ -3338,7 +3309,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: DestroyerArmorUpgradePressed
         m_Mode: 1
@@ -3681,7 +3652,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: UpgradePressed
         m_Mode: 1
@@ -4234,7 +4205,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: CruiserArmorUpgradePressed
         m_Mode: 1
@@ -4986,7 +4957,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: BattleshipMovementUpgradePressed
         m_Mode: 1
@@ -5118,7 +5089,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: ToBattle
         m_Mode: 1
@@ -5204,7 +5175,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -240, y: -58.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4646060807508584423
@@ -5237,8 +5208,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+  m_sharedMaterial: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5262,8 +5233,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5278,7 +5249,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -5684,7 +5655,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: SubmarineAttackButtonPressed
         m_Mode: 1
@@ -6019,7 +5990,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: BattleshipAttackButtonPressed
         m_Mode: 1
@@ -6502,7 +6473,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: CruiserAttackButtonPressed
         m_Mode: 1
@@ -6623,7 +6594,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 39.9, y: -58.2}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6134014700423164012
@@ -6656,8 +6627,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+  m_sharedMaterial: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6681,8 +6652,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6846,7 +6817,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: SubmarineSpecialAbilityButtonPressed
         m_Mode: 1
@@ -7452,81 +7423,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &7853209411191850490
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6924222592428451214}
-  - component: {fileID: 8231762935890601198}
-  - component: {fileID: 1912765833030076014}
-  m_Layer: 5
-  m_Name: TXT_NextGains
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6924222592428451214
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7853209411191850490}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6392786038737595683}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8231762935890601198
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7853209411191850490}
-  m_CullTransparentMesh: 1
---- !u!114 &1912765833030076014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7853209411191850490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &8121410812546173968
 GameObject:
   m_ObjectHideFlags: 0
@@ -7648,7 +7544,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: DestroyerSpecialAbilityButtonPressed
         m_Mode: 1
@@ -8194,7 +8090,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6532418409437395342}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: HarborSceneUIManager, Assembly-CSharp
         m_MethodName: CruiserMovementUpgradePressed
         m_Mode: 1
