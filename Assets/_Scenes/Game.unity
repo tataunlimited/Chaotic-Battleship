@@ -3792,7 +3792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2043244364136619800, guid: 2b3e85235387b4e4f860d44b5d941294, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -23.8
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 2043244364136619800, guid: 2b3e85235387b4e4f860d44b5d941294, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3831,6 +3831,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b3e85235387b4e4f860d44b5d941294, type: 3}
+--- !u!1 &1464471030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6335453329481982723, guid: 2b3e85235387b4e4f860d44b5d941294, type: 3}
+  m_PrefabInstance: {fileID: 1464471029}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1517596993
 GameObject:
   m_ObjectHideFlags: 0
@@ -6176,6 +6181,10 @@ PrefabInstance:
       propertyPath: m_Resource
       value: 
       objectReference: {fileID: 8300000, guid: 79a14ecb0e698964787891a7a558eab4, type: 3}
+    - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
+      propertyPath: terrain
+      value: 
+      objectReference: {fileID: 1464471030}
     - target: {fileID: 8669010056232355852, guid: 8f3f618652e66b847a645fe197ce3a12, type: 3}
       propertyPath: phaseText
       value: 
