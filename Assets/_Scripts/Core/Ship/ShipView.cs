@@ -446,7 +446,7 @@ namespace Core.Ship
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
         }
 
-        private Quaternion GetRotation(Orientation orientation)
+        public Quaternion GetRotation(Orientation orientation)
         {
             float yAngle = orientation switch
             {

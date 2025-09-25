@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text phaseText;
     public TMP_Text roundNumber;
+
+    public bool IsShipPlacementPhaseOver;
     
     private int _roundNumber = 1;
     public int RoundNumber => _roundNumber;
@@ -103,10 +105,7 @@ public class GameManager : MonoBehaviour
         _shipPlacementUI = FindOne<ShipPlacementUI>();
         if (_shipPlacementUI != null)
         {
-            _shipPlacementUI.OnAllShipsSpawned += () =>
-            {
-                if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
-            };
+            _shipPlacementUI.OnAllShipsSpawned += EnableNextPhaseButton;
         }
 
         // ---- Try to load a saved snapshot BEFORE spawning ships ----
@@ -147,6 +146,13 @@ public class GameManager : MonoBehaviour
         */
 
         StartEncounter();
+    }
+
+    private void EnableNextPhaseButton()
+    {
+        _shipPlacementUI.OnAllShipsSpawned -= EnableNextPhaseButton;
+        if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
+        IsShipPlacementPhaseOver = true;
     }
 
     public void Restart()

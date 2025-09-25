@@ -33,6 +33,7 @@ public class CameraController : MonoBehaviour
 
     public bool IsTransitioning { get; private set; }
     private bool _isZooming;
+    public bool CanZoom => GameManager.instance.IsShipPlacementPhaseOver;
     
     private bool _isDefaultView;
 
@@ -111,7 +112,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if(!_isDefaultView || _isZooming)
+        if(!_isDefaultView || _isZooming || !CanZoom)
             return;
         if (Input.mouseScrollDelta.y > 0f)
         {

@@ -6497,6 +6497,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 376672986}
     - target: {fileID: 6535581671742872931, guid: cea4cdc2b6a57204dadec7f3a894e636, type: 3}
+      propertyPath: subs_left
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535581671742872931, guid: cea4cdc2b6a57204dadec7f3a894e636, type: 3}
+      propertyPath: destroyers_left
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535581671742872931, guid: cea4cdc2b6a57204dadec7f3a894e636, type: 3}
+      propertyPath: battleships_left
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535581671742872931, guid: cea4cdc2b6a57204dadec7f3a894e636, type: 3}
       propertyPath: board_controller
       value: 
       objectReference: {fileID: 64301709}
