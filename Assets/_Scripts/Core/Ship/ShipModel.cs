@@ -134,6 +134,10 @@ namespace Core.Ship
             List<GridPos> coords = new List<GridPos>();
             selectedCoords = new List<GridPos>();
             chance = false;
+            if(reserved.x < 0 || reserved.y < 0)
+            {
+                reserved = root;
+            }
 
             switch (type)
             {
@@ -145,6 +149,7 @@ namespace Core.Ship
                     break;
                 case ShipType.Battleship:
                     coords.AddRange(boardView.GetAllPositions());
+                    selectedCoords.AddRange(AttackPattern.GetPossiblePositions(boardView));
                     chance = true;
                     break;
                 case ShipType.Submarine:
@@ -306,6 +311,37 @@ namespace Core.Ship
                 ShipType.Submarine => new SubAttackPattern(this, attackLevel, specialAbilityLevel),
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        public bool CanTarget()
+        {
+            switch (type)
+            {
+                case ShipType.Destroyer:
+                case ShipType.Battleship when AttackPattern.AttackLevel > 2:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        
+        public void CheckToRevealShips(BoardView enemyBoard, GridPos targetPos)
+        {
+            if(enemyBoard.Model.Get(targetPos) != CellState.NearMiss)
+                return;
+            
+            if (AttackPattern.NearmissRevealRadius > 0)
+            {
+                var neighbors = enemyBoard.GetNeighbors(targetPos, AttackPattern.NearmissRevealRadius);
+                foreach (var neighbor in neighbors)
+                {
+                    if (enemyBoard.TryGetShipAt(neighbor, out var ship))
+                    {
+                        ship.Show();
+                        Debug.Log("Revealing A Ship!");
+                    }
+                }
+            }
         }
     }
 

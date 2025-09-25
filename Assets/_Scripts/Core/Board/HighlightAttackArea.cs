@@ -20,7 +20,7 @@ namespace Core.Board
         {
             ClearHighlight();
 
-            var cColor = BoardController.Instance.SelectedShip.shipModel.type == ShipType.Destroyer
+            var cColor = BoardController.Instance.SelectedShip.shipModel.CanTarget() 
                 ? selectionColor
                 : chanceColor;
             

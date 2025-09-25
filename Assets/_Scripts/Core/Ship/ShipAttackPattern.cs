@@ -9,10 +9,13 @@ namespace Core.Ship
     public abstract class ShipAttackPattern
     {
         protected readonly ShipModel ShipModel;
-        protected readonly int AttackLevel;
-        protected readonly int SpecialAbilityLevel;
+        public readonly int AttackLevel;
+        public readonly int SpecialAbilityLevel;
 
         public bool IsInCapacitated { get; set; }
+        public virtual int NearmissRevealRadius => -1;
+        public virtual bool CanScorchOnMiss => false;
+        public int ScorchLifeTime => 2;
 
         protected ShipAttackPattern(ShipModel shipModel, int attackLevel, int specialAbilityLevel)
         {
@@ -60,6 +63,11 @@ namespace Core.Ship
         {
             return false;
         }
+        
+        public virtual bool CanPierceArmor(ShipType targetType)
+        {
+            return false;
+        }
 
         protected void FireTorpedo(TorpedoData data)
         {
@@ -83,6 +91,10 @@ namespace Core.Ship
             return coords;
         }
 
+        public virtual List<GridPos> GetPossiblePositions(BoardView enemyBoard)
+        {
+            return new List<GridPos>();
+        }
     }
 
     public class SubAttackPattern : ShipAttackPattern
@@ -115,7 +127,7 @@ namespace Core.Ship
             }
             else
             {
-                ShipModel.submerged  = true;
+                ShipModel.submerged = true;
             }
 
             return coords;
@@ -182,6 +194,8 @@ namespace Core.Ship
 
     public class DestroyerAttackPattern : ShipAttackPattern
     {
+        public override int NearmissRevealRadius => IsSpecialAttack && SpecialAbilityLevel > 1 ? 1 : -1;
+
         public DestroyerAttackPattern(ShipModel shipModel, int attackLevel, int specialAbilityLevel) : base(shipModel,
             attackLevel, specialAbilityLevel)
         {
@@ -224,9 +238,23 @@ namespace Core.Ship
                 coords.AddRange(torpedoAttackPos);
             }
 
+            if (IsSpecialAttack && SpecialAbilityLevel > 0)
+            {
+                
+                foreach (var coord in coords)
+                {
+                    if (enemyBoard.HasShipAt(coord))
+                    {
+                        coords.AddRange(enemyBoard.GetRandomPositionAroundThePoint(coord, 1));
+                        break;
+                    }
+                }
+            }
+
             coords.Add(ShipModel.reserved);
             return coords;
         }
+        
 
 
         public override bool CanIncapacitate(ShipType targetType)
@@ -238,10 +266,17 @@ namespace Core.Ship
         {
             return IsSpecialAttack ? 1000 : 1;
         }
+
+        public override bool CanPierceArmor(ShipType targetType)
+        {
+            return SpecialAbilityLevel > 2;
+        }
     }
 
     public class CruiserAttackPattern : ShipAttackPattern
     {
+        public override bool CanScorchOnMiss => IsSpecialAttack && SpecialAbilityLevel > 1;
+
         public CruiserAttackPattern(ShipModel shipModel, int attackLevel, int specialAbilityLevel) : base(shipModel,
             attackLevel, specialAbilityLevel)
         {
@@ -268,7 +303,7 @@ namespace Core.Ship
 
         private int GetNumberOfHits()
         {
-            if(IsSpecialAttack && SpecialAbilityLevel > 2) return 9;
+            if (IsSpecialAttack && SpecialAbilityLevel > 2) return 9;
             return AttackLevel switch
             {
                 1 => 5,
@@ -295,8 +330,8 @@ namespace Core.Ship
 
         public override bool CanScorchMissedCells()
         {
-            if(IsSpecialAttack && SpecialAbilityLevel > 1) return true;
-            return false;     
+            if (IsSpecialAttack && SpecialAbilityLevel > 1) return true;
+            return false;
         }
     }
 
@@ -309,10 +344,18 @@ namespace Core.Ship
 
         public override List<GridPos> GetAttackPositions(BoardView enemyBoard)
         {
+            if (ShipModel.reserved.x < 0 || ShipModel.reserved.y < 0)
+            {
+                ShipModel.reserved = ShipModel.root;
+            }
+
             var coords = new List<GridPos>();
+
+
             AddAttackPositions(enemyBoard, coords);
 
-            if (AttackLevel <= 2) return coords;
+
+            if (IsSpecialAttack && SpecialAbilityLevel <= 2) return coords;
             bool canAttackAgain = coords.All(pos => !enemyBoard.HasShipAt(pos));
 
             if (canAttackAgain)
@@ -326,7 +369,14 @@ namespace Core.Ship
         private void AddAttackPositions(BoardView enemyBoard, List<GridPos> coords)
         {
             int count = GetNumberOfHits();
-            coords.AddRange(enemyBoard.GetRandomPositions(count));
+            if (AttackLevel > 2)
+            {
+                coords.AddRange(enemyBoard.GetRandomPositionAroundThePoint(ShipModel.reserved, count, 3, true));
+            }
+            else
+            {
+                coords.AddRange(enemyBoard.GetRandomPositions(count));
+            }
         }
 
         private int GetNumberOfHits()
@@ -343,10 +393,11 @@ namespace Core.Ship
                 numOfHits *= SpecialAbilityLevel switch
                 {
                     0 => 3,
-                    > 1 => 4,
+                    >= 1 => 4,
                     _ => 3
                 };
             }
+
             return numOfHits;
         }
 
@@ -354,6 +405,18 @@ namespace Core.Ship
         {
             if (SpecialAbilityLevel > 1) return true;
             return false;
+        }
+
+        public override List<GridPos> GetPossiblePositions(BoardView enemyView)
+        {
+            if (AttackLevel > 2)
+            {
+                var coords = enemyView.GetNeighbors(ShipModel.reserved, 3);
+                coords.Add(ShipModel.reserved);
+                return coords;
+            }
+
+            return enemyView.GetAllPositions();
         }
     }
 

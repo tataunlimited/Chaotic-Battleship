@@ -27,9 +27,7 @@ namespace Core.Ship
 
         public GameObject defaultState;
         public GameObject brokenState;
-
-        private ShipMovementComponent _movementComponent;
-
+        
         public Action<ShipView> OnBeforeShipPlacedOnGrid;
 
         public bool IsInInitialPhase { get; private set; }
@@ -240,9 +238,6 @@ namespace Core.Ship
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
 
-         
-
-
             var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
             if (fireVFX != null && coords.Count > 0)
             {
@@ -261,6 +256,12 @@ namespace Core.Ship
                 if (enemyBoard.Model.TryFire(gridPos, out bool hit))
                 {
                     bool ignoreSound = false;
+
+                    if (!hit && shipModel.AttackPattern.CanScorchOnMiss)
+                    {
+                        enemyBoard.Model.TryScorchCell(gridPos, shipModel.AttackPattern.ScorchLifeTime);
+                    }
+                    
                     if (shipModel.type == ShipType.Submarine && !IsPlayer && !hit)
                     {
                         ignoreSound = true;
@@ -279,7 +280,7 @@ namespace Core.Ship
                             var enemyShipType = enemyShip.shipModel.type;
                             int damage = shipModel.AttackPattern.GetAttackDamage(enemyShipType);
 
-                            bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, out bool justSunk);
+                            bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, shipModel.AttackPattern.CanPierceArmor(enemyShipType), out bool justSunk);
 
                             if (isDamaged)
                             {
@@ -337,20 +338,24 @@ namespace Core.Ship
                         // NEEDED TO SILENCE THIS TO HEAR SHIP FIRING!
                         //VFXManager.Instance.PlayFireSound();
                     }
+                    
+                    shipModel.CheckToRevealShips(enemyBoard, gridPos);;
                 }
 
 
                 yield return _waitForSeconds0_1;
             }
+            
+            
 
             SetPosition(); // reset position
             UpdateSubPosition();
         }
 
-        public bool ApplyDamage(int damage, ShipType type, out bool isSunk)
+        public bool ApplyDamage(int damage, ShipType type, bool canPierceArmor, out bool isSunk)
         {
             isSunk = false;
-            if (!shipModel.CanReceiveDamage(type))
+            if (!canPierceArmor && !shipModel.CanReceiveDamage(type))
             {
                 return false;
             }
