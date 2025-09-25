@@ -29,7 +29,7 @@ namespace Core.Board
         public static BoardController Instance;
         //SFX
         public AudioSource shipSelectMovementPhaseSFX;
-       
+
         void Awake()
         {
             _camera = Camera.main;
@@ -260,7 +260,6 @@ namespace Core.Board
             playerView.Unfreeze();
         }
 
-        // In BoardController
         public void SpawnEnemyShipsFromModels(List<ShipModel> ships, bool reveal = false)
         {
             if (ships == null || ships.Count == 0)
@@ -268,7 +267,7 @@ namespace Core.Board
                 Debug.LogWarning("SpawnEnemyShipsFromModels: No ships to spawn.");
                 return;
             }
-            
+
             // randomly set the enemy ship locations and orientations, and place them on the enemyView board
             _enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
             enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
@@ -280,6 +279,12 @@ namespace Core.Board
             {
                 enemyView.RevealShips();
             }
+        }
+        
+        public void SetIntelligenceLevel(int level)
+        {
+            EnsureEnemyWaveManager();
+            _enemyWaveManager.intelligenceLevel = Mathf.Clamp(level, 0, 3);
         }
 
     }
