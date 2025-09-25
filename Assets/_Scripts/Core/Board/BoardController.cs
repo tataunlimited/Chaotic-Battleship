@@ -58,7 +58,9 @@ namespace Core.Board
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && 
+                (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS ||
+                 GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_MOVING))
             {
                 if (TryHitBoard(enemyView, out var eCell))  // left-click fires at enemy
                 {
