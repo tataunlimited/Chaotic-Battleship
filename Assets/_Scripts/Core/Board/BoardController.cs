@@ -5,6 +5,8 @@ using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using Utility;
 
 
 namespace Core.Board
@@ -64,7 +66,7 @@ namespace Core.Board
                 {
                     // if (enemyView.Model.TryFire(eCell, out _))
                     //     enemyView.Tint(eCell);
-                    if (SelectedShip != null && SelectedShip.shipModel.type == ShipType.Destroyer)
+                    if (SelectedShip != null && SelectedShip.shipModel.CanTarget())
                     {
                         SelectedShip.shipModel.reserved = eCell;
                         highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
@@ -218,16 +220,20 @@ namespace Core.Board
                 yield return StartCoroutine(ship.Value.AttackSequence(enemyView));
                 yield return new WaitForSeconds(0.5f);
             }
+            playerView.Model.UpdateScorchedCells();
         }
 
         public IEnumerator EnemyAttack()
         {
-            foreach (var ship in enemyView.SpawnedShips)
+            var randomizedEnemyShipList = enemyView.SpawnedShips.Values.ToList();
+            randomizedEnemyShipList.Shuffle();
+            foreach (var ship in randomizedEnemyShipList)
             {
-                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                yield return StartCoroutine(ship.Value.AttackSequence(playerView));
+                if (ship.shipModel.IsSunk) continue;  // skip sunk ships
+                yield return StartCoroutine(ship.AttackSequence(playerView));
                 yield return new WaitForSeconds(0.5f);
             }
+            enemyView.Model.UpdateScorchedCells();
         }
 
         public void ResetGridIndicators()

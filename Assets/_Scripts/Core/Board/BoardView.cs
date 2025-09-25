@@ -132,7 +132,7 @@ namespace Core.Board
                 return;
             //Tint(p, GetColor(p));
             if (_tiles.TryGetValue(p, out var r))
-                r.SetColor(Model.Get(p));
+                r.SetColor(Model.Get(p), Model.IsScorched(p));
         }
 
         public bool TryGetShipAt(GridPos pos, out ShipView shipView)
@@ -502,10 +502,14 @@ namespace Core.Board
             return totalHealth;
         }
 
-        public List<GridPos> GetRandomPositionAroundThePoint(GridPos shipModelReserved, int count)
+        public List<GridPos> GetRandomPositionAroundThePoint(GridPos shipModelReserved, int count, int radius = 1, bool includeCenter = false)
         {
-            var neighbors = GetNeighbors(shipModelReserved);
+            var neighbors = GetNeighbors(shipModelReserved, radius);
             var randomPositions = new List<GridPos>();
+            if (includeCenter)
+            {
+                randomPositions.Add(shipModelReserved);
+            }
             if(neighbors.Count == 0)
                 return randomPositions;
             //Debug.Log("GetRandomPositionAroundThePoint: " + neighbors.Count)
@@ -515,7 +519,43 @@ namespace Core.Board
             }
             return randomPositions;
         }
-        
+
+        public List<GridPos> GetNeighbors(GridPos node, int radius)
+        {
+            List<GridPos> neighbors = new List<GridPos>();
+
+            // Guard clause for invalid radius
+            if (radius <= 0)
+            {
+                return neighbors;
+            }
+
+            // Iterate in a square from -radius to +radius around the node
+            for (int xOffset = -radius; xOffset <= radius; xOffset++)
+            {
+                for (int yOffset = -radius; yOffset <= radius; yOffset++)
+                {
+                    // Skip the center node itself (0,0 offset)
+                    if (xOffset == 0 && yOffset == 0)
+                    {
+                        continue;
+                    }
+
+                    int checkX = node.x + xOffset;
+                    int checkY = node.y + yOffset;
+                    var newPos = new GridPos(checkX, checkY);
+
+                    // Add the position if it's within the grid boundaries
+                    if (Model.InBounds(newPos))
+                    {
+                        neighbors.Add(newPos);
+                    }
+                }
+            }
+
+            return neighbors;
+        }
+
         private List<GridPos> GetNeighbors(GridPos node)
         {
             List<GridPos> neighbors = new List<GridPos>();
