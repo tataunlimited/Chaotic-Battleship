@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject NextWavePanel;
     public TextMeshProUGUI WaveCountText;
+    public GameObject terrain;
 
     private ShipPlacementUI _shipPlacementUI;
 
@@ -501,10 +502,40 @@ public class GameManager : MonoBehaviour
 
         phaseState = PHASE_STATE.START_ENCOUNTER;
 
+        // Move the terrain when a new wave starts
+        StartCoroutine(MoveTerrain(-5f, 0.5f));
+
         // Persist new wave number; we'll snapshot after spawn
         SaveManager.SaveGame();
 
         // Immediately kick off the new encounter (no scene reload needed)
         StartEncounter();
     }
+
+    private IEnumerator MoveTerrain(float deltaZ, float duration)
+    {
+        if (terrain == null)
+            yield break;
+
+        Vector3 start = terrain.transform.position;
+        Vector3 end = start + new Vector3(0f, 0f, deltaZ);
+
+        if (duration <= 0f)
+        {
+            terrain.transform.position = end;
+            yield break;
+        }
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float frac = Mathf.Clamp01(t / duration);
+            terrain.transform.position = Vector3.Lerp(start, end, frac);
+            yield return null;
+        }
+
+        terrain.transform.position = end;
+    }
+
 }
