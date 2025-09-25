@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.Board;
@@ -33,6 +34,7 @@ namespace Core.Ship
         private ShipView _shipView;
         private static Coroutine _movementCoroutine;
         private bool _isBeingPushed = false; // Prevents a ship from being pushed multiple times at once
+        public event Action OnShipMovementFinished;
 
         public Vector3 GetOriginalPosition() => _shipView.Board.GridToWorld(_shipView.shipModel.root);
 
@@ -183,10 +185,12 @@ namespace Core.Ship
 
             boardModel.TryPlaceShip(_shipView.shipModel);
             _shipView.Board.UpdateBoard();
+            BoardController.Instance.HighlightAttackArea();
 
             Debug.Log("Movement finished.");
             _movementCoroutine = null;
             _isMoving = false;
+            
         }
 
         /// <summary>

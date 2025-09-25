@@ -71,7 +71,8 @@ namespace Core.Board
                     if (SelectedShip != null && SelectedShip.shipModel.CanTarget())
                     {
                         SelectedShip.shipModel.reserved = eCell;
-                        highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+                        HighlightAttackArea();
+                        //highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
                     }
                 }
                 if (TrySelectShip(out var shipView)) // right-click to test on player
@@ -113,12 +114,13 @@ namespace Core.Board
                     {
                         shipView.shipModel.UpdateMovementStatus();
                         UpdatePlayerSelectedShip(SelectedShip);
+                        HighlightAttackArea();
                     }
 
                 });
             }
-            if (playerView.Model.InBounds(SelectedShip.shipModel.root))
-                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+
+            HighlightAttackArea();
 
             OnShipSelected?.Invoke(true);
             shipSelectMovementPhaseSFX.Play();
@@ -128,6 +130,12 @@ namespace Core.Board
             GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
         }
 
+        public void HighlightAttackArea()
+        {
+            if (playerView.Model.InBounds(SelectedShip.shipModel.root))
+                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+
+        }
         public void ClearSelectedShip()
         {
             if (SelectedShip != null)
