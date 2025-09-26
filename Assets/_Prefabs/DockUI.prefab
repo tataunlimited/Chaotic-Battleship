@@ -3290,6 +3290,9 @@ MonoBehaviour:
   Destroyers_left_to_place_Button: {fileID: 5528866984277366877}
   Cruisers_left_to_place_Button: {fileID: 5721432540829663630}
   Battleships_left_to_place_Button: {fileID: 1418967461384266875}
+  gridLayer:
+    serializedVersion: 2
+    m_Bits: 0
   shipConfirmOnGridSFX: {fileID: 0}
 --- !u!1 &7112687366827307422
 GameObject:

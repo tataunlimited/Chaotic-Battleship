@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     public AttackPatternUpgradeSO attackUpgradeSO;
     public SpecialAttackUpgradeSO specialUpgradeSO;
     public MovementUpgradeSO movementUpgradeSO;
+    public ShipInfoPanel playerShipInfoPanel;
+    public ShipInfoPanel enemyShipInfoPanel;
 
     public enum PHASE_STATE
     {
