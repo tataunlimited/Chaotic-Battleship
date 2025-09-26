@@ -258,7 +258,7 @@ public class ShipPlacementUI : MonoBehaviour
     {
         var model = ShipFactory.CreateShipModel(type);
         model.orientation = Orientation.North;
-        model.root = new GridPos(100000, 100000);
+        model.root = new GridPos(-10000, -10000);
         return model;
     }
 }
