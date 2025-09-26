@@ -132,6 +132,10 @@ namespace Core.Board
 
         public void HighlightAttackArea()
         {
+            if (SelectedShip == null)
+            {
+                return;
+            }
             highlightAttackArea.SpawnHighlights(SelectedShip.shipModel);
         }
         public void ClearSelectedShip()

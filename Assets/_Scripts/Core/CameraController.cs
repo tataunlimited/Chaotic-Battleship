@@ -44,11 +44,12 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
-        if (!targetCamera) {targetCamera = Camera.main;}
+        if (!targetCamera) { targetCamera = Camera.main; }
         //defaultPosition = transform.position;
         //defaultEulerAngles = transform.rotation.eulerAngles;
         _isDefaultView = true;
         if (targetCamera) defaultFOV = targetCamera.fieldOfView;
+        GoToDockView();
     }
 
 
