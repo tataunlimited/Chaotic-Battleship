@@ -91,10 +91,11 @@ namespace Core.Ship
             return coords;
         }
 
-        public virtual List<GridPos> GetPossiblePositions(BoardView enemyBoard)
+        public virtual AreaOfAttack GetAreaOfAttack(BoardView enemyBoard)
         {
-            return new List<GridPos>();
+            return new AreaOfAttack();
         }
+
     }
 
     public class SubAttackPattern : ShipAttackPattern
@@ -104,11 +105,11 @@ namespace Core.Ship
         {
         }
 
-
+        private bool CanFireThisTurn => Round % 2 == 0 || IsSpecialAttack;
         public override List<GridPos> GetAttackPositions(BoardView enemyBoard)
         {
             var coords = new List<GridPos>();
-            if (Round % 2 == 1 || IsSpecialAttack)
+            if (CanFireThisTurn)
             {
                 ShipModel.submerged = false;
                 CalculateSubLineOfAttack(enemyBoard, coords, ShipModel.orientation);
@@ -144,7 +145,7 @@ namespace Core.Ship
 
             return CalculateChance(0.5f) ? 2 : 1;
         }
-
+        
         private void CalculateSubLineOfAttack(BoardView enemyBoard, List<GridPos> coords, Orientation orientation)
         {
             var subLineOfFire = GetAttackLinePositions(enemyBoard, orientation);
@@ -178,7 +179,25 @@ namespace Core.Ship
                 coords.AddRange(secondSubLineOfFire);
             }
         }
+        public override AreaOfAttack GetAreaOfAttack(BoardView enemyBoard)
+        {
+            var aot = base.GetAreaOfAttack(enemyBoard);
+            
+            if (CanFireThisTurn)
+            {
+                aot.LineOfFireCells = ShipModel.orientation is Orientation.West or Orientation.East
+                    ? enemyBoard.GetRow(ShipModel.root.y, ShipModel.orientation)
+                    : enemyBoard.GetColumn(ShipModel.root.x, ShipModel.orientation);
+                if (CanFireTorpedoPerpendicular())
+                {
+                    aot.PossibleCells = ShipModel.orientation is Orientation.North or Orientation.South
+                        ? enemyBoard.GetRow(ShipModel.root.y, ShipModel.orientation)
+                        : enemyBoard.GetColumn(ShipModel.root.x, ShipModel.orientation);
+                }
+            }
 
+            return aot;
+        }
         private bool CanFireTorpedoPerpendicular()
         {
             if (!IsSpecialAttack || SpecialAbilityLevel == 0) return false;
@@ -195,6 +214,8 @@ namespace Core.Ship
     public class DestroyerAttackPattern : ShipAttackPattern
     {
         public override int NearmissRevealRadius => IsSpecialAttack && SpecialAbilityLevel > 1 ? 1 : -1;
+        
+        private bool CanFireTorpedo => AttackLevel > 2 && Round % 3 == 0;
 
         public DestroyerAttackPattern(ShipModel shipModel, int attackLevel, int specialAbilityLevel) : base(shipModel,
             attackLevel, specialAbilityLevel)
@@ -216,17 +237,10 @@ namespace Core.Ship
                 coords.AddRange(enemyBoard.GetRandomPositionAroundThePoint(ShipModel.reserved, 1));
             }
 
-            if (AttackLevel > 2 && Round % 3 == 0)
+            if (CanFireTorpedo)
             {
                 // Firing a torpedo 90 degrees clockwise
-                Orientation or = ShipModel.orientation switch
-                {
-                    Orientation.North => Orientation.East,
-                    Orientation.East => Orientation.South,
-                    Orientation.South => Orientation.West,
-                    Orientation.West => Orientation.North,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                Orientation or = GetTorpedoOrientation();
 
                 var torpedoAttackPos = GetAttackLinePositions(enemyBoard, or);
                 FireTorpedo(new TorpedoData
@@ -254,8 +268,39 @@ namespace Core.Ship
             coords.Add(ShipModel.reserved);
             return coords;
         }
-        
 
+        private Orientation GetTorpedoOrientation()
+        {
+            return ShipModel.orientation switch
+            {
+                Orientation.North => Orientation.East,
+                Orientation.East => Orientation.South,
+                Orientation.South => Orientation.West,
+                Orientation.West => Orientation.North,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+        public override AreaOfAttack GetAreaOfAttack(BoardView enemyBoard)
+        {
+            var aot = base.GetAreaOfAttack(enemyBoard);
+
+            aot.TargetableCells = enemyBoard.GetAllPositions();
+            aot.LineOfFireCells.Add(ShipModel.reserved);
+            if(AttackLevel > 0)
+                aot.PossibleCells.AddRange(enemyBoard.GetNeighbors(ShipModel.reserved, 1));
+
+            if (CanFireTorpedo)
+            {
+                var orientation = GetTorpedoOrientation();
+                List<GridPos> line = orientation is Orientation.West or Orientation.East
+                    ? enemyBoard.GetRow(ShipModel.root.y, orientation)
+                    : enemyBoard.GetColumn(ShipModel.root.x, orientation);
+                aot.PossibleCells.AddRange(line);
+            }
+            
+
+            return aot;
+        }
 
         public override bool CanIncapacitate(ShipType targetType)
         {
@@ -333,6 +378,14 @@ namespace Core.Ship
             if (IsSpecialAttack && SpecialAbilityLevel > 1) return true;
             return false;
         }
+        
+        public override AreaOfAttack GetAreaOfAttack(BoardView enemyBoard)
+        {
+            var aot = base.GetAreaOfAttack(enemyBoard);
+            
+            aot.PossibleCells.AddRange(enemyBoard.CruiserAttack(ShipModel.GetCells(), ShipModel.orientation, 0, true));
+            return aot;
+        }
     }
 
     public class BattleShipAttackPattern : ShipAttackPattern
@@ -406,17 +459,24 @@ namespace Core.Ship
             if (SpecialAbilityLevel > 1) return true;
             return false;
         }
+        
+        public override AreaOfAttack GetAreaOfAttack(BoardView enemyBoard)
+        {            
+            var aot = base.GetAreaOfAttack(enemyBoard);
 
-        public override List<GridPos> GetPossiblePositions(BoardView enemyView)
-        {
+            
             if (AttackLevel > 2)
             {
-                var coords = enemyView.GetNeighbors(ShipModel.reserved, 3);
-                coords.Add(ShipModel.reserved);
-                return coords;
+                aot.TargetableCells.AddRange(enemyBoard.GetAllPositions());
+                aot.PossibleCells.AddRange(enemyBoard.GetNeighbors(ShipModel.reserved, 3));
+                aot.PossibleCells.Add(ShipModel.reserved);
             }
-
-            return enemyView.GetAllPositions();
+            else
+            {
+                aot.PossibleCells.AddRange(enemyBoard.GetAllPositions());
+            }
+            
+            return aot;
         }
     }
 

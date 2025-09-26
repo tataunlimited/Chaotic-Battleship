@@ -253,7 +253,8 @@ namespace Core.Ship
          
             foreach (var gridPos in coords)
             {
-                if (enemyBoard.Model.TryFire(gridPos, out bool hit))
+                bool ignoreEverythingButShip = shipModel.type == ShipType.Submarine && !IsPlayer;
+                if (enemyBoard.Model.TryFire(gridPos, out bool hit, ignoreEverythingButShip))
                 {
                     bool ignoreSound = false;
 
@@ -262,7 +263,7 @@ namespace Core.Ship
                         enemyBoard.Model.TryScorchCell(gridPos, shipModel.AttackPattern.ScorchLifeTime);
                     }
                     
-                    if (shipModel.type == ShipType.Submarine && !IsPlayer && !hit)
+                    if (ignoreEverythingButShip && !hit)
                     {
                         ignoreSound = true;
                     }
@@ -339,7 +340,7 @@ namespace Core.Ship
                         //VFXManager.Instance.PlayFireSound();
                     }
                     
-                    shipModel.CheckToRevealShips(enemyBoard, gridPos);;
+                    shipModel.CheckToRevealShips(enemyBoard, gridPos);
                 }
 
 

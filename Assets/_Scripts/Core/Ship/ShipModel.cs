@@ -128,6 +128,16 @@ namespace Core.Ship
             return coords;
         }
 
+        public AreaOfAttack GetPossibleAreaOfAttack(BoardView enemyBoard)
+        {
+            if(reserved.x < 0 || reserved.y < 0)
+            {
+                reserved = root;
+            }
+
+            return AttackPattern.GetAreaOfAttack(enemyBoard);
+        }
+
         internal List<GridPos> GetPossibleAreaOfAttack(BoardView boardView, out List<GridPos> selectedCoords,
             out bool chance)
         {
@@ -149,7 +159,7 @@ namespace Core.Ship
                     break;
                 case ShipType.Battleship:
                     coords.AddRange(boardView.GetAllPositions());
-                    selectedCoords.AddRange(AttackPattern.GetPossiblePositions(boardView));
+                    //selectedCoords.AddRange(AttackPattern.GetAreaOfAttack(boardView));
                     chance = true;
                     break;
                 case ShipType.Submarine:
@@ -429,5 +439,12 @@ namespace Core.Ship
 
             return ship;
         }
+    }
+
+    public class AreaOfAttack
+    {
+        public List<GridPos> LineOfFireCells = new();
+        public List<GridPos> TargetableCells = new();
+        public List<GridPos> PossibleCells = new();
     }
 }

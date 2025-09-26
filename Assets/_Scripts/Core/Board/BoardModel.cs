@@ -130,7 +130,7 @@ namespace Core.Board
             }
         }
 
-        public bool TryFire(GridPos p, out bool hit)
+        public bool TryFire(GridPos p, out bool hit, bool onlyUpdateHit = false)
         {
             hit = false;
             if (!InBounds(p)) return false;                    // invalid shot
@@ -146,11 +146,12 @@ namespace Core.Board
                 case CellState.Empty:
                 case CellState.Miss:
                 case CellState.NearMiss:
+                    if (onlyUpdateHit) return false;
                     Set(p, IsOrthogonallyAdjacentToShip(p) ? CellState.NearMiss : CellState.Miss);
                     return true;
                 case CellState.Hit:
                     // already resolved; don’t re-tint / re-animate
-                    return false;
+                    return true;
 
                 default:
                     return false;

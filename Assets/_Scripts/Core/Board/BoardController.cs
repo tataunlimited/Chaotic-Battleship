@@ -132,9 +132,7 @@ namespace Core.Board
 
         public void HighlightAttackArea()
         {
-            if (playerView.Model.InBounds(SelectedShip.shipModel.root))
-                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
-
+            highlightAttackArea.SpawnHighlights(SelectedShip.shipModel);
         }
         public void ClearSelectedShip()
         {
