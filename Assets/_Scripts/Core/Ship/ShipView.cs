@@ -66,6 +66,7 @@ namespace Core.Ship
         private Quaternion _baseRot;
         private Vector3 _defaultStateLocalPos;
         private ShipMovement _shipMovement;
+        private ShipUpgradeVisual _shipUpgradeVisual;
 
         // //AUDIO SFX
         // public AudioSource shipConfirmationSFX;
@@ -87,12 +88,15 @@ namespace Core.Ship
 
             if (IsPlayer)
                 _shipMovement = gameObject.AddComponent<ShipMovement>();
+            
         }
 
         private void EnsureComponents()
         {
             if (_shipHealth == null) _shipHealth = GetComponent<ShipHealth>();
             if (_collider == null) _collider = GetComponentInChildren<Collider>(true);
+            _shipUpgradeVisual = GetComponent<ShipUpgradeVisual>();
+
         }
 
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
@@ -128,19 +132,26 @@ namespace Core.Ship
         private void LoadPlayerShipData()
         {
             var pd = PlayerData.Instance;
-            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Armor));
+            int movementLevel = pd.GetUpgrade(shipModel.type, UpgradeType.Movement);
+            int attackLevel = pd.GetUpgrade(shipModel.type, UpgradeType.AttackPattern);
+            int armorLevel = pd.GetUpgrade(shipModel.type, UpgradeType.Armor);
+            int specialLevel = pd.GetUpgrade(shipModel.type, UpgradeType.SpecialAttack);
+            
+            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, armorLevel);
             if (armorData != null)
             {
                 shipModel.SetArmorLevelData(armorData);
             }
 
-            shipModel.InitAttackPattern(pd.GetUpgrade(shipModel.type, UpgradeType.AttackPattern), pd.GetUpgrade(shipModel.type, UpgradeType.SpecialAttack));
+            shipModel.InitAttackPattern(attackLevel, specialLevel);
 
-            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Movement));
+            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, movementLevel);
             if (movementData != null)
             {
                 shipModel.SetMovementLevelData(movementData);
             }
+            _shipUpgradeVisual.Setup(movementLevel, attackLevel, armorLevel, specialLevel);
+            
         }
 
         public void Hide()

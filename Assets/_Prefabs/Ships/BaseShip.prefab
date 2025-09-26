@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9071194118322993481}
   - component: {fileID: 7133455884396350364}
-  - component: {fileID: -865248615779685098}
+  - component: {fileID: 3861103587125755012}
   m_Layer: 3
   m_Name: BaseShip
   m_TagString: Untagged
@@ -84,6 +84,9 @@ MonoBehaviour:
     length: 3
     submerged: 0
     hp: 0
+    armor: 0
+    armorDestroyerChance: 0
+    armorCruiserChance: 0
     orientation: 0
     root:
       x: 5
@@ -92,6 +95,8 @@ MonoBehaviour:
       x: -1000
       y: -1000
     isDestroyed: 0
+  torpedoPrefab: {fileID: 0}
+  torpedoSpawnPoint: {fileID: 0}
   defaultState: {fileID: 7284658678121241804}
   brokenState: {fileID: 4297834889547011565}
   rockingEnabled: 1
@@ -101,33 +106,19 @@ MonoBehaviour:
   bobFrequencyHz: 0.33
   rotationLerp: 12
   bobLerp: 12
---- !u!54 &-865248615779685098
-Rigidbody:
+  fireVFX: {fileID: 0}
+--- !u!114 &3861103587125755012
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4813498074127623595}
-  serializedVersion: 4
-  m_Mass: 100
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9336f72b9297f0f4590edb21c06eb7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7284658678121241804
 GameObject:
   m_ObjectHideFlags: 0

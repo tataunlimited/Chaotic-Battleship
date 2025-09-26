@@ -190,9 +190,17 @@ namespace Core.Ship
                     : enemyBoard.GetColumn(ShipModel.root.x, ShipModel.orientation);
                 if (CanFireTorpedoPerpendicular())
                 {
-                    aot.PossibleCells = ShipModel.orientation is Orientation.North or Orientation.South
-                        ? enemyBoard.GetRow(ShipModel.root.y, ShipModel.orientation)
-                        : enemyBoard.GetColumn(ShipModel.root.x, ShipModel.orientation);
+                    Orientation perpendicularOrientation = ShipModel.orientation switch
+                    {
+                        Orientation.North => Orientation.East,
+                        Orientation.East => Orientation.South,
+                        Orientation.South => Orientation.West,
+                        Orientation.West => Orientation.North,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
+                    aot.PossibleCells = perpendicularOrientation is Orientation.West or Orientation.East
+                        ? enemyBoard.GetRow(ShipModel.root.y, perpendicularOrientation)
+                        : enemyBoard.GetColumn(ShipModel.root.x, perpendicularOrientation);
                 }
             }
 
