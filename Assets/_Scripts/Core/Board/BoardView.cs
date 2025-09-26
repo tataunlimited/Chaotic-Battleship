@@ -79,6 +79,8 @@ namespace Core.Board
 
             foreach (var pair in SpawnedShips)
             {
+                //check for null in case a ship was destroyed and removed
+                if (pair.Value == null) continue;
                 wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
                 pair.Value.SnapShipOnGrid(previousShipData.root, previousShipData.orientation);
                 pair.Value.shipModel.MovementPattern.Reset();
@@ -242,12 +244,22 @@ namespace Core.Board
             // No spawn, no instance
             return false;
         }
+        
+        public void RemoveShip(ShipView ship)
+        {
+            if (ship == null) return;
+            if (SpawnedShips.ContainsKey(ship.shipModel.id))
+            {
+                SpawnedShips.Remove(ship.shipModel.id);
+                Destroy(ship.gameObject);
+            }
+        }
 
         public void UpdateBoard(bool showShips = true)
         {
             foreach (var ship in SpawnedShips)
             {
-               // ship.Value.SetShipOnGrid(true);
+                // ship.Value.SetShipOnGrid(true);
                 Model.TryPlaceShip(ship.Value.shipModel);
             }
             foreach (var tile in _tiles)

@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad13fe24e31a11f4a9ff0b87fff3a81b, type: 3}
   m_Name: Wave2
   m_EditorClassIdentifier: 
-  displayName: 
-  notes: 
   ships:
   - type: 2
-    count: 2
+    count: 1
   - type: 1
     count: 1
   overrideIntelligence: 1

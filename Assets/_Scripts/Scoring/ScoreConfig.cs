@@ -5,12 +5,13 @@ using UnityEngine;
 public class ScoreConfig : ScriptableObject
 {
     [Header("Per segment hit")]
-    public int segmentHit = 25;
+    public int segmentHit = 50;
 
     [Header("Destroy bonuses")]
-    public int submarineDestroy = 50;
-    public int destroyerDestroy = 100;
-    public int battleshipDestroy = 200;
+    public int submarineDestroy = 200;
+    public int destroyerDestroy = 400;
+    public int cruiserDestroy = 600;
+    public int battleshipDestroy = 800;
 
     [Header("Wave clear + speed bonus")]
     public int waveClear = 1000;
@@ -23,6 +24,7 @@ public class ScoreConfig : ScriptableObject
         {
             case ShipType.Submarine: return submarineDestroy;
             case ShipType.Destroyer: return destroyerDestroy;
+            case ShipType.Cruiser:   return cruiserDestroy;
             case ShipType.Battleship: return battleshipDestroy;
             default: return 0;
         }

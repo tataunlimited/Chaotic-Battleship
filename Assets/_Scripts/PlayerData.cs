@@ -13,6 +13,11 @@ public class PlayerData : MonoBehaviour
     public int currentScore = 0;
     public enum Phase {Placement, Attack, Movement}
     public Phase currentPhase;
+
+    public int numberSubsInDock = 0;
+    public int numberDestroyersInDock = 1;
+    public int numberCruisersInDock = 0;
+    public int numberBattleshipsInDock = 0;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 

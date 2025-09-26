@@ -70,19 +70,15 @@ public class EnemyWaveSpawner : MonoBehaviour
             Debug.LogWarning("EnemyWaveSpawner: Nothing to spawn (0 ships).");
             return;
         }
+        //set the intelligence level based on the wave definition or the default intelligence level
+        waveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
+            ? Mathf.Clamp(def.intelligenceLevel, 0, 3)
+            : Mathf.Clamp(intelligenceLevel, 0, 3);
 
         // --- Set the wave default AI level ---
         waveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
             ? Mathf.Clamp(def.intelligenceLevel, 0, 3)
             : Mathf.Clamp(intelligenceLevel, 0, 3);
-
-        // --- Clear & apply per-type overrides (they’re just integers) ---
-        AIOverrideRegistry.Clear();
-        if (def != null && def.typeAI != null)
-        {
-            foreach (var t in def.typeAI)
-                AIOverrideRegistry.TypeLevels[t.type] = Mathf.Clamp(t.intelligenceLevel, 0, 3);
-        }
 
         // --- Place ships ---
         bool placedAll = waveManager.RandomlySetShipsLocations(enemyBoard, ships);
@@ -95,29 +91,6 @@ public class EnemyWaveSpawner : MonoBehaviour
         var preExisting = new HashSet<ShipView>(enemyBoard.SpawnedShips.Values);
         controller.SpawnEnemyShipsFromModels(ships, false);
         var justSpawned = enemyBoard.SpawnedShips.Values.Where(sv => !preExisting.Contains(sv)).ToList();
-
-        // --- Per-ship overrides (assign to any N ships of the type) ---
-        if (def != null && def.perShipAI != null && def.perShipAI.Count > 0)
-        {
-            var byType = justSpawned.GroupBy(sv => sv.shipModel.type)
-                                    .ToDictionary(g => g.Key, g => new Queue<ShipView>(g));
-
-            foreach (var o in def.perShipAI)
-            {
-                if (!byType.TryGetValue(o.type, out var q) || q.Count == 0) continue;
-
-                int toAssign = Mathf.Min(o.count, q.Count);
-                int lvl = Mathf.Clamp(o.intelligenceLevel, 0, 3);
-                for (int i = 0; i < toAssign; i++)
-                {
-                    var sv = q.Dequeue();
-                    if (sv != null && sv.shipModel != null && !string.IsNullOrEmpty(sv.shipModel.id))
-                    {
-                        AIOverrideRegistry.ShipLevels[sv.shipModel.id] = lvl; // << just setting the integer
-                    }
-                }
-            }
-        }
     }
 
     private List<ShipModel> BuildWaveFromDefinition(WaveDefinition def)
