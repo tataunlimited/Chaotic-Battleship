@@ -24,13 +24,9 @@ public class EnemyWaveSpawner : MonoBehaviour
     [Range(0, 3)] public int intelligenceLevel = 0;
     public bool revealOnSpawn = false;
 
-    [SerializeField] private EnemyWaveManager waveManager = new EnemyWaveManager();
+    private EnemyWaveManager WaveManager => BoardController.Instance.enemyWaveManager;
     public static EnemyWaveSpawner Instance;
-
-    void OnValidate()
-    {
-        waveManager ??= new EnemyWaveManager();
-    }
+    
 
     void Awake()
     {
@@ -71,17 +67,17 @@ public class EnemyWaveSpawner : MonoBehaviour
             return;
         }
         //set the intelligence level based on the wave definition or the default intelligence level
-        waveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
+        WaveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
             ? Mathf.Clamp(def.intelligenceLevel, 0, 3)
             : Mathf.Clamp(intelligenceLevel, 0, 3);
 
         // --- Set the wave default AI level ---
-        waveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
+        WaveManager.intelligenceLevel = (def != null && def.overrideIntelligence)
             ? Mathf.Clamp(def.intelligenceLevel, 0, 3)
             : Mathf.Clamp(intelligenceLevel, 0, 3);
 
         // --- Place ships ---
-        bool placedAll = waveManager.RandomlySetShipsLocations(enemyBoard, ships);
+        bool placedAll = WaveManager.RandomlySetShipsLocations(enemyBoard, ships);
         if (!placedAll)
             Debug.LogWarning("EnemyWaveSpawner: Not all ships could be placed on the board.");
 
@@ -97,31 +93,26 @@ public class EnemyWaveSpawner : MonoBehaviour
     {
         var list = new List<ShipModel>(def.TotalShips);
         foreach (var entry in def.ships)
-            AddCopies(list, entry.type, entry.count);
+            AddCopies(list, entry);
         return list;
     }
 
     private List<ShipModel> BuildWaveFromCounts()
     {
         var list = new List<ShipModel>(numSubmarines + numDestroyers + numBattleships + numCruisers);
-        AddCopies(list, ShipType.Submarine,  numSubmarines);
-        AddCopies(list, ShipType.Destroyer,  numDestroyers);
-        AddCopies(list, ShipType.Battleship, numBattleships);
-        AddCopies(list, ShipType.Cruiser,    numCruisers);
+        // AddCopies(list, ShipType.Submarine,  numSubmarines);
+        // AddCopies(list, ShipType.Destroyer,  numDestroyers);
+        // AddCopies(list, ShipType.Battleship, numBattleships);
+        // AddCopies(list, ShipType.Cruiser,    numCruisers);
         return list;
     }
 
-    private static void AddCopies(List<ShipModel> list, ShipType type, int count)
+    private static void AddCopies(List<ShipModel> list, WaveDefinition.ShipEntry entry)
     {
-        if (count <= 0) return;
-
-        // if (!ShipFactory.DefaultShips.TryGetValue(type, out var model))
-        // {
-        //     Debug.LogError($"EnemyWaveSpawner: Default ship not found for {type}");
-        //     return;
-        // }
-        var model = ShipFactory.CreateShipModel(type); // force creation (if not already created)
-        for (int i = 0; i < count; i++)
+        if (entry.count <= 0) return;
+        
+        var model = ShipFactory.CreateEnemyModel(entry); // force creation (if not already created)
+        for (int i = 0; i < entry.count; i++)
             list.Add(model.Copy());
     }
 

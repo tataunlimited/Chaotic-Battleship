@@ -17,6 +17,46 @@ namespace Core.Ship
     }
 
     [System.Serializable]
+    public class EnemyShipModel : ShipModel
+    {
+        public int movementLevel;
+        public int attackLevel;
+        public int specialAbilityLevel;
+        public int armorLevel;
+
+        public EnemyShipModel() { }
+
+        // This is the key constructor for your factory!
+        public EnemyShipModel(ShipModel baseModel, int movementLevel, int attackLevel, int specialAbilityLevel, int armorLevel) 
+            : base(baseModel) // This copies all properties from ShipModel!
+        {
+            this.movementLevel = movementLevel;
+            this.attackLevel = attackLevel;
+            this.specialAbilityLevel = specialAbilityLevel;
+            this.armorLevel = armorLevel;
+        
+            // Now, initialize the attack pattern with the enemy's specific levels
+            this.InitAttackPattern(this.attackLevel, this.specialAbilityLevel);
+        }
+    
+        // Add a constructor to copy another EnemyShipModel
+        public EnemyShipModel(EnemyShipModel other) : base(other)
+        {
+            this.movementLevel = other.movementLevel;
+            this.attackLevel = other.attackLevel;
+            this.specialAbilityLevel = other.specialAbilityLevel;
+            this.armorLevel = other.armorLevel;
+
+            this.InitAttackPattern(this.attackLevel, this.specialAbilityLevel);
+        }
+
+        // Override the Copy method
+        public override ShipModel Copy()
+        {
+            return new EnemyShipModel(this);
+        }
+    }
+    [System.Serializable]
     public class ShipModel
     {
         public string id;
@@ -43,7 +83,45 @@ namespace Core.Ship
         public bool canMove => !isDestroyed && MovementPattern != null && MovementPattern.canMove;
         public bool canRotate => !isDestroyed && MovementPattern != null && MovementPattern.canRotate;
 
+        public ShipModel() { }
 
+        // Add this protected copy constructor
+        protected ShipModel(ShipModel other)
+        {
+            this.id = other.id;
+            this.type = other.type;
+            this.length = other.length;
+            this.submerged = other.submerged;
+            this.hp = other.hp;
+            this.isDestroyed = other.isDestroyed;
+            this.armor = other.armor;
+            this.armorDestroyerChance = other.armorDestroyerChance;
+            this.armorCruiserChance = other.armorCruiserChance;
+            this.orientation = other.orientation;
+            this.root = other.root;
+            this.reserved = other.reserved;
+            this._round = other._round;
+        
+            this.MovementPattern = ShipMovementPattern.CreateMovementPattern(other.type);
+            if(other.MovementPattern != null)
+            {
+                this.MovementPattern.moveData = other.MovementPattern.moveData; // Assuming moveData is a struct or needs copying
+            }
+        }
+
+        // Change the existing Copy() method to be virtual
+        public virtual ShipModel Copy()
+        {
+            // Now the Copy method simply uses our new copy constructor!
+            var copy = new ShipModel(this);
+        
+            // We still need to initialize the attack pattern after copying
+            int attackLevel = this.AttackPattern?.AttackLevel ?? 0;
+            int specialLevel = this.AttackPattern?.SpecialAbilityLevel ?? 0;
+            copy.InitAttackPattern(attackLevel, specialLevel);
+
+            return copy;
+        }
         /// <summary>Apply damage and return true if the ship just sunk.</summary>
         public bool ApplyDamage(int damage = 1)
         {
@@ -177,29 +255,6 @@ namespace Core.Ship
             return coords;
         }
 
-        public ShipModel Copy()
-        {
-            ShipModel copy = new ShipModel
-            {
-                id = id,
-                type = type,
-                length = length,
-                root = root,
-                orientation = orientation,
-                hp = hp,
-                isDestroyed = isDestroyed,
-                _round = _round,
-                submerged = submerged,
-                armor = armor,
-                armorDestroyerChance = armorDestroyerChance,
-                armorCruiserChance = armorCruiserChance,
-                reserved = reserved,
-                MovementPattern = ShipMovementPattern.CreateMovementPattern(type),
-            };
-            copy.InitAttackPattern(0, 0);
-
-            return copy;
-        }
 
         public bool MoveTowards(Orientation direction, int count = 1)
         {
@@ -381,7 +436,12 @@ namespace Core.Ship
         {
             return DefaultShips[type].Copy();
         }
+        public static EnemyShipModel CreateEnemyModel(WaveDefinition.ShipEntry shipEntry)
+        {
+            ShipModel baseModel = DefaultShips[shipEntry.type];
 
+            return new EnemyShipModel(baseModel, shipEntry.movementLevel, shipEntry.attackLevel, shipEntry.specialAbilityLevel, shipEntry.armorLevel);
+        }
         private static ShipModel CreateBattleship()
         {
             var ship = new ShipModel

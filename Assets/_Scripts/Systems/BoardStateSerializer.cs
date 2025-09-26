@@ -75,7 +75,7 @@ public static class BoardStateSerializer
             var ori = ParseOrientation(s.orientation);
 
             // Place the ship
-            if (view.TryPlaceShip(prefab, pos, ori, out var instance))
+            /*if (view.TryPlaceShip(prefab, pos, ori, out var instance))
             {
                 // Restore HP after Init() (which resets HP)
                 instance.shipModel.hp = Mathf.Clamp(s.hp, 0, instance.shipModel.MaxHP);
@@ -87,7 +87,7 @@ public static class BoardStateSerializer
             else
             {
                 Debug.LogWarning($"[BoardStateSerializer] Failed to place {s.type} at {pos} ({ori})");
-            }
+            }*/
         }
     }
 

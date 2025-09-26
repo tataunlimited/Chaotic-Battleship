@@ -209,7 +209,7 @@ namespace Core.Board
             }
         }
 
-        public bool TryPlaceShip(ShipView prefab, GridPos pos, Orientation orientation, out ShipView instance)
+        public bool TryPlaceShip(ShipView prefab, ShipModel shipModel, out ShipView instance)
         {
             instance = null;
 
@@ -217,10 +217,10 @@ namespace Core.Board
 
             string id = name + _lastShipId;
 
-            var shipModel = ShipFactory.CreateShipModel(prefab.shipModel.type);
-            shipModel.id = id;
-            shipModel.orientation = orientation;
-            shipModel.root = pos;
+            // var shipModel = ShipFactory.CreateShipModel(prefab.shipModel.type);
+            // shipModel.id = id;
+            // shipModel.orientation = orientation;
+            // shipModel.root = pos;
 
             bool success = Model.TryPlaceShip(shipModel);
 

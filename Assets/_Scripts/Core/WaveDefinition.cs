@@ -11,6 +11,10 @@ public class WaveDefinition : ScriptableObject
     {
         public ShipType type;
         [Min(0)] public int count = 0;
+        [Min(0)] public int movementLevel = 0;
+        [Min(0)] public int attackLevel = 0;
+        [Min(0)] public int armorLevel = 0;
+        [Min(0)] public int specialAbilityLevel = 0;
     }
 
     [Header("Ships in this wave")]

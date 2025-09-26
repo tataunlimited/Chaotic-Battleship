@@ -121,10 +121,22 @@ namespace Core.Ship
 
         private void LoadEnemyShipData()
         {
-            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, 0);
-            if (movementData != null)
+            if (shipModel is EnemyShipModel enemyModel)
             {
-                shipModel.SetMovementLevelData(movementData);
+                _shipUpgradeVisual.Setup(enemyModel.movementLevel, enemyModel.attackLevel, enemyModel.armorLevel, enemyModel.specialAbilityLevel);
+                var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, enemyModel.armorLevel);
+                if (armorData != null)
+                {
+                    shipModel.SetArmorLevelData(armorData);
+                }
+
+                shipModel.InitAttackPattern(enemyModel.attackLevel, enemyModel.specialAbilityLevel);
+
+                var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, enemyModel.movementLevel);
+                if (movementData != null)
+                {
+                    shipModel.SetMovementLevelData(movementData);
+                }
             }
         }
 

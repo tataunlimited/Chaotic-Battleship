@@ -180,11 +180,13 @@ public class ShipPlacementUI : MonoBehaviour
         }
         sub_selected_to_place = true;
         Debug.Log("Sub Selected to place");
-        var newShip = board_controller.SpawnPlayerShip(ShipType.Submarine);
+        var newShip = board_controller.SpawnPlayerShip(GetShip(ShipType.Submarine));
+        
         board_controller.UpdatePlayerSelectedShip(newShip);
         subs_left--;
         StartShipPlacementOnGrid(newShip);
     }
+
 
     public void SetDestroyerToNextPlacement()
     {
@@ -197,7 +199,7 @@ public class ShipPlacementUI : MonoBehaviour
         }
         destroyer_selected_to_place = true;
         Debug.Log("Destroyer Selected to place");
-        var newShip = board_controller.SpawnPlayerShip(ShipType.Destroyer);
+        var newShip = board_controller.SpawnPlayerShip(GetShip(ShipType.Destroyer));
         board_controller.UpdatePlayerSelectedShip(newShip);
         destroyers_left--;
         StartShipPlacementOnGrid(newShip);
@@ -215,7 +217,7 @@ public class ShipPlacementUI : MonoBehaviour
         }
         cruiser_selected_to_place = true;
         Debug.Log("Cruiser Selected to place");
-        var newShip = board_controller.SpawnPlayerShip(ShipType.Cruiser);
+        var newShip = board_controller.SpawnPlayerShip(GetShip(ShipType.Cruiser));
         board_controller.UpdatePlayerSelectedShip(newShip);
         cruisers_left--;
         StartShipPlacementOnGrid(newShip);
@@ -233,7 +235,7 @@ public class ShipPlacementUI : MonoBehaviour
         }
         battleship_selected_to_place = true;
         Debug.Log("Battleship Selected to place");
-        var newShip = board_controller.SpawnPlayerShip(ShipType.Battleship);
+        var newShip = board_controller.SpawnPlayerShip(GetShip(ShipType.Battleship));
         board_controller.UpdatePlayerSelectedShip(newShip);
         battleships_left--;
         StartShipPlacementOnGrid(newShip);
@@ -250,5 +252,13 @@ public class ShipPlacementUI : MonoBehaviour
         shipConfirmOnGridSFX.Play();
         shipView.OnBeforeShipPlacedOnGrid -= OnShipPlacedOnTheGrid;
         _spawnedShip = null;
+    }
+    
+    private ShipModel GetShip(ShipType type)
+    {
+        var model = ShipFactory.CreateShipModel(type);
+        model.orientation = Orientation.North;
+        model.root = new GridPos(100000, 100000);
+        return model;
     }
 }
