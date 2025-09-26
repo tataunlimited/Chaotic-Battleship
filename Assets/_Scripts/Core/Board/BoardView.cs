@@ -79,6 +79,8 @@ namespace Core.Board
 
             foreach (var pair in SpawnedShips)
             {
+                //check for null in case a ship was destroyed and removed
+                if (pair.Value == null) continue;
                 wasSuccessful &= previousShipPlacements.TryGetValue(pair.Key, out previousShipData);
                 pair.Value.SnapShipOnGrid(previousShipData.root, previousShipData.orientation);
                 pair.Value.shipModel.MovementPattern.Reset();
