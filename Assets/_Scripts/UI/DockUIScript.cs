@@ -58,6 +58,21 @@ public class DockUIScript : MonoBehaviour
         GameManager.instance.NextPhaseButton();
         // show HUD
         HUD.SetActive(true);
+        //populate player ship info panel
+        if (GameManager.instance.playerShipInfoPanel != null)
+        {
+            GameManager.instance.playerShipInfoPanel.Populate();
+        } else
+        {
+            Debug.LogWarning("Player Ship Info Panel reference is null in GameManager!");
+        }
+        if (GameManager.instance.enemyShipInfoPanel != null)
+        {
+            GameManager.instance.enemyShipInfoPanel.Populate();
+        } else
+        {
+            Debug.LogWarning("Enemy Ship Info Panel reference is null in GameManager!");
+        }
         // hide dock UI
         this.gameObject.SetActive(false);
 
