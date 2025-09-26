@@ -10543,7 +10543,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board_controller: {fileID: 0}
-  placement_group: {fileID: 2791589337248181380}
   Subs_left_to_place: {fileID: 6325588984913105316}
   Destroyers_left_to_place: {fileID: 8195096284985390089}
   Cruisers_left_to_place: {fileID: 3868008667923624474}

@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class ShipPlacementUI : MonoBehaviour
 {
     public BoardController board_controller;
-    public GameObject placement_group;
     public TextMeshProUGUI Subs_left_to_place;
     public TextMeshProUGUI Destroyers_left_to_place;
     public TextMeshProUGUI Cruisers_left_to_place;
@@ -49,14 +48,20 @@ public class ShipPlacementUI : MonoBehaviour
     private void Awake()
     {
         // Capture Inspector defaults so we can restore them each new wave
-        _defSubs = subs_left;
-        _defDestroyers = destroyers_left;
-        _defCruisers = cruisers_left;
-        _defBattleships = battleships_left;
+        _defSubs = PlayerData.Instance.numberSubsInDock;
+        _defDestroyers = PlayerData.Instance.numberDestroyersInDock;
+        _defCruisers = PlayerData.Instance.numberCruisersInDock;
+        _defBattleships = PlayerData.Instance.numberBattleshipsInDock;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() { }
+    void Start()
+    {
+        subs_left        = _defSubs;
+        destroyers_left  = _defDestroyers;
+        cruisers_left    = _defCruisers;
+        battleships_left = _defBattleships;
+    }
 
     // Update is called once per frame
     void Update()
@@ -71,7 +76,6 @@ public class ShipPlacementUI : MonoBehaviour
         if (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
         {
             in_placement_Phase = true;
-            placement_group.SetActive(true);
             Subs_left_to_place.text       = subs_left.ToString();
             Destroyers_left_to_place.text = destroyers_left.ToString();
             Cruisers_left_to_place.text   = cruisers_left.ToString();
@@ -84,20 +88,18 @@ public class ShipPlacementUI : MonoBehaviour
             destroyer_selected_to_place  = false;
             cruiser_selected_to_place    = false;
             battleship_selected_to_place = false;
-            placement_group.SetActive(false);
         }
 
-        if (subs_left <= 0)        { Subs_left_to_place_Button.interactable        = false; }
-        if (destroyers_left <= 0)  { Destroyers_left_to_place_Button.interactable  = false; }
-        if (cruisers_left <= 0)    { Cruisers_left_to_place_Button.interactable    = false; }
-        if (battleships_left <= 0) { Battleships_left_to_place_Button.interactable = false; }
+        if (subs_left <= 0)        { Subs_left_to_place_Button.interactable        = false; } else { Subs_left_to_place_Button.interactable        = true; }
+        if (destroyers_left <= 0)  { Destroyers_left_to_place_Button.interactable  = false; } else { Destroyers_left_to_place_Button.interactable  = true; }
+        if (cruisers_left <= 0)    { Cruisers_left_to_place_Button.interactable    = false; } else { Cruisers_left_to_place_Button.interactable    = true; }
+        if (battleships_left <= 0) { Battleships_left_to_place_Button.interactable = false; } else { Battleships_left_to_place_Button.interactable = true; }
 
         if (subs_left <= 0 && destroyers_left <= 0 && cruisers_left <= 0 && battleships_left <= 0)
         {
             if (AreAllShipsSpawned) return;
             AreAllShipsSpawned = true;
             OnAllShipsSpawned?.Invoke();
-            placement_group.SetActive(false);
         }
         
 
@@ -138,10 +140,10 @@ public class ShipPlacementUI : MonoBehaviour
     // NEW: called by GameManager at the start of each wave
     public void ResetForNewWave()
     {
-        subs_left        = _defSubs;
-        destroyers_left  = _defDestroyers;
-        cruisers_left    = _defCruisers;
-        battleships_left = _defBattleships;
+        subs_left        = PlayerData.Instance.numberSubsInDock;
+        destroyers_left  = PlayerData.Instance.numberDestroyersInDock;
+        cruisers_left    = PlayerData.Instance.numberCruisersInDock;
+        battleships_left = PlayerData.Instance.numberBattleshipsInDock;
 
         if (Subs_left_to_place_Button)        Subs_left_to_place_Button.interactable        = true;
         if (Destroyers_left_to_place_Button)  Destroyers_left_to_place_Button.interactable  = true;

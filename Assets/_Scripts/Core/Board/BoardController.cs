@@ -137,6 +137,11 @@ namespace Core.Board
 
             foreach (var ship in playerView.SpawnedShips)
             {
+                if (ship.Value == null)
+                {
+                    
+                    continue;
+                }
                 ship.Value.DeselectShip();
             }
         }

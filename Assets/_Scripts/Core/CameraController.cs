@@ -15,6 +15,9 @@ public class CameraController : MonoBehaviour
     public Vector3 defaultEulerAngles;
     public Vector3 attackPosition;
     public Vector3 attackEulerAngles;
+
+    public Vector3 dockPosition;
+    public Vector3 dockEulerAngles;
     
     public Vector3 enemyBoardViewPosition;
     public Vector3 enemyBoardEulerAngles;
@@ -41,8 +44,8 @@ public class CameraController : MonoBehaviour
     void Awake()
     {
         if (!targetCamera) {targetCamera = Camera.main;}
-        defaultPosition = transform.position;
-        defaultEulerAngles = transform.rotation.eulerAngles;
+        //defaultPosition = transform.position;
+        //defaultEulerAngles = transform.rotation.eulerAngles;
         _isDefaultView = true;
         if (targetCamera) defaultFOV = targetCamera.fieldOfView;
     }
@@ -52,6 +55,15 @@ public class CameraController : MonoBehaviour
     public void GoToDefaultView(bool instant = false)
     {
         Pose pose = GetDefaultPose();
+        float dur = instant ? 0f : transitionDuration;
+        float? fov = tweenFieldOfView && targetCamera ? defaultFOV : (float?)null;
+        LerpToPose(pose, dur, fov);
+        _isDefaultView = true;
+    }
+
+    public void GoToDockView(bool instant = false)
+    {
+        Pose pose = GetDockPose();
         float dur = instant ? 0f : transitionDuration;
         float? fov = tweenFieldOfView && targetCamera ? defaultFOV : (float?)null;
         LerpToPose(pose, dur, fov);
@@ -103,6 +115,11 @@ public class CameraController : MonoBehaviour
         return new Pose(attackPosition, Quaternion.Euler(attackEulerAngles));
     }
 
+    private Pose GetDockPose()
+    {
+        return new Pose(dockPosition, Quaternion.Euler(dockEulerAngles));
+    }
+
     private void LerpToPose(Pose targetPose, float duration, float? fovTarget)
     {
         if (_activeRoutine != null) StopCoroutine(_activeRoutine);
@@ -113,13 +130,13 @@ public class CameraController : MonoBehaviour
     {
         if(!_isDefaultView || _isZooming)
             return;
-        if (Input.mouseScrollDelta.y > 0f)
+        if (Input.mouseScrollDelta.y > 0f && GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS) // zoom in
         {
             transform.DOMove(enemyBoardViewPosition, zoomDuration).OnComplete(()=>_isZooming = false);
             transform.DORotate(enemyBoardEulerAngles, zoomDuration);
             _isZooming = true;
         }
-        else if(Input.mouseScrollDelta.y < 0f)
+        else if(Input.mouseScrollDelta.y < 0f && GameManager.instance.phaseState != GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
         {
             transform.DOMove(defaultPosition, zoomDuration).OnComplete(()=>_isZooming = false);;
             transform.DORotate(defaultEulerAngles, zoomDuration);

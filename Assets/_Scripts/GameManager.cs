@@ -313,10 +313,11 @@ public class GameManager : MonoBehaviour
         }
         if (cameraController != null) cameraController.GoToAttackView();
 
-        phaseState = PHASE_STATE.PLAYER_FIRING;
-        Debug.Log("Phase changed to: PLAYER_FIRING");
-        StartCoroutine(AttackingPhase());
-        if (nextPhaseBtn != null) nextPhaseBtn.interactable = false;
+        PlayerMoves();
+
+        if (cameraController != null) cameraController.GoToDefaultView();
+        if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
+        Debug.Log("nextPhaseBtn.interactable = true");
 
         // Snapshot at battle start
         SaveSnapshot();

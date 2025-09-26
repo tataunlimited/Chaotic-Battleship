@@ -838,6 +838,7 @@ MonoBehaviour:
   armorUpgradeSO: {fileID: 11400000, guid: c7ec02a74a533cb4eab8a2a5243a7b5b, type: 2}
   attackUpgradeSO: {fileID: 11400000, guid: 8a60170a3c59b5b4b8ede5dfbfda9eb6, type: 2}
   specialUpgradeSO: {fileID: 11400000, guid: e78511e704bd2ec43bb5dfb7c0315a1e, type: 2}
+  movementUpgradeSO: {fileID: 11400000, guid: c97d56c4fcd8f6b4f95488ac7df4ef3a, type: 2}
   phaseState: 0
   playerShipsPlaced: 0
   enemyShipsPlaced: 0
@@ -1607,7 +1608,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -7613877148626258434, guid: 108b3c1be846db3428c16b6f6109de00, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0bba37f6b3d01864eac9f5bde999924d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 79a14ecb0e698964787891a7a558eab4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

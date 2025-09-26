@@ -57,6 +57,7 @@ public class GameManagerScore : MonoBehaviour
             {
                 case ShipType.Submarine:  add = 50;  break;
                 case ShipType.Destroyer:  add = 100; break;
+                case ShipType.Cruiser:    add = 150; break;
                 case ShipType.Battleship: add = 200; break;
             }
         }
@@ -74,6 +75,12 @@ public class GameManagerScore : MonoBehaviour
         Score += Mathf.Max(maxSpeed - perTurn * TurnsThisWave, 0);
 
         TurnsThisWave = 0;
+        EmitScoreChanged();
+    }
+
+    public void ModifyScore(int amount)
+    {
+        Score += amount;
         EmitScoreChanged();
     }
 

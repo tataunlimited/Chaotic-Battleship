@@ -16,7 +16,7 @@ MonoBehaviour:
   - type: 2
     count: 1
   - type: 1
-    count: 1
+    count: 3
   - type: 3
     count: 1
   - type: 4
@@ -24,5 +24,3 @@ MonoBehaviour:
   overrideIntelligence: 1
   intelligenceLevel: 3
   revealOnSpawn: 0
-  typeAI: []
-  perShipAI: []

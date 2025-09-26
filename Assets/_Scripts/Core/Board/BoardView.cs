@@ -242,12 +242,22 @@ namespace Core.Board
             // No spawn, no instance
             return false;
         }
+        
+        public void RemoveShip(ShipView ship)
+        {
+            if (ship == null) return;
+            if (SpawnedShips.ContainsKey(ship.shipModel.id))
+            {
+                SpawnedShips.Remove(ship.shipModel.id);
+                Destroy(ship.gameObject);
+            }
+        }
 
         public void UpdateBoard(bool showShips = true)
         {
             foreach (var ship in SpawnedShips)
             {
-               // ship.Value.SetShipOnGrid(true);
+                // ship.Value.SetShipOnGrid(true);
                 Model.TryPlaceShip(ship.Value.shipModel);
             }
             foreach (var tile in _tiles)
