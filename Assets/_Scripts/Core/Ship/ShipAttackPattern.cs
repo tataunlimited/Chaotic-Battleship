@@ -416,12 +416,14 @@ namespace Core.Ship
             AddAttackPositions(enemyBoard, coords);
 
 
-            if (!IsSpecialAttack && SpecialAbilityLevel <= 2) return coords;
-            bool canAttackAgain = coords.All(pos => !enemyBoard.HasShipAt(pos));
-
-            if (canAttackAgain)
+            if (IsSpecialAttack && SpecialAbilityLevel > 2)
             {
-                AddAttackPositions(enemyBoard, coords);
+                bool canAttackAgain = coords.All(pos => !enemyBoard.HasShipAt(pos));
+
+                if (canAttackAgain)
+                {
+                    AddAttackPositions(enemyBoard, coords);
+                }
             }
 
             return coords;
