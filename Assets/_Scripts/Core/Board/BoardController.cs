@@ -5,6 +5,8 @@ using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using Utility;
 
 
 namespace Core.Board
@@ -58,16 +60,19 @@ namespace Core.Board
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && 
+                (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS ||
+                 GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_MOVING))
             {
                 if (TryHitBoard(enemyView, out var eCell))  // left-click fires at enemy
                 {
                     // if (enemyView.Model.TryFire(eCell, out _))
                     //     enemyView.Tint(eCell);
-                    if (SelectedShip != null && SelectedShip.shipModel.type == ShipType.Destroyer)
+                    if (SelectedShip != null && SelectedShip.shipModel.CanTarget())
                     {
                         SelectedShip.shipModel.reserved = eCell;
-                        highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+                        HighlightAttackArea();
+                        //highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
                     }
                 }
                 if (TrySelectShip(out var shipView)) // right-click to test on player
@@ -109,12 +114,13 @@ namespace Core.Board
                     {
                         shipView.shipModel.UpdateMovementStatus();
                         UpdatePlayerSelectedShip(SelectedShip);
+                        HighlightAttackArea();
                     }
 
                 });
             }
-            if (playerView.Model.InBounds(SelectedShip.shipModel.root))
-                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+
+            HighlightAttackArea();
 
             OnShipSelected?.Invoke(true);
             shipSelectMovementPhaseSFX.Play();
@@ -124,6 +130,10 @@ namespace Core.Board
             GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
         }
 
+        public void HighlightAttackArea()
+        {
+            highlightAttackArea.SpawnHighlights(SelectedShip.shipModel);
+        }
         public void ClearSelectedShip()
         {
             if (SelectedShip != null)
@@ -207,10 +217,10 @@ namespace Core.Board
         {
             return shipType switch
             {
-                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 1), Orientation.North, playerView),
-                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 3), Orientation.North, playerView),
-                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-1, 2), Orientation.North, playerView),
-                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-1, 4), Orientation.North, playerView),
+                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-100, 1), Orientation.North, playerView),
+                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-100, 3), Orientation.North, playerView),
+                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-100, 2), Orientation.North, playerView),
+                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-100, 4), Orientation.North, playerView),
                 _ => throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null),
             };
         }
@@ -223,16 +233,20 @@ namespace Core.Board
                 yield return StartCoroutine(ship.Value.AttackSequence(enemyView));
                 yield return new WaitForSeconds(0.5f);
             }
+            playerView.Model.UpdateScorchedCells();
         }
 
         public IEnumerator EnemyAttack()
         {
-            foreach (var ship in enemyView.SpawnedShips)
+            var randomizedEnemyShipList = enemyView.SpawnedShips.Values.ToList();
+            randomizedEnemyShipList.Shuffle();
+            foreach (var ship in randomizedEnemyShipList)
             {
-                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                yield return StartCoroutine(ship.Value.AttackSequence(playerView));
+                if (ship.shipModel.IsSunk) continue;  // skip sunk ships
+                yield return StartCoroutine(ship.AttackSequence(playerView));
                 yield return new WaitForSeconds(0.5f);
             }
+            enemyView.Model.UpdateScorchedCells();
         }
 
         public void ResetGridIndicators()

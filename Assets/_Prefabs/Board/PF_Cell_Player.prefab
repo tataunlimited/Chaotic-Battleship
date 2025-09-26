@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 554527127646829119}
   - component: {fileID: 6017375407310850079}
   - component: {fileID: 9014949936559646911}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PF_Cell_Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 5341720070213226970}
   - component: {fileID: 1726635923652076790}
   - component: {fileID: 3711618174409959995}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 8180632608853210273}
   - component: {fileID: 9072617604822731940}
   - component: {fileID: 4951531872544840971}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Plane_Center
   m_TagString: Untagged
   m_Icon: {fileID: 0}

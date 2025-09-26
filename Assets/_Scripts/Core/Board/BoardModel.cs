@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Core.GridSystem;
 using Core.Ship;
 
@@ -10,6 +9,8 @@ namespace Core.Board
         public readonly BoardSide Side;
         public readonly int Width;
         public readonly int Height;
+
+        private readonly Dictionary<GridPos, int> ScorchedCells = new();
 
 
 
@@ -66,6 +67,34 @@ namespace Core.Board
             return true;
         }
 
+        public bool TryScorchCell(GridPos p, int lifeTime)
+        {
+            if (!InBounds(p)) return false;
+            if (_cells[p.x, p.y] == CellState.Ship) return false;
+            ScorchedCells[p] = lifeTime;
+            return true;
+
+        }
+
+        public void UpdateScorchedCells()
+        {
+            List<GridPos> keys = new List<GridPos>(ScorchedCells.Keys);
+            List<GridPos> toRemove = new List<GridPos>();
+
+            foreach (GridPos key in keys)
+            {
+                ScorchedCells[key]--; 
+                if (ScorchedCells[key] <= 0)
+                {
+                    toRemove.Add(key);
+                }
+            }
+
+            foreach (GridPos key in toRemove)
+            {
+                ScorchedCells.Remove(key);
+            }
+        }
         public bool ValidateShipPlacement(ShipModel shipModel, List<GridPos> positionsToIgnore = null)
         {
             foreach (var c in shipModel.GetCells())
@@ -75,7 +104,7 @@ namespace Core.Board
                     continue;
                 }
 
-                if (!InBounds(c) || (_cells[c.x, c.y] != CellState.Empty && _cells[c.x, c.y] != CellState.Miss && _cells[c.x, c.y] != CellState.NearMiss))
+                if (!InBounds(c) || ScorchedCells.ContainsKey(c) || (_cells[c.x, c.y] != CellState.Empty && _cells[c.x, c.y] != CellState.Miss && _cells[c.x, c.y] != CellState.NearMiss))
                     return false;
             }
             return true;
@@ -101,7 +130,7 @@ namespace Core.Board
             }
         }
 
-        public bool TryFire(GridPos p, out bool hit)
+        public bool TryFire(GridPos p, out bool hit, bool onlyUpdateHit = false)
         {
             hit = false;
             if (!InBounds(p)) return false;                    // invalid shot
@@ -115,14 +144,14 @@ namespace Core.Board
                     return true;
 
                 case CellState.Empty:
-                    Set(p, IsOrthogonallyAdjacentToShip(p) ? CellState.NearMiss : CellState.Miss);
-                    return true;
-
                 case CellState.Miss:
                 case CellState.NearMiss:
+                    if (onlyUpdateHit) return false;
+                    Set(p, IsOrthogonallyAdjacentToShip(p) ? CellState.NearMiss : CellState.Miss);
+                    return true;
                 case CellState.Hit:
                     // already resolved; don’t re-tint / re-animate
-                    return false;
+                    return true;
 
                 default:
                     return false;
@@ -145,6 +174,11 @@ namespace Core.Board
                     return true;
             }
             return false;
+        }
+
+        public bool IsScorched(GridPos gridPos)
+        {
+            return ScorchedCells.ContainsKey(gridPos);
         }
     }
 }

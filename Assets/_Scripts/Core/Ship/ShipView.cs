@@ -27,9 +27,7 @@ namespace Core.Ship
 
         public GameObject defaultState;
         public GameObject brokenState;
-
-        private ShipMovementComponent _movementComponent;
-
+        
         public Action<ShipView> OnBeforeShipPlacedOnGrid;
 
         public bool IsInInitialPhase { get; private set; }
@@ -68,6 +66,7 @@ namespace Core.Ship
         private Quaternion _baseRot;
         private Vector3 _defaultStateLocalPos;
         private ShipMovement _shipMovement;
+        private ShipUpgradeVisual _shipUpgradeVisual;
 
         // //AUDIO SFX
         // public AudioSource shipConfirmationSFX;
@@ -89,12 +88,15 @@ namespace Core.Ship
 
             if (IsPlayer)
                 _shipMovement = gameObject.AddComponent<ShipMovement>();
+            
         }
 
         private void EnsureComponents()
         {
             if (_shipHealth == null) _shipHealth = GetComponent<ShipHealth>();
             if (_collider == null) _collider = GetComponentInChildren<Collider>(true);
+            _shipUpgradeVisual = GetComponent<ShipUpgradeVisual>();
+
         }
 
         public void Init(BoardView boardView, ShipModel model, bool isPlayer)
@@ -130,19 +132,26 @@ namespace Core.Ship
         private void LoadPlayerShipData()
         {
             var pd = PlayerData.Instance;
-            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Armor));
+            int movementLevel = pd.GetUpgrade(shipModel.type, UpgradeType.Movement);
+            int attackLevel = pd.GetUpgrade(shipModel.type, UpgradeType.AttackPattern);
+            int armorLevel = pd.GetUpgrade(shipModel.type, UpgradeType.Armor);
+            int specialLevel = pd.GetUpgrade(shipModel.type, UpgradeType.SpecialAttack);
+            
+            var armorData = GameManager.instance.armorUpgradeSO.GetUpgrade(shipModel.type, armorLevel);
             if (armorData != null)
             {
                 shipModel.SetArmorLevelData(armorData);
             }
 
-            shipModel.InitAttackPattern(pd.GetUpgrade(shipModel.type, UpgradeType.AttackPattern), pd.GetUpgrade(shipModel.type, UpgradeType.SpecialAttack));
+            shipModel.InitAttackPattern(attackLevel, specialLevel);
 
-            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, pd.GetUpgrade(shipModel.type, UpgradeType.Movement));
+            var movementData = GameManager.instance.movementUpgradeSO.GetUpgrade(shipModel.type, movementLevel);
             if (movementData != null)
             {
                 shipModel.SetMovementLevelData(movementData);
             }
+            _shipUpgradeVisual.Setup(movementLevel, attackLevel, armorLevel, specialLevel);
+            
         }
 
         public void Hide()
@@ -240,9 +249,6 @@ namespace Core.Ship
         public IEnumerator AttackSequence(BoardView enemyBoard)
         {
 
-         
-
-
             var coords = shipModel.GetAttackCoordinates(enemyBoard, Board.IsLastShip);
             if (fireVFX != null && coords.Count > 0)
             {
@@ -258,10 +264,17 @@ namespace Core.Ship
          
             foreach (var gridPos in coords)
             {
-                if (enemyBoard.Model.TryFire(gridPos, out bool hit))
+                bool ignoreEverythingButShip = shipModel.type == ShipType.Submarine && !IsPlayer;
+                if (enemyBoard.Model.TryFire(gridPos, out bool hit, ignoreEverythingButShip))
                 {
                     bool ignoreSound = false;
-                    if (shipModel.type == ShipType.Submarine && !IsPlayer && !hit)
+
+                    if (!hit && shipModel.AttackPattern.CanScorchOnMiss)
+                    {
+                        enemyBoard.Model.TryScorchCell(gridPos, shipModel.AttackPattern.ScorchLifeTime);
+                    }
+                    
+                    if (ignoreEverythingButShip && !hit)
                     {
                         ignoreSound = true;
                     }
@@ -279,7 +292,7 @@ namespace Core.Ship
                             var enemyShipType = enemyShip.shipModel.type;
                             int damage = shipModel.AttackPattern.GetAttackDamage(enemyShipType);
 
-                            bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, out bool justSunk);
+                            bool isDamaged = enemyShip.ApplyDamage(damage, shipModel.type, shipModel.AttackPattern.CanPierceArmor(enemyShipType), out bool justSunk);
 
                             if (isDamaged)
                             {
@@ -337,20 +350,24 @@ namespace Core.Ship
                         // NEEDED TO SILENCE THIS TO HEAR SHIP FIRING!
                         //VFXManager.Instance.PlayFireSound();
                     }
+                    
+                    shipModel.CheckToRevealShips(enemyBoard, gridPos);
                 }
 
 
                 yield return _waitForSeconds0_1;
             }
+            
+            
 
             SetPosition(); // reset position
             UpdateSubPosition();
         }
 
-        public bool ApplyDamage(int damage, ShipType type, out bool isSunk)
+        public bool ApplyDamage(int damage, ShipType type, bool canPierceArmor, out bool isSunk)
         {
             isSunk = false;
-            if (!shipModel.CanReceiveDamage(type))
+            if (!canPierceArmor && !shipModel.CanReceiveDamage(type))
             {
                 return false;
             }
@@ -441,7 +458,7 @@ namespace Core.Ship
             transform.rotation = Quaternion.Euler(0f, yAngle, 0f);
         }
 
-        private Quaternion GetRotation(Orientation orientation)
+        public Quaternion GetRotation(Orientation orientation)
         {
             float yAngle = orientation switch
             {

@@ -63,7 +63,7 @@ MonoBehaviour:
       UpgradeName: Level 1
       Description: 'Hits 5/9 in targeted area
 
-        
+
 
 '
     - Cost: 1500
@@ -76,7 +76,7 @@ MonoBehaviour:
       UpgradeName: Level 3
       Description: 'Destroyers take 1 additional damage. Hits 7/9 in targeted area
 
-        
+
 
 '
   - ShipType: 2
@@ -86,7 +86,7 @@ MonoBehaviour:
       UpgradeName: Level 1
       Description: 'Fires at 6 random spots
 
-        
+
 
 '
     - Cost: 1500

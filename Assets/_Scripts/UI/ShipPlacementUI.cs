@@ -22,6 +22,7 @@ public class ShipPlacementUI : MonoBehaviour
     public Button Destroyers_left_to_place_Button;
     public Button Cruisers_left_to_place_Button;
     public Button Battleships_left_to_place_Button;
+    
 
     private bool sub_selected_to_place = false;
     private bool destroyer_selected_to_place = false;
@@ -35,11 +36,16 @@ public class ShipPlacementUI : MonoBehaviour
     private int _defDestroyers;
     private int _defCruisers;
     private int _defBattleships;
+    
+    public LayerMask gridLayer;
 
     public bool AreAllShipsSpawned { private set; get; }
+    public bool AreAllShipsSpawnedAndPlaced => AreAllShipsSpawned && _spawnedShip == null;
+    
     public Action OnAllShipsSpawned;
 
     private ShipView _spawnedShip;
+    
 
     //SFX
 
@@ -63,6 +69,7 @@ public class ShipPlacementUI : MonoBehaviour
         battleships_left = _defBattleships;
     }
 
+
     // Update is called once per frame
     void Update()
     {
@@ -71,6 +78,16 @@ public class ShipPlacementUI : MonoBehaviour
         {
             var gridPos = GetMouseGridPosition();
             _spawnedShip.transform.position = board_controller.playerView.GridToWorld(gridPos);
+            if (Input.mouseScrollDelta.y > 0f)
+            {
+                var or = _spawnedShip.shipModel.RotateLeft();
+                RotateSpawnedShip(or);;
+            }
+            else if(Input.mouseScrollDelta.y < 0f)
+            {
+                var or = _spawnedShip.shipModel.RotateRight();
+                RotateSpawnedShip(or);
+            }
         }
         
         if (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS)
@@ -95,45 +112,38 @@ public class ShipPlacementUI : MonoBehaviour
         if (cruisers_left <= 0)    { Cruisers_left_to_place_Button.interactable    = false; } else { Cruisers_left_to_place_Button.interactable    = true; }
         if (battleships_left <= 0) { Battleships_left_to_place_Button.interactable = false; } else { Battleships_left_to_place_Button.interactable = true; }
 
+        
         if (subs_left <= 0 && destroyers_left <= 0 && cruisers_left <= 0 && battleships_left <= 0)
         {
-            if (AreAllShipsSpawned) return;
             AreAllShipsSpawned = true;
-            OnAllShipsSpawned?.Invoke();
+
+            if (AreAllShipsSpawnedAndPlaced)
+            {
+                OnAllShipsSpawned?.Invoke();
+                //placement_group.SetActive(false);
+            }
         }
+
         
 
     }
-    
+    private void RotateSpawnedShip(Orientation or)
+    {
+        if (_spawnedShip == null) return;
+        _spawnedShip.shipModel.orientation = or;
+        _spawnedShip.transform.rotation = _spawnedShip.GetRotation(or);
+        BoardController.Instance.UpdatePlayerSelectedShip(_spawnedShip);
+    }
     private GridPos GetMouseGridPosition()
     {
-        /*// Create a ray from the camera through the mouse position
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        GridPos pos = default;
-        // We need to know the 'z' position of our ground plane
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-        float rayDistance;
-
-        if (groundPlane.Raycast(ray, out rayDistance))
-        {
-            // Get the point where the ray intersects the plane
-            Vector3 worldPoint = ray.GetPoint(rayDistance);
-            // Convert the world point to a cell position on the tilemap
-            board_controller.playerView.WorldToGrid(worldPoint , out pos);
-        }*/
-       
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        Vector3 cellPosition = new Vector3(-1000, 0, -1000);
-        GridPos pos = default;
-        if (Physics.Raycast(ray, out hit))
+        GridPos pos = new GridPos(100000, 100000);
+        if (Physics.Raycast(ray, out hit, 1000, gridLayer))
         {
-            // hit.point contains the world position where the ray intersected with a collider
-            cellPosition = hit.collider.transform.position;
-            // You can also get the hit object: hit.collider.gameObject
+            var cellPosition = hit.collider.transform.position;
+            board_controller.playerView.WorldToGrid(cellPosition , out pos);
         }
-        board_controller.playerView.WorldToGrid(cellPosition , out pos);
-        // Return a default value if the ray doesn't hit the plane
         return pos;
     }
 
