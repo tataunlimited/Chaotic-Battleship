@@ -13,6 +13,9 @@ public class SFXManager : MonoBehaviour
 
     [Header("Mixer (exposed: MasterVolume, SFXVolume, BGMVolume)")]
     [SerializeField] private AudioMixer MasterVolumeAudioMixer;
+    public AudioSource shipSelectMovementPhaseSFX;
+    public AudioSource shipGridConfirmMovementPhaseSFX;
+
 
     // Shared PlayerPrefs keys (used by Main Menu & In-Game)
     private const string PREF_MASTER = "opt_audio_master";
@@ -43,6 +46,15 @@ public class SFXManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    public void PlayShipSelectMovementPhaseSFX()
+    {
+        shipSelectMovementPhaseSFX.Play();
+    }
+
+    public void PlayShipGridConfirmMovementPhaseSFX()
+    {
+        shipGridConfirmMovementPhaseSFX.Play();   
+    }
     public void SetSFXVolume(float sliderValue)
     {
         MasterVolumeAudioMixer.SetFloat("SFXVolume", LinearToDb(sliderValue));
