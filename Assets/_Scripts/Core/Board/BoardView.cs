@@ -247,10 +247,20 @@ namespace Core.Board
         
         public void RemoveShip(ShipView ship)
         {
-            if (ship == null) return;
+            Debug.Log("Removing ship: " + ship);
+            if (ship == null)
+            {
+                Debug.LogWarning("Tried to remove a null ship!");
+                return;
+            }
             if (SpawnedShips.ContainsKey(ship.shipModel.id))
             {
                 SpawnedShips.Remove(ship.shipModel.id);
+                Destroy(ship.gameObject);
+                Debug.Log("Ship removed");
+            }
+            else
+            {
                 Destroy(ship.gameObject);
             }
         }
