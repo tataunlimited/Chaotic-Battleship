@@ -17,21 +17,21 @@ MonoBehaviour:
     AttackUpgrades:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Destroyer Attack Upgrade I
       Description: 'Hits targeted grid, and 1 additional grid within radius 1 (ignoring
         target point)
 
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: Level 2
+      UpgradeName: Destroyer Attack Upgrade II
       Description: 'Any ship hit on the targeted grid does not fire during the next
         firing phase
 
 '
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Destroyer Attack Upgrade III
       Description: 'Fires a torpedo every 3 rounds 90 degrees clockwise to the bow
         direction
 
@@ -40,19 +40,19 @@ MonoBehaviour:
     AttackUpgrades:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Sub Attack Upgrade I
       Description: '25% chance to deal 2 damage
 
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: Level 2
+      UpgradeName: Sub Attack Upgrade II
       Description: '50% chance to deal 2 damage
 
 '
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Sub Attack Upgrade III
       Description: 'Fires 2 torpedoes, 1 forward, 1 aft
 
 '
@@ -60,7 +60,7 @@ MonoBehaviour:
     AttackUpgrades:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Cruiser Attack Upgrade I
       Description: 'Hits 5/9 in targeted area
 
 
@@ -68,12 +68,12 @@ MonoBehaviour:
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: Level 2
+      UpgradeName: Cruiser Attack Upgrade II
       Description: 'Successful hits prevents those ships from moving in the next
         round during Movement '
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Cruiser Attack Upgrade III
       Description: 'Destroyers take 1 additional damage. Hits 7/9 in targeted area
 
 
@@ -83,7 +83,7 @@ MonoBehaviour:
     AttackUpgrades:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Battleship Attack Upgrade I
       Description: 'Fires at 6 random spots
 
 
@@ -91,11 +91,11 @@ MonoBehaviour:
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: Level 2
+      UpgradeName: Battleship Attack Upgrade II
       Description: Fires at 8 random spots
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Battleship Attack Upgrade III
       Description: 'If the salvo completely missed, fire an additional salvo
 
 '
