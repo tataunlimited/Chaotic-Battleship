@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a29747de86ff64aba21f2a53766757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionForce: 10
+  explosionForceRange: {x: 5, y: 10}
+  upwardBias: 2
 --- !u!1 &4813498074127623595
 GameObject:
   m_ObjectHideFlags: 0
