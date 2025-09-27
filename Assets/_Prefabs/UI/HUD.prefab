@@ -1229,8 +1229,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -1561,7 +1561,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 6590276794928915756}
 --- !u!1 &241387933908334020
@@ -3916,7 +3916,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 5200767118307832667}
 --- !u!1 &745964941593787193
@@ -4590,7 +4590,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 4552967180603958757}
 --- !u!1 &912300063604858523
@@ -4838,9 +4838,9 @@ RectTransform:
   - {fileID: 8745365879086547300}
   m_Father: {fileID: 5913902933126901455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.15, y: -151.375}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7011347187658640671
@@ -4903,8 +4903,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -5906,7 +5906,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 5220008407205545216}
 --- !u!1 &1052038485612400770
@@ -6311,7 +6311,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 7370654169934454867}
 --- !u!1 &1199789109192238467
@@ -6563,8 +6563,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -7342,9 +7342,9 @@ RectTransform:
   - {fileID: 7663168953187259363}
   m_Father: {fileID: 5913902933126901455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.15, y: -206.03702}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5827380488935733982
@@ -7407,8 +7407,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -7431,7 +7431,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5737591929959678990}
         m_TargetAssemblyTypeName: GameMenuActions, Assembly-CSharp
-        m_MethodName: ClearSnapshot
+        m_MethodName: ShowGiveUpConfirm
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7782,7 +7782,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 4252966694303800416}
 --- !u!1 &1477341123308858708
@@ -8798,9 +8798,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Clear Snapshot
-
-'
+  m_text: Give Up
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
   m_sharedMaterial: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
@@ -10792,7 +10790,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 4609507904405371010}
 --- !u!1 &2126470640906778278
@@ -12037,7 +12035,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 4599442100212692341}
 --- !u!1 &2477280804676775184
@@ -12743,7 +12741,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 6845195246865682512}
 --- !u!1 &2586755314602253966
@@ -14677,6 +14675,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3745939779859150695}
+  - {fileID: 8836368691207496673}
   m_Father: {fileID: 350746022212109213}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &562462354620714330
@@ -14707,7 +14706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenuRoot: {fileID: 0}
-  giveUpConfirmPanel: {fileID: 0}
+  giveUpConfirmPanel: {fileID: 556588525803080975}
   pauseMenuRootName: PauseMenu
   giveUpPanelName: GiveUpConfirm
   mainMenuSceneName: MainMenu
@@ -16725,7 +16724,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 3074247725805319302}
 --- !u!1 &3254944932626294535
@@ -17108,7 +17107,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 1009926573728891838}
 --- !u!1 &3292267919021191398
@@ -18532,7 +18531,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 7641384922850864254}
 --- !u!1 &3519789798096891330
@@ -18920,9 +18919,9 @@ RectTransform:
   - {fileID: 8391338188365057680}
   m_Father: {fileID: 5913902933126901455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.15, y: -42.051003}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2431415811856248083
@@ -18985,8 +18984,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -19830,8 +19829,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -20366,8 +20365,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -23789,9 +23788,9 @@ RectTransform:
   - {fileID: 8578834453846680788}
   m_Father: {fileID: 5913902933126901455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.15, y: -96.713005}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8256674064702270586
@@ -23854,8 +23853,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -27901,7 +27900,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 1680151755781918807}
 --- !u!1 &5437157546419884491
@@ -31232,7 +31231,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 7467135475943210946}
 --- !u!1 &6086913613171190766
@@ -33087,7 +33086,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 5429894443875604295}
 --- !u!1 &6326222392898464041
@@ -35360,7 +35359,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 194344076071190414}
 --- !u!1 &6980589706296564478
@@ -36044,9 +36043,9 @@ RectTransform:
   - {fileID: 2505062740011569658}
   m_Father: {fileID: 5913902933126901455}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.15, y: -260.699}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 14}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4923516148074762742
@@ -36109,8 +36108,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -36724,7 +36723,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 1361969653688302967}
 --- !u!1 &7245951365730332045
@@ -36882,7 +36881,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 2815470571756188106}
 --- !u!1 &7273853683044759695
@@ -37486,8 +37485,8 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 0.6039216, g: 0.6039216, b: 0.6039216, a: 1}
+    m_PressedColor: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -38148,7 +38147,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 7828378770699781086}
 --- !u!1 &7568737368984800819
@@ -40662,7 +40661,7 @@ MonoBehaviour:
   destroyerSprite: {fileID: 21300000, guid: 39e38f03312c7bd42a0ea557f4db9b82, type: 3}
   cruiserSprite: {fileID: 21300000, guid: ce9927492d7e71d409ea7ed4992ae2e0, type: 3}
   battleshipSprite: {fileID: 21300000, guid: c17c0602618d5f8459945545e5da317a, type: 3}
-  lostHealthMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
+  lostHealthMaterial: {fileID: 2100000, guid: 8bd95ac271a28e84fb4ba257973640d4, type: 2}
   lostArmorMaterial: {fileID: 2100000, guid: b3e5c1b02fb6c4044905c64bfe617c18, type: 2}
   shipNameText: {fileID: 324835940225192873}
 --- !u!1 &8157109260238250923
@@ -45591,4 +45590,443 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4762255886464413588, guid: b966cab18bc37be458f3a3c9a287cfc9, type: 3}
   m_PrefabInstance: {fileID: 5339614007607364826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6726367718667924461
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8288411809465330061}
+    m_Modifications:
+    - target: {fileID: 90654912085175875, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 90654912085175875, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5737591929959678990}
+    - target: {fileID: 90654912085175875, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 90654912085175875, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnGiveUpNo
+      objectReference: {fileID: 0}
+    - target: {fileID: 90654912085175875, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameMenuActions, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 390439111062568376, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 390439111062568376, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 390439111062568376, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 390439111062568376, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 406387345136533179, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 402.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 406387345136533179, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 272
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 282.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 201.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 1609203557858818652, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -198
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004858140063509022, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004858140063509022, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004858140063509022, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004858140063509022, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004858140063509022, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 201.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 2004858140063509022, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -49
+      objectReference: {fileID: 0}
+    - target: {fileID: 2582305506534688572, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2582305506534688572, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5008e8d3968d5e74aa04498f03b71294, type: 3}
+    - target: {fileID: 2582305506534688572, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215603521239882516, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1138039502, guid: 717e5c2fb7506fc48be7dfe4534f60d9, type: 3}
+    - target: {fileID: 3215603521239882516, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 133.245
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 215.8675
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852575707828507783, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895445418041985040, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895445418041985040, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895445418041985040, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195221879730087937, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 5195221879730087937, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 5195221879730087937, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 5195221879730087937, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5427055177209223124, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5427055177209223124, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5737591929959678990}
+    - target: {fileID: 5427055177209223124, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5427055177209223124, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnGiveUpYes
+      objectReference: {fileID: 0}
+    - target: {fileID: 5427055177209223124, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameMenuActions, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 133.245
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 66.6225
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619193102444914144, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_fontSize
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 6223350099271945270, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6383882919077951083, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_ChildAlignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6383882919077951083, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_ChildControlWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6383882919077951083, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529776263866364092, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529776263866364092, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5008e8d3968d5e74aa04498f03b71294, type: 3}
+    - target: {fileID: 6529776263866364092, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6548723818760126178, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_Name
+      value: GiveUpConfirm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6548723818760126178, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6615534167126613491, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292775808342224498, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292775808342224498, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292775808342224498, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292775808342224498, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292775808342224498, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 201.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292775808342224498, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -111
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799519529067533484, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_text
+      value: Continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799519529067533484, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 7799519529067533484, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 5619314084278346855, guid: a2f5d8a6be9657a4f935495abd277ece, type: 2}
+    - target: {fileID: 7799519529067533484, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799519529067533484, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+--- !u!1 &556588525803080975 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6548723818760126178, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+  m_PrefabInstance: {fileID: 6726367718667924461}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8836368691207496673 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2880559165331558412, guid: 9a138b804a8353e48b23fbd2d92b33b2, type: 3}
+  m_PrefabInstance: {fileID: 6726367718667924461}
   m_PrefabAsset: {fileID: 0}
