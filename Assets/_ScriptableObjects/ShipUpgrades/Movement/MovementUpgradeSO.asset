@@ -30,7 +30,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 400
       Icon: {fileID: 0}
-      UpgradeName: Level 1 Sub Movement Upgrade
+      UpgradeName: Sub Movement Upgrade I
       Description: Can move 4 spaces orthogonally
       OrthogonalMovementPoints: 4
       DiagonalMovementPoints: 0
@@ -42,7 +42,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 800
       Icon: {fileID: 0}
-      UpgradeName: Level 2 Sub Movement Upgrade
+      UpgradeName: Sub Movement Upgrade II
       Description: Can move 5 spaces orthogonally
       OrthogonalMovementPoints: 5
       DiagonalMovementPoints: 0
@@ -54,7 +54,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 1600
       Icon: {fileID: 0}
-      UpgradeName: Level 3 Sub Movement Upgrade
+      UpgradeName: Sub Movement Upgrade III
       Description: Can move 6 spaces orthogonally
       OrthogonalMovementPoints: 6
       DiagonalMovementPoints: 0
@@ -81,7 +81,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 500
       Icon: {fileID: 0}
-      UpgradeName: Level 1 Destroyer Movement Upgrade
+      UpgradeName: Destroyer Movement Upgrade I
       Description: can move anywhere in radius 2
       OrthogonalMovementPoints: 0
       DiagonalMovementPoints: 0
@@ -93,7 +93,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 2 Destroyer Movement Upgrade
+      UpgradeName: Destroyer Movement Upgrade II
       Description: can move 3 vertically or orthogonally, or 2 in any direction
       OrthogonalMovementPoints: 3
       DiagonalMovementPoints: 3
@@ -105,7 +105,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 2000
       Icon: {fileID: 0}
-      UpgradeName: Level 3 Destroyer Movement Upgrade
+      UpgradeName: Destroyer Movement Upgrade III
       Description: can move 3 in any direction
       OrthogonalMovementPoints: 0
       DiagonalMovementPoints: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
       CanRotateAndMove: 0
     - Cost: 700
       Icon: {fileID: 0}
-      UpgradeName: Level 1 Cruiser Movement Upgrade
+      UpgradeName: Cruiser Movement Upgrade I
       Description: can move and rotate in a single move
       OrthogonalMovementPoints: 0
       DiagonalMovementPoints: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 1400
       Icon: {fileID: 0}
-      UpgradeName: Level 2 Cruiser Movement Upgrade
+      UpgradeName: Cruiser Movement Upgrade II
       Description: ' can move forward 3 or back 1 or forward diagonal 1, and can
         move and rotate in a single move'
       OrthogonalMovementPoints: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
       CanRotateAndMove: 1
     - Cost: 2800
       Icon: {fileID: 0}
-      UpgradeName: Level 3 Cruiser Movement Upgrade
+      UpgradeName: Cruiser Movement Upgrade III
       Description: can move forward 3, back 2, or forward diagonal 2 or back diagonal
         1, and can move and rotate in a single move
       OrthogonalMovementPoints: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
       CanRotateAndMove: 0
     - Cost: 800
       Icon: {fileID: 0}
-      UpgradeName: Level 1 Battleship Movement Upgrade
+      UpgradeName: Battleship Movement Upgrade I
       Description: can move forward 2 or back 1
       OrthogonalMovementPoints: 0
       DiagonalMovementPoints: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
       CanRotateAndMove: 0
     - Cost: 1600
       Icon: {fileID: 0}
-      UpgradeName: Level 2 Battleship Movement Upgrade
+      UpgradeName: Battleship Movement Upgrade II
       Description: can move forward 2, forward diagonal 1, or back 1
       OrthogonalMovementPoints: 0
       DiagonalMovementPoints: 0
@@ -207,7 +207,7 @@ MonoBehaviour:
       CanRotateAndMove: 0
     - Cost: 3200
       Icon: {fileID: 0}
-      UpgradeName: Level 3 Battleship Movement Upgrade
+      UpgradeName: Battleship Movement Upgrade III
       Description: can move forward 2, forward diagonal 2, back 1, or back diagonal
         1
       OrthogonalMovementPoints: 0
