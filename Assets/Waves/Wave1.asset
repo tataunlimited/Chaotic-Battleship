@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Wave1
   m_EditorClassIdentifier: 
   ships:
-  - type: 1
-    count: 1
-  - type: 2
-    count: 3
+  - type: 3
+    count: 2
+    movementLevel: 0
+    attackLevel: 0
+    armorLevel: 0
+    specialAbilityLevel: 0
   overrideIntelligence: 1
-  intelligenceLevel: 3
+  intelligenceLevel: 0
   revealOnSpawn: 1

@@ -14,9 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ships:
   - type: 2
-    count: 2
+    count: 1
+    movementLevel: 0
+    attackLevel: 1
+    armorLevel: 1
+    specialAbilityLevel: 0
+  - type: 3
+    count: 1
+    movementLevel: 1
+    attackLevel: 1
+    armorLevel: 0
+    specialAbilityLevel: 1
   - type: 4
     count: 1
+    movementLevel: 0
+    attackLevel: 0
+    armorLevel: 0
+    specialAbilityLevel: 0
+  - type: 3
+    count: 1
+    movementLevel: 0
+    attackLevel: 1
+    armorLevel: 1
+    specialAbilityLevel: 0
   overrideIntelligence: 1
-  intelligenceLevel: 2
+  intelligenceLevel: 1
   revealOnSpawn: 0
