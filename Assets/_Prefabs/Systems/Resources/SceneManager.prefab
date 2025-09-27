@@ -134,10 +134,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SFXManager
       objectReference: {fileID: 0}
-    - target: {fileID: 9129469268481332814, guid: 38e0db5d57e99fc4b979dcf9d1bcd04f, type: 3}
-      propertyPath: shipGridConfirmMovementPhaseSFX
-      value: 
-      objectReference: {fileID: 8587269303775082429}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -146,10 +142,5 @@ PrefabInstance:
 --- !u!4 &4020677366591404712 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4939016888631662202, guid: 38e0db5d57e99fc4b979dcf9d1bcd04f, type: 3}
-  m_PrefabInstance: {fileID: 8306530462053543122}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &8587269303775082429 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 318245519825083247, guid: 38e0db5d57e99fc4b979dcf9d1bcd04f, type: 3}
   m_PrefabInstance: {fileID: 8306530462053543122}
   m_PrefabAsset: {fileID: 0}
