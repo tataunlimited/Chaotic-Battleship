@@ -401,19 +401,14 @@ namespace Core.Board
 
         public void ResetIndicators(bool showShips = true)
         {
-            List<int> shipIdsToRemove = new List<int>();
-            foreach (var ship in SpawnedShips)
+            for (var index = SpawnedShips.Count - 1; index >= 0; index--)
             {
+                var ship = SpawnedShips[index];
                 if (ship.shipModel.isDestroyed)
                 {
                     Destroy(ship.gameObject);
-                    shipIdsToRemove.Add(SpawnedShips.IndexOf(ship));;
+                    SpawnedShips.RemoveAt(index);
                 }
-            }
-
-            foreach (var id in shipIdsToRemove)
-            {
-                SpawnedShips.RemoveAt(id);
             }
 
             Model.ResetAllCells();
