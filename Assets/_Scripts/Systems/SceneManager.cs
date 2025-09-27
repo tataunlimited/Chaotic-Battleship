@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ public class SceneManager : MonoBehaviour
     [SerializeField] private Image fadeImage; 
     [SerializeField] private Slider progressBar;   
     [SerializeField] private float fadeDuration = 0.5f; 
+    
+    public event Action<SceneType> OnSceneLoaded;
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -36,6 +39,12 @@ public class SceneManager : MonoBehaviour
 
         if (ScreenFader.Instance)
             StartCoroutine(ScreenFader.Instance.FadeIn());
+    }
+    
+    void Start()
+    {
+        if (OnSceneLoaded != null)
+            OnSceneLoaded(GetCurrentScene());
     }
 
     // public API
@@ -48,6 +57,23 @@ public class SceneManager : MonoBehaviour
 
         Debug.LogError($"[SceneManager] No mapping found for {type}");
         return null;
+    }
+
+    public SceneType GetCurrentScene()
+    {
+        var sceneName = USceneManager.GetActiveScene().name;
+        return GetSceneType(sceneName);
+    }
+    private SceneType GetSceneType(string sceneName)
+    {
+        foreach (var scene in scenes)
+        {
+            if (scene.sceneName == sceneName)
+            {
+                return scene.type;
+            }
+        }
+        return SceneType.MainMenu;
     }
 
     IEnumerator LoadRoutine(string sceneName)
@@ -82,6 +108,8 @@ public class SceneManager : MonoBehaviour
             yield return ScreenFader.Instance.FadeIn();
 
         if (progressBar) progressBar.value = 0f;
+        
+        OnSceneLoaded?.Invoke(GetSceneType(sceneName));
     }
 
     public void ReloadActiveScene()

@@ -48,9 +48,7 @@ public class ShipPlacementUI : MonoBehaviour
     
 
     //SFX
-
-    public AudioSource shipConfirmOnGridSFX; 
-
+    
     private void Awake()
     {
         // Capture Inspector defaults so we can restore them each new wave
@@ -256,7 +254,7 @@ public class ShipPlacementUI : MonoBehaviour
 
     private void OnShipPlacedOnTheGrid(ShipView shipView)
     {
-        shipConfirmOnGridSFX.Play();
+        SFXManager.Instance.PlayShipConfirmOnGridSFX();
         shipView.OnBeforeShipPlacedOnGrid -= OnShipPlacedOnTheGrid;
         _spawnedShip = null;
     }

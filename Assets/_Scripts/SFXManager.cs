@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -10,11 +11,15 @@ public class SFXManager : MonoBehaviour
     [SerializeField] private AudioSource battleshipAttack;
     [SerializeField] private AudioSource cruiserAttack;
     [SerializeField] private AudioSource submarineAttack;
+    [SerializeField] private AudioSource mainMenuMusic;
+    [SerializeField] private AudioSource battleMusic;
+    [SerializeField] private AudioSource creditScene;
 
     [Header("Mixer (exposed: MasterVolume, SFXVolume, BGMVolume)")]
     [SerializeField] private AudioMixer MasterVolumeAudioMixer;
     public AudioSource shipSelectMovementPhaseSFX;
     public AudioSource shipGridConfirmMovementPhaseSFX;
+    public AudioSource shipConfirmOnGridSFX; 
 
 
     // Shared PlayerPrefs keys (used by Main Menu & In-Game)
@@ -36,6 +41,29 @@ public class SFXManager : MonoBehaviour
         }
         Instance = this;
         ApplyFromPrefs();
+        SceneManager.Instance.OnSceneLoaded += PlayLevelMusic;
+    }
+
+    private void PlayLevelMusic(SceneTypes.SceneType sceneType)
+    {
+        mainMenuMusic.Stop();
+        battleMusic.Stop();
+        creditScene.Stop();
+        switch (sceneType)
+        {
+            case SceneTypes.SceneType.MainMenu:
+                mainMenuMusic.Play();
+                break;
+            case SceneTypes.SceneType.Game:
+                battleMusic.Play();
+                break;
+            case SceneTypes.SceneType.Credits:
+                creditScene.Play();
+                break;
+            case SceneTypes.SceneType.Harbor:
+                break;
+
+        }
     }
 
     // Called by UI sliders (linear 0..1)
@@ -44,6 +72,11 @@ public class SFXManager : MonoBehaviour
         MasterVolumeAudioMixer.SetFloat("MasterVolume", LinearToDb(sliderValue));
         PlayerPrefs.SetFloat(PREF_MASTER, Mathf.Clamp01(sliderValue));
         PlayerPrefs.Save();
+    }
+    
+    public void PlayShipConfirmOnGridSFX()
+    {
+        shipConfirmOnGridSFX.Play();
     }
 
     public void PlayShipSelectMovementPhaseSFX()
