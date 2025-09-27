@@ -15,12 +15,16 @@ MonoBehaviour:
   ships:
   - type: 2
     count: 1
-  - type: 1
-    count: 3
+    movementLevel: 1
+    attackLevel: 1
+    armorLevel: 1
+    specialAbilityLevel: 0
   - type: 3
-    count: 1
-  - type: 4
-    count: 1
+    count: 2
+    movementLevel: 1
+    attackLevel: 1
+    armorLevel: 1
+    specialAbilityLevel: 0
   overrideIntelligence: 1
-  intelligenceLevel: 3
+  intelligenceLevel: 1
   revealOnSpawn: 0
