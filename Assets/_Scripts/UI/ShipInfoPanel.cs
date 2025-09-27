@@ -3,7 +3,7 @@ using Core.Ship;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.Generic;
 public class ShipInfoPanel : MonoBehaviour
 {
     public Vector2 revealedPosition;
@@ -82,14 +82,14 @@ public class ShipInfoPanel : MonoBehaviour
     //hook here to update ship info slots when ships are added/removed
     public void Populate()
     {
-        var ships = new System.Collections.Generic.List<ShipView>();
+        List<ShipView> ships;
         if (!isPlayerPanel)
         {
-            ships = new System.Collections.Generic.List<ShipView>(BoardController.Instance.enemyView.SpawnedShips.Values);
+            ships = new List<ShipView>(BoardController.Instance.enemyView.SpawnedShips);
         }
         else
         {
-            ships = new System.Collections.Generic.List<ShipView>(BoardController.Instance.playerView.SpawnedShips.Values);
+            ships = new List<ShipView>(BoardController.Instance.playerView.SpawnedShips);
         }
         var infoSlots = new ShipInfoSlotManager[] { infoSlot1, infoSlot2, infoSlot3, infoSlot4, infoSlot5, infoSlot6, infoSlot7, infoSlot8, infoSlot9, infoSlot10 };
         for (int i = 0; i < infoSlots.Length; i++)

@@ -124,7 +124,7 @@ public class DockUIScript : MonoBehaviour
                 playerView.RemoveShip(selectedShip);
                 BoardController.Instance.ClearSelectedShip();
                 //update player board
-                BoardController.Instance.playerView.UpdateBoard();
+                BoardController.Instance.playerView.ResetIndicators();
                 //BoardController.Instance.playerView.ResetMovementPhase();
             }
         }

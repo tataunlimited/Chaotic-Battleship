@@ -23,7 +23,7 @@ public static class BoardStateSerializer
         var bs = new BoardState();
 
         // Walk all live ships on this board
-        foreach (var shipView in view.SpawnedShips.Values)
+        foreach (var shipView in view.SpawnedShips)
         {
             var m = shipView.shipModel;
             bs.ships.Add(new ShipState

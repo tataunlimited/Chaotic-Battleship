@@ -162,7 +162,7 @@ namespace Core.Ship
 
 
             bool haveAllSuccessfullyMoved = true;
-            foreach (ShipView shipView in AIBoard.SpawnedShips.Values)
+            foreach (ShipView shipView in AIBoard.SpawnedShips)
             {
                 haveAllSuccessfullyMoved &= IntelligentlyTurnAndMove(shipView, AIBoard, playerBoard, playerImminentHitSet, playerShipsLocations);
             }
@@ -208,7 +208,7 @@ namespace Core.Ship
 
             // Note: future improvement: a smarter approach is to actually order the ships by Destroyers, 
             //      Submarines, and then Cruisers since this is the order of accuracy of the ships attacks
-            foreach (ShipView shipView in playerBoard.SpawnedShips.Values)
+            foreach (ShipView shipView in playerBoard.SpawnedShips)
             {
                 ship = shipView.shipModel;
                 if (ship.isDestroyed)
@@ -256,7 +256,7 @@ namespace Core.Ship
             List<GridPos> coords;
             List<GridPos> playerShipsLocations = new List<GridPos>();
 
-            foreach (ShipView shipView in playerBoard.SpawnedShips.Values)
+            foreach (ShipView shipView in playerBoard.SpawnedShips)
             {
                 coords = shipView.shipModel.GetCells();
                 playerShipsLocations.AddRange(coords);
@@ -561,7 +561,7 @@ namespace Core.Ship
                 return target;
             }
 
-            var shipViews = boardView.SpawnedShips.Values.ToList();
+            var shipViews = boardView.SpawnedShips.ToList();
             int randomIndex = UnityEngine.Random.Range(0, shipViews.Count);
             var rndShip = shipViews[randomIndex];
             var bowPosition = rndShip.shipModel.root;
@@ -576,7 +576,7 @@ namespace Core.Ship
 
             bool haveBeenSuccessfullyMoved = true;
 
-            foreach (ShipView shipView in AIBoard.SpawnedShips.Values)
+            foreach (ShipView shipView in AIBoard.SpawnedShips)
             {
                 haveBeenSuccessfullyMoved &= RandomlyMoveAShip(AIBoard, shipView);
 

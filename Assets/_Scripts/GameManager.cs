@@ -316,7 +316,7 @@ public class GameManager : MonoBehaviour
             boardController.UpdateBoards();
             foreach (var ship in boardController.playerView.SpawnedShips)
             {
-                ship.Value.SetShipOnGrid(true);
+                ship.SetShipOnGrid(true);
             }
         }
         if (cameraController != null) cameraController.GoToAttackView();

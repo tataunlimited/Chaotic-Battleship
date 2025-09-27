@@ -151,12 +151,12 @@ namespace Core.Board
 
             foreach (var ship in playerView.SpawnedShips)
             {
-                if (ship.Value == null)
+                if (ship == null)
                 {
                     
                     continue;
                 }
-                ship.Value.DeselectShip();
+                ship.DeselectShip();
             }
         }
 
@@ -225,8 +225,8 @@ namespace Core.Board
         {
             foreach (var ship in playerView.SpawnedShips)
             {
-                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                yield return StartCoroutine(ship.Value.AttackSequence(enemyView));
+                if (ship.shipModel.IsSunk) continue;  // skip sunk ships
+                yield return StartCoroutine(ship.AttackSequence(enemyView));
                 yield return new WaitForSeconds(0.5f);
             }
             playerView.Model.UpdateScorchedCells();
@@ -234,7 +234,7 @@ namespace Core.Board
 
         public IEnumerator EnemyAttack()
         {
-            var randomizedEnemyShipList = enemyView.SpawnedShips.Values.ToList();
+            var randomizedEnemyShipList = enemyView.SpawnedShips;
             randomizedEnemyShipList.Shuffle();
             foreach (var ship in randomizedEnemyShipList)
             {

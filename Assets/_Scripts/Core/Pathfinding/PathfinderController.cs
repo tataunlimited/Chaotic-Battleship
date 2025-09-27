@@ -42,7 +42,7 @@ namespace Core.Pathfinding
             var unwalkablePositions = new HashSet<GridPos>();
             shipGridConfirmMovementPhaseSFX.Play();
             // Add all currently occupied ship cells to the unwalkable set
-            foreach (var shipView in boardView.SpawnedShips.Values)
+            foreach (var shipView in boardView.SpawnedShips)
             {
                 // IMPORTANT: Ignore the ship that is currently trying to move
                 if (shipView.shipModel.id == movingShip.id)

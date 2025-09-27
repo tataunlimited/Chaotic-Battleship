@@ -84,9 +84,9 @@ public class EnemyWaveSpawner : MonoBehaviour
         bool reveal = (def != null && def.revealOnSpawn) || revealOnSpawn;
 
         // Track which ships are added by this spawn so we can bind per-ship AI
-        var preExisting = new HashSet<ShipView>(enemyBoard.SpawnedShips.Values);
+        var preExisting = new HashSet<ShipView>(enemyBoard.SpawnedShips);
         controller.SpawnEnemyShipsFromModels(ships, false);
-        var justSpawned = enemyBoard.SpawnedShips.Values.Where(sv => !preExisting.Contains(sv)).ToList();
+        var justSpawned = enemyBoard.SpawnedShips.Where(sv => !preExisting.Contains(sv)).ToList();
     }
 
     private List<ShipModel> BuildWaveFromDefinition(WaveDefinition def)
