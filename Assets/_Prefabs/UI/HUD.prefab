@@ -14706,6 +14706,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6344a0387fdfc1418910258e0817fe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseMenuRoot: {fileID: 0}
+  giveUpConfirmPanel: {fileID: 0}
+  pauseMenuRootName: PauseMenu
+  giveUpPanelName: GiveUpConfirm
+  mainMenuSceneName: MainMenu
+  sfxSource: {fileID: 0}
+  defeatFanfare: {fileID: 0}
+  fanfareDelay: 0.25
 --- !u!1 &2841853017067713374
 GameObject:
   m_ObjectHideFlags: 0
@@ -42440,6 +42448,8 @@ RectTransform:
   - {fileID: 6918099186000792288}
   - {fileID: 778252450425125828}
   - {fileID: 4226592745033000275}
+  - {fileID: 2301502068176743208}
+  - {fileID: 5400424843032931020}
   - {fileID: 9209513189868045087}
   - {fileID: 580103267008799566}
   - {fileID: 7685697827202557947}
@@ -42448,8 +42458,6 @@ RectTransform:
   - {fileID: 6863394598456126071}
   - {fileID: 1471820307914631797}
   - {fileID: 8853097765402675146}
-  - {fileID: 2301502068176743208}
-  - {fileID: 5400424843032931020}
   - {fileID: 785098457084902218}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

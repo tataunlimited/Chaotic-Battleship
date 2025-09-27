@@ -57,6 +57,13 @@ public class DockUIScript : MonoBehaviour
             sellText.text = "Sell Ship";
         }
 
+        //deactivate sell button if we only have one ship left in the dock
+        if (PlayerData.Instance.numberSubsInDock + PlayerData.Instance.numberDestroyersInDock + PlayerData.Instance.numberCruisersInDock + PlayerData.Instance.numberBattleshipsInDock <= 1)
+        {
+            sellShipButton.interactable = false;
+            sellText.text = "Cannot Sell Last Ship";
+        }
+
         Debug.Log("Sell button interactable: " + sellShipButton.interactable);
     }
 
@@ -92,6 +99,12 @@ public class DockUIScript : MonoBehaviour
 
     public void SellShip()
     {
+        //make sure we can't sell our last remaining ship
+        if (PlayerData.Instance.numberSubsInDock + PlayerData.Instance.numberDestroyersInDock + PlayerData.Instance.numberCruisersInDock + PlayerData.Instance.numberBattleshipsInDock <= 1)
+        {
+            Debug.Log("Cannot sell last remaining ship!");
+            return;
+        }
         // sell selected ship
         if (BoardController.Instance.SelectedShip != null)
         {

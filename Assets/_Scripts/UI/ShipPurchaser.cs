@@ -14,6 +14,8 @@ public class ShipPurchaser : MonoBehaviour
     public TextMeshProUGUI wave_number_text;
     public Button slot_1_button;
     public Button slot_2_button;
+    public int max_ships_in_dock = 10;
+    public int current_number_of_ships_in_dock = 0;    
 
 
     private int slot_1_price = 100;
@@ -159,13 +161,22 @@ public class ShipPurchaser : MonoBehaviour
             slot_2_button.GetComponent<Image>().color = Color.white;
         }
 
+        
+        current_number_of_ships_in_dock = PlayerData.Instance.numberSubsInDock + PlayerData.Instance.numberDestroyersInDock + PlayerData.Instance.numberCruisersInDock + PlayerData.Instance.numberBattleshipsInDock;
+        if(current_number_of_ships_in_dock >= max_ships_in_dock)
+        {
+            slot_1_button.interactable = false;
+            slot_2_button.interactable = false;
+        }
+        
         current_points_text.text = "Current Points: " + PlayerData.Instance.currentScore.ToString();
         wave_number_text.text = "Wave: " + PlayerData.Instance.waveNumber.ToString();
     }
 
     public void PurchaseSlot1()
     {
-        if (PlayerData.Instance.currentScore >= slot_1_price)
+        //add a check that total number of ships in dock is less than max allowed ships in dock (10)
+        if (current_number_of_ships_in_dock < max_ships_in_dock && PlayerData.Instance.currentScore >= slot_1_price)
         {
             //add the selected ship to the ship placement UI for placement
             switch (slot_1_text.text)
@@ -197,7 +208,7 @@ public class ShipPurchaser : MonoBehaviour
 
     public void PurchaseSlot2()
     {
-        if (PlayerData.Instance.currentScore >= slot_2_price)
+        if (current_number_of_ships_in_dock < max_ships_in_dock && PlayerData.Instance.currentScore >= slot_2_price)
         {
 
             //add the selected ship to the ship placement UI for placement
