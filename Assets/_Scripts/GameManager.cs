@@ -1,5 +1,6 @@
 using System.Collections;
 using Core.Board;
+using Core.Ship;
 using Core.Ship.Upgrade;
 using TMPro;
 using UnityEngine;
@@ -82,6 +83,9 @@ public class GameManager : MonoBehaviour
         Init();
 
         roundNumber.text = _roundNumber.ToString();
+        ShipMovement.ResetEvents();
+        ShipMovement.OnShipMoveStarted += ()=>EnableNextPhaseButton(false);
+        ShipMovement.OnShipMoveEnded += ()=>EnableNextPhaseButton(true);
 
     }
 
@@ -107,6 +111,7 @@ public class GameManager : MonoBehaviour
         _shipPlacementUI = FindOne<ShipPlacementUI>();
         if (_shipPlacementUI != null)
         {
+            _shipPlacementUI.OnAllShipsSpawned += (b)=> { IsShipPlacementPhaseOver = b; };
             _shipPlacementUI.OnAllShipsSpawned += EnableNextPhaseButton;
         }
 
@@ -153,7 +158,6 @@ public class GameManager : MonoBehaviour
     private void EnableNextPhaseButton(bool value)
     {
         if (nextPhaseBtn != null) nextPhaseBtn.interactable = value;
-        IsShipPlacementPhaseOver = true;
     }
 
     public void Restart()

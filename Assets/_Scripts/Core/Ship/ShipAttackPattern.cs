@@ -105,7 +105,7 @@ namespace Core.Ship
         {
         }
 
-        private bool CanFireThisTurn => Round % 2 == 0 || IsSpecialAttack;
+        private bool CanFireThisTurn => Round % 2 == 1 || IsSpecialAttack;
         public override List<GridPos> GetAttackPositions(BoardView enemyBoard)
         {
             var coords = new List<GridPos>();

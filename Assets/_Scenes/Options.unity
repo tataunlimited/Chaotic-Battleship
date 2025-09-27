@@ -276,6 +276,8 @@ MonoBehaviour:
   defaultEulerAngles: {x: 44.34, y: 0, z: 0}
   attackPosition: {x: 0, y: 22.37, z: 1.25}
   attackEulerAngles: {x: 69.7, y: 0, z: 0}
+  dockPosition: {x: 0, y: 0, z: 0}
+  dockEulerAngles: {x: 0, y: 0, z: 0}
   enemyBoardViewPosition: {x: 0, y: 10.33, z: 7.3}
   enemyBoardEulerAngles: {x: 53, y: 0, z: 0}
   transitionDuration: 0.75
@@ -1439,6 +1441,7 @@ GameObject:
   - component: {fileID: 6479613798505336800}
   - component: {fileID: 7430411317463274164}
   - component: {fileID: 4725980642689492336}
+  - component: {fileID: 7430411317463274165}
   m_Layer: 0
   m_Name: OptionsMenu
   m_TagString: Untagged
@@ -2663,6 +2666,21 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
+--- !u!114 &7430411317463274165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2544879831254546310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afa05efc0d15d3e44ba7314bc1c8be26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterSlider: {fileID: 1201492469449261934}
+  sfxSlider: {fileID: 628665688836804909}
+  bgmSlider: {fileID: 3077068710198649235}
 --- !u!114 &7500284054926502112
 MonoBehaviour:
   m_ObjectHideFlags: 0
