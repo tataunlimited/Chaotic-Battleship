@@ -176,11 +176,25 @@ public static class SaveManager
     // ===== Full Reset =====
     public static void ResetAllData()
     {
-        // Wipe prefs
+        const string PREF_MASTER = "opt_audio_master";
+        const string PREF_SFX    = "opt_audio_sfx";
+        const string PREF_BGM    = "opt_audio_bgm";
+
+        bool hasM = PlayerPrefs.HasKey(PREF_MASTER);
+        bool hasS = PlayerPrefs.HasKey(PREF_SFX);
+        bool hasB = PlayerPrefs.HasKey(PREF_BGM);
+
+        float vM = PlayerPrefs.GetFloat(PREF_MASTER, 1f);
+        float vS = PlayerPrefs.GetFloat(PREF_SFX,    1f);
+        float vB = PlayerPrefs.GetFloat(PREF_BGM,    1f);
+
         PlayerPrefs.DeleteAll();
+
+        if (hasM) PlayerPrefs.SetFloat(PREF_MASTER, vM);
+        if (hasS) PlayerPrefs.SetFloat(PREF_SFX,    vS);
+        if (hasB) PlayerPrefs.SetFloat(PREF_BGM,    vB);
         PlayerPrefs.Save();
 
-        // Reset runtime data
         var pd = PlayerData.Instance;
         if (pd != null)
         {
@@ -200,6 +214,7 @@ public static class SaveManager
 
         Debug.Log("[SaveManager] ResetAllData()");
     }
+
 
     // ===== Helpers =====
     private static string UpgradeKey(ShipType ship, UpgradeType type) => $"Upgrade_{ship}_{type}";
