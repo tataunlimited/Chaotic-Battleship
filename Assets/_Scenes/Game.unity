@@ -2358,6 +2358,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 64301709}
     - target: {fileID: 4221307764305128325, guid: 858dff34350568343a3e36148475a54b, type: 3}
+      propertyPath: gridLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 4221307764305128325, guid: 858dff34350568343a3e36148475a54b, type: 3}
       propertyPath: shipConfirmOnGridSFX
       value: 
       objectReference: {fileID: 540402129}
