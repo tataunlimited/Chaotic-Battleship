@@ -42,7 +42,7 @@ public class ShipPlacementUI : MonoBehaviour
     public bool AreAllShipsSpawned { private set; get; }
     public bool AreAllShipsSpawnedAndPlaced => AreAllShipsSpawned && _spawnedShip == null;
     
-    public Action OnAllShipsSpawned;
+    public Action<bool> OnAllShipsSpawned;
 
     private ShipView _spawnedShip;
     
@@ -119,8 +119,15 @@ public class ShipPlacementUI : MonoBehaviour
 
             if (AreAllShipsSpawnedAndPlaced)
             {
-                OnAllShipsSpawned?.Invoke();
-                //placement_group.SetActive(false);
+                OnAllShipsSpawned?.Invoke(AreAllShipsSpawnedAndPlaced);
+            }
+        }
+        else
+        {
+            if (AreAllShipsSpawned)
+            {
+                AreAllShipsSpawned = false;
+                OnAllShipsSpawned?.Invoke(false);
             }
         }
 

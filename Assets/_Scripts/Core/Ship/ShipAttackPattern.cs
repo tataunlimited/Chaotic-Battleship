@@ -360,6 +360,7 @@ namespace Core.Ship
             return AttackLevel switch
             {
                 1 => 5,
+                2 => 5,
                 > 2 => 7,
                 _ => 3
             };

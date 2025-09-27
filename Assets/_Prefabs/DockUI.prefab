@@ -259,6 +259,8 @@ MonoBehaviour:
   shipPurchaser: {fileID: 4652917209052489745}
   sellText: {fileID: 3123007851185061191}
   playerView: {fileID: 0}
+  shipPlacementUI: {fileID: 4221307764305128325}
+  startBattleBtn: {fileID: 6850609703211435969}
 --- !u!1 &1153563594522553017
 GameObject:
   m_ObjectHideFlags: 0
@@ -3292,7 +3294,7 @@ MonoBehaviour:
   Battleships_left_to_place_Button: {fileID: 1418967461384266875}
   gridLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   shipConfirmOnGridSFX: {fileID: 0}
 --- !u!1 &7112687366827307422
 GameObject:

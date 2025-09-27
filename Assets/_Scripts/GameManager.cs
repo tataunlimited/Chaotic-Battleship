@@ -150,10 +150,9 @@ public class GameManager : MonoBehaviour
         StartEncounter();
     }
 
-    private void EnableNextPhaseButton()
+    private void EnableNextPhaseButton(bool value)
     {
-        _shipPlacementUI.OnAllShipsSpawned -= EnableNextPhaseButton;
-        if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
+        if (nextPhaseBtn != null) nextPhaseBtn.interactable = value;
         IsShipPlacementPhaseOver = true;
     }
 

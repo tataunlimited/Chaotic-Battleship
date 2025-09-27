@@ -11,10 +11,18 @@ public class DockUIScript : MonoBehaviour
     public ShipPurchaser shipPurchaser;
     public TextMeshProUGUI sellText;
     public BoardView playerView;
+    public ShipPlacementUI shipPlacementUI;
+    public Button startBattleBtn;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        startBattleBtn.interactable = false;
+        shipPlacementUI.OnAllShipsSpawned += OnAllShipsSpawned;
+    }
 
+    private void OnAllShipsSpawned(bool value)
+    {
+        startBattleBtn.interactable = value;
     }
 
     // Update is called once per frame
@@ -54,6 +62,10 @@ public class DockUIScript : MonoBehaviour
 
     public void StartWave()
     {
+        if (!shipPlacementUI.AreAllShipsSpawnedAndPlaced)
+        {
+            return;
+        }
         // go to next phase
         GameManager.instance.NextPhaseButton();
         // show HUD
