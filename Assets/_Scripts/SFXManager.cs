@@ -32,8 +32,6 @@ public class SFXManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         ApplyFromPrefs();
     }
 
