@@ -150,7 +150,7 @@ namespace Core.Board
                     Set(p, IsOrthogonallyAdjacentToShip(p) ? CellState.NearMiss : CellState.Miss);
                     return true;
                 case CellState.Hit:
-                    // already resolved; don’t re-tint / re-animate
+                    hit = true;
                     return true;
 
                 default:
