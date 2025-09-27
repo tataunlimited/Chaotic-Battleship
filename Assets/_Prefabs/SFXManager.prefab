@@ -836,6 +836,7 @@ MonoBehaviour:
   cruiserAttack: {fileID: 2786481653888093144}
   submarineAttack: {fileID: 6971859581459946657}
   MasterVolumeAudioMixer: {fileID: 24100000, guid: 108b3c1be846db3428c16b6f6109de00, type: 2}
+  shipSelectMovementPhaseSFX: {fileID: 1191221061219183255}
 --- !u!82 &3430901819249191138
 AudioSource:
   m_ObjectHideFlags: 0

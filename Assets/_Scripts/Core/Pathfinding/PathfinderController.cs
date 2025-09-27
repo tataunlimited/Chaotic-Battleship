@@ -16,7 +16,6 @@ namespace Core.Pathfinding
         public static PathfinderController Instance { get; private set; }
 
         //SFX
-        public AudioSource shipGridConfirmMovementPhaseSFX;
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -40,7 +39,7 @@ namespace Core.Pathfinding
         public List<GridPos> FindPathForShip(BoardView boardView, ShipModel movingShip, GridPos start, GridPos end)
         {
             var unwalkablePositions = new HashSet<GridPos>();
-            shipGridConfirmMovementPhaseSFX.Play();
+            SFXManager.Instance.PlayShipGridConfirmMovementPhaseSFX();
             // Add all currently occupied ship cells to the unwalkable set
             foreach (var shipView in boardView.SpawnedShips)
             {

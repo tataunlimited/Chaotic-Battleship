@@ -31,7 +31,6 @@ namespace Core.Board
         public EnemyWaveManager enemyWaveManager;
         public static BoardController Instance;
         //SFX
-        public AudioSource shipSelectMovementPhaseSFX;
 
         void Awake()
         {
@@ -123,9 +122,8 @@ namespace Core.Board
             HighlightAttackArea();
 
             OnShipSelected?.Invoke(true);
-            shipSelectMovementPhaseSFX.Play();
-
-            // enable/disable the rotate buttons
+            SFXManager.Instance.PlayShipSelectMovementPhaseSFX();
+            
             GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
             GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
         }
