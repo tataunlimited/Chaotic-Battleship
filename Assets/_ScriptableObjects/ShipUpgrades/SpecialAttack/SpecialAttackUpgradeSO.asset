@@ -17,20 +17,20 @@ MonoBehaviour:
     SpecialAttackUpgrade:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Destroyer Special Attack Upgrade I
       Description: 'Destroying a ship launches a 2nd shot automatically hitting a
         random tile in a 3x3 zone around the destroyed ship.
 
 '
     - Cost: 0
       Icon: {fileID: 0}
-      UpgradeName: 
+      UpgradeName: Destroyer Special Attack Upgrade II
       Description: 'If the shot is a near miss it reveals a 3x3 zone around its shot.
 
 '
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Destroyer Special Attack Upgrade III
       Description: 'Attacks ignore Armor.
 
 '
@@ -38,21 +38,21 @@ MonoBehaviour:
     SpecialAttackUpgrade:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Sub Special Attack Upgrade I
       Description: '10% chance of attacking both x and y axis at the same time.
 
-        
+
 
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: 
+      UpgradeName: Sub Special Attack Upgrade II
       Description: '20% chance of attacking both x and y axis at the same time.
 
 '
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Sub Special Attack Upgrade III
       Description: '30% chance of attacking both x and y axis at the same time.
 
 '
@@ -60,18 +60,18 @@ MonoBehaviour:
     SpecialAttackUpgrade:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Cruiser Special Attack Upgrade I
       Description: 'Gains a 4th 3x3 attack zone (12 shots total).
 
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: 
+      UpgradeName: Cruiser Special Attack Upgrade II
       Description: "Missed shots temporarily mark zones as \u201Cscorched\u201D for
         2 rounds preventing opponents from placing ships there.\r\n"
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Cruiser Special Attack Upgrade III
       Description: 'Instead of attacking random tiles, attack the entire 3x3 zone.
 
 '
@@ -79,22 +79,22 @@ MonoBehaviour:
     SpecialAttackUpgrade:
     - Cost: 1000
       Icon: {fileID: 0}
-      UpgradeName: Level 1
+      UpgradeName: Battleship Special Attack Upgrade I
       Description: 'Fires 4x as many shots.
 
 '
     - Cost: 1500
       Icon: {fileID: 0}
-      UpgradeName: 
+      UpgradeName: Battleship Special Attack Upgrade II
       Description: 'If a ship is damaged, it renders that ship unable to attack next
         round.
 
-        
+
 
 '
     - Cost: 3000
       Icon: {fileID: 0}
-      UpgradeName: Level 3
+      UpgradeName: Battleship Special Attack Upgrade III
       Description: 'When destroyed, unleash one final massive salvo (6x the shots).
 
 '
