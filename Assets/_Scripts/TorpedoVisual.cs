@@ -1,4 +1,7 @@
 //Torpedo
+
+using Core.Ship;
+using DG.Tweening;
 using UnityEngine;
 using Core.Board;
 using Core.GridSystem;
@@ -18,6 +21,11 @@ public class TorpedoVisual : MonoBehaviour
     private bool _isHit;
     private bool _isMovingToEnemyBoard = false;
     private Vector3 _startPos;
+    public float acceleration = 1;
+    //public float distance = 5f;
+    //public AnimationCurve curve;
+
+    public float degree = 20f;
 
     public void Init(BoardView enemyBoard, Transform playerBoardTransform, GridPos targetGridPos, bool isHit)
     {
@@ -26,6 +34,9 @@ public class TorpedoVisual : MonoBehaviour
         _targetGridPos = targetGridPos;
         _isHit = isHit;
         _startPos = transform.position;
+        transform.eulerAngles = new Vector3(degree, transform.eulerAngles.y, transform.eulerAngles.z);
+
+        //transform.DOMove(transform.forward.normalized * distance, 1f).SetEase(curve);
     }
 
     void Update()
@@ -47,7 +58,32 @@ public class TorpedoVisual : MonoBehaviour
                 _isMovingToEnemyBoard = true;
                 StartCoroutine(TransitionToEnemyBoard());
             }
+            //return;
+            // Move the torpedo forward
+            transform.position += transform.forward * speed * Time.deltaTime;
+
+            // Update the lifetime counter and destroy the object when it expires
+            //_timeAlive += Time.deltaTime;
+            //speed += acceleration * Time.deltaTime;
+            //if (_timeAlive >= lifetime) // Example: destroy 1 second after starting to dive
+            //{
+            //  Destroy(gameObject);
+            //}
+            //if (_timeAlive >= lifetime)
+            //{
+            //  transform.position += Vector3.down * speed * Time.deltaTime * 0.5f;
+
+            //if (_timeAlive >= lifetime) // Example: destroy 1 second after starting to dive
+            //{
+            //  Destroy(gameObject);
+            //}
+            //}
         }
+    }
+
+    public void Init(TorpedoData torpedoData)
+    {
+        //throw new System.NotImplementedException();
     }
 
     private IEnumerator TransitionToEnemyBoard()

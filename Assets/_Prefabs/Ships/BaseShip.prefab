@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7188997284388319423}
+  - component: {fileID: 172893146427686410}
   m_Layer: 3
   m_Name: BrokenShipModelContainer
   m_TagString: Untagged
@@ -31,6 +32,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9071194118322993481}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &172893146427686410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4297834889547011565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a29747de86ff64aba21f2a53766757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionForceRange: {x: 5, y: 10}
+  upwardBias: 2
 --- !u!1 &4813498074127623595
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,7 +56,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9071194118322993481}
   - component: {fileID: 7133455884396350364}
-  - component: {fileID: -865248615779685098}
+  - component: {fileID: 3861103587125755012}
+  - component: {fileID: 2728903682136993913}
   m_Layer: 3
   m_Name: BaseShip
   m_TagString: Untagged
@@ -84,6 +100,9 @@ MonoBehaviour:
     length: 3
     submerged: 0
     hp: 0
+    armor: 0
+    armorDestroyerChance: 0
+    armorCruiserChance: 0
     orientation: 0
     root:
       x: 5
@@ -92,6 +111,8 @@ MonoBehaviour:
       x: -1000
       y: -1000
     isDestroyed: 0
+  torpedoPrefab: {fileID: 0}
+  torpedoSpawnPoint: {fileID: 0}
   defaultState: {fileID: 7284658678121241804}
   brokenState: {fileID: 4297834889547011565}
   rockingEnabled: 1
@@ -101,7 +122,36 @@ MonoBehaviour:
   bobFrequencyHz: 0.33
   rotationLerp: 12
   bobLerp: 12
---- !u!54 &-865248615779685098
+  fireVFX: {fileID: 0}
+--- !u!114 &3861103587125755012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4813498074127623595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9336f72b9297f0f4590edb21c06eb7fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementUpgrade:
+    level1: {fileID: 0}
+    level2: {fileID: 0}
+    level3: {fileID: 0}
+  attackUpgrade:
+    level1: {fileID: 0}
+    level2: {fileID: 0}
+    level3: {fileID: 0}
+  armorUpgrade:
+    level1: {fileID: 0}
+    level2: {fileID: 0}
+    level3: {fileID: 0}
+  specialAbilityUpgrade:
+    level1: {fileID: 0}
+    level2: {fileID: 0}
+    level3: {fileID: 0}
+--- !u!54 &2728903682136993913
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,7 +159,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4813498074127623595}
   serializedVersion: 4
-  m_Mass: 100
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -126,7 +176,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!1 &7284658678121241804
 GameObject:

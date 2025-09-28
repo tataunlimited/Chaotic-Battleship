@@ -51,9 +51,8 @@ MonoBehaviour:
   height: 10
   cellSize: 1
   origin: {x: -5, y: 0, z: 10.5}
-  cellPrefab: {fileID: 3498131598842137522, guid: 53bd56a79daabf641a483f8a0f97be65, type: 3}
+  cellPrefab: {fileID: 8406341763212950752, guid: bfe169c26ad032442a46d957e8e44bc8, type: 3}
   hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
-  baseColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &6942412552272609847
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +106,6 @@ MonoBehaviour:
   origin: {x: -5, y: 0, z: 0}
   cellPrefab: {fileID: 3498131598842137522, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
   hitFirePrefab: {fileID: 1781949194303238870, guid: 4e35892e4c5444340a0e2189311808e5, type: 3}
-  baseColor: {r: 0, g: 1, b: 0.15980244, a: 1}
 --- !u!1 &8915164760813226162
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,6 +165,11 @@ MonoBehaviour:
   shipLayer:
     serializedVersion: 2
     m_Bits: 8
+  _enemyWaveManager:
+    intelligenceLevel: 0
+    intelligenceMode: 0
+    DEFAULT_SHIP_TYPES: 02000000030000000100000004000000
+  shipSelectMovementPhaseSFX: {fileID: 0}
 --- !u!1001 &1332777804502252984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -185,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: chanceColor.a
-      value: 0.8784314
+      value: 0.7882353
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: chanceColor.g
@@ -209,15 +212,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: selectionColor.a
-      value: 0.92941177
+      value: 0.5411765
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: selectionColor.b
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
+      propertyPath: selectionColor.g
+      value: 0.567645
       objectReference: {fileID: 0}
     - target: {fileID: 7776180343080350112, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: selectionColor.r
-      value: 0.9151845
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8009996881848241770, guid: 4a235d1a21fd03e459e8295901d9968a, type: 3}
       propertyPath: m_Pivot.x

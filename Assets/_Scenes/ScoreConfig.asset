@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2943054d8c65d724597049052e293ab3, type: 3}
   m_Name: ScoreConfig
   m_EditorClassIdentifier: 
-  segmentHit: 25
-  submarineDestroy: 50
-  destroyerDestroy: 100
-  battleshipDestroy: 200
+  segmentHit: 50
+  submarineDestroy: 200
+  destroyerDestroy: 400
+  cruiserDestroy: 600
+  battleshipDestroy: 800
   waveClear: 1000
   speedMax: 1000
   speedPerTurn: 50

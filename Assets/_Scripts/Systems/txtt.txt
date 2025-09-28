@@ -1,0 +1,196 @@
+<align="center">
+<size=56><b>Waves of War</b></size>
+
+
+
+
+
+
+
+<size=52><b>Credits</b></size>
+
+<size=46><b>Team Members</b></size>
+
+<size=32>
+Connor Moran — Lead Design, Project Manager
+
+
+Andy M. — Project Manager
+
+
+Robert Bridges — QA, Sound
+
+
+Felipe Ramos — UI Art, Terrain Design
+
+
+Cristina Mateo — Producer, Sound Design
+
+
+Jason Mahar — Lead QA, Programmer
+
+
+James Douglas — Level Design, UI, Audio
+
+
+Yang Yang — 3D Modeling, Sculpting
+
+
+Taher Samadi Shal — Lead Programmer
+
+
+Prashanna Kandel — Programmer
+
+
+Ray Humphrey — Programmer
+
+
+Trayvion Coats — QA, Programmer
+
+
+</size>
+
+<size=46><b>Special Thanks</b></size>
+
+<size=56>Roy Papp, Professor</size>
+
+
+<size=56>Gerard Merritt, Professor</size>
+
+
+
+
+
+<size=42><i>Made with dedication. Thanks for playing!</i></size>
+
+<size=42>© 2025 Waves of War Team</size>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</align>

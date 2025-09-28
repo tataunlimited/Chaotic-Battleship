@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ea5986be71d094485c012d2a0c0f19, type: 3}
+  m_Name: UpgradeIconLookup
+  m_EditorClassIdentifier: 
+  rows:
+  - ship: 1
+    upgradeType: 1
+    iconsByLevel:
+    - {fileID: 21300000, guid: 41323044f1c240049a0728bbcd20285b, type: 3}
+    - {fileID: 21300000, guid: 7ef01d65e17d36e44a84431afbea47b5, type: 3}
+    - {fileID: 21300000, guid: c8d90363a98c082488d683639cbeed42, type: 3}
+    - {fileID: 21300000, guid: bf7b2e87be3abac4e9b6f83ea679ad7e, type: 3}
+  - ship: 2
+    upgradeType: 1
+    iconsByLevel:
+    - {fileID: 21300000, guid: f587459d96d937c44bd398d88dc42b5c, type: 3}
+    - {fileID: 21300000, guid: 53e054f6080d8a04090066cebc0c4742, type: 3}
+    - {fileID: 21300000, guid: 6152d9f96ba604241a73ab0bd05f9467, type: 3}
+    - {fileID: 21300000, guid: 5e1f3984f5bf0db49aa7192cf7be0f2b, type: 3}
+  - ship: 3
+    upgradeType: 1
+    iconsByLevel:
+    - {fileID: 21300000, guid: a5f1801e3d1d8674d98d6d93f4178a13, type: 3}
+    - {fileID: 21300000, guid: 02de0dcc4d799624aa6dfcfec1639a8c, type: 3}
+    - {fileID: 21300000, guid: d916b859d4606964b9cdc4a20baf9d95, type: 3}
+    - {fileID: 21300000, guid: 6757b50a6864f8449bdb21684629bccc, type: 3}
+  - ship: 4
+    upgradeType: 1
+    iconsByLevel:
+    - {fileID: 21300000, guid: abf4df6d83c8b384aad27c2af4feccb9, type: 3}
+    - {fileID: 21300000, guid: 08b53eda338203f40a2dbfff90bfa895, type: 3}
+    - {fileID: 21300000, guid: 0dfb6381d32eae547bacf587074ca8b1, type: 3}
+    - {fileID: 21300000, guid: 01d49a0b0f4bf414ab9a8ba08749d13a, type: 3}
+  placeholder: {fileID: 0}

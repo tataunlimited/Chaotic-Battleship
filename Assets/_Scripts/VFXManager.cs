@@ -12,6 +12,7 @@ public class VFXManager : MonoBehaviour
     [SerializeField] private AudioSource hitSound;
     [SerializeField] private AudioSource shipSunkSound;
     [SerializeField] private AudioSource fireSound;
+    [SerializeField] private AudioSource armorHitSound;
 
     private void Awake()
    {
@@ -23,7 +24,7 @@ public class VFXManager : MonoBehaviour
       Instantiate(explosionPrefab, position, Quaternion.identity);
    }
 
-   public void SpawnHitEffect(Vector3 vector3)
+   public void PlayHitEffect(Vector3 vector3)
    {
       Debug.Log("SHIP HIT!!!");
         if (hitSound != null)
@@ -47,5 +48,9 @@ public class VFXManager : MonoBehaviour
    public void PlayFireSound()
    {
        fireSound.Play();
+   }
+   public void PlayArmorHitSound()
+   {
+       armorHitSound.Play();
    }
 }

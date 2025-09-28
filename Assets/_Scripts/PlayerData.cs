@@ -11,14 +11,21 @@ public class PlayerData : MonoBehaviour
     // Core values
     public int waveNumber = 1;
     public int currentScore = 0;
-    public int currentRound = 1;
     public enum Phase {Placement, Attack, Movement}
     public Phase currentPhase;
+
+    public int numberSubsInDock = 0;
+    public int numberDestroyersInDock = 1;
+    public int numberCruisersInDock = 0;
+    public int numberBattleshipsInDock = 0;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     // NEW: score baseline captured at the start of each wave
     public int scoreAtWaveStart = 0;
+
+    //list of wave definitions that have been completed
+    
 
     // Upgrade data container
     [System.Serializable]
@@ -98,6 +105,8 @@ public class PlayerData : MonoBehaviour
             case UpgradeType.Armor:         lvl.Armor         = newLevel; break;
         }
     }
+
+    
 
     // Expose upgrades for SaveManager
     public IReadOnlyDictionary<ShipType, UpgradeLevels> UpgradesReadonly => upgrades;

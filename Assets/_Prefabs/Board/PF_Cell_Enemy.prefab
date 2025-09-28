@@ -100,6 +100,14 @@ PrefabInstance:
       propertyPath: normalColorEmission.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6017375407310850079, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+      propertyPath: nearMissColorEmission.b
+      value: 15.266155
+      objectReference: {fileID: 0}
+    - target: {fileID: 6017375407310850079, guid: dd7bd6dae625ccf4489bbfd015150d5c, type: 3}
+      propertyPath: nearMissColorEmission.g
+      value: 16.94838
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

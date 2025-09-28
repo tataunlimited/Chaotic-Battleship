@@ -28,6 +28,7 @@ namespace UI
 
             _boardController.ClearSelectedShip();
             _boardController.playerView.ResetMovementPhase();
+            SFXManager.Instance.PlayResetMovement();
         }
 
         public void UpdateShipMovementRemaining(int value)
@@ -41,7 +42,16 @@ namespace UI
             {
                 if (_boardController.SelectedShip.RotateLeft())
                 {
-                    _boardController.ClearSelectedShip();
+                    _boardController.SelectedShip.shipModel.orientation =
+                   _boardController.SelectedShip.shipModel.RotateLeft();
+
+                    // refresh highlights and movement
+                    _boardController.UpdatePlayerSelectedShip(_boardController.SelectedShip);
+
+                    if (!_boardController.SelectedShip.shipModel.canMove)
+                    {
+                        _boardController.ClearSelectedShip();
+                    }
                 }
             }
         }
@@ -52,7 +62,16 @@ namespace UI
             {
                 if (_boardController.SelectedShip.RotateRight())
                 {
-                    _boardController.ClearSelectedShip();
+                    _boardController.SelectedShip.shipModel.orientation =
+                   _boardController.SelectedShip.shipModel.RotateRight();
+
+                    // refresh highlights and movement
+                    _boardController.UpdatePlayerSelectedShip(_boardController.SelectedShip);
+
+                    if (!_boardController.SelectedShip.shipModel.canMove)
+                    {
+                        _boardController.ClearSelectedShip();
+                    }
                 }
             }
         }

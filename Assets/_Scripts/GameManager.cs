@@ -1,5 +1,7 @@
 using System.Collections;
 using Core.Board;
+using Core.Ship;
+using Core.Ship.Upgrade;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,13 @@ public class GameManager : MonoBehaviour
     public BoardController boardController;
     public CameraController cameraController;
 
+    public ArmorUpgradeSO armorUpgradeSO;
+    public AttackPatternUpgradeSO attackUpgradeSO;
+    public SpecialAttackUpgradeSO specialUpgradeSO;
+    public MovementUpgradeSO movementUpgradeSO;
+    public ShipInfoPanel playerShipInfoPanel;
+    public ShipInfoPanel enemyShipInfoPanel;
+
     public enum PHASE_STATE
     {
         START_ENCOUNTER,
@@ -20,8 +29,8 @@ public class GameManager : MonoBehaviour
         PLAYER_PLACING_SHIPS,
         PLAYER_FIRING,
         ENEMY_FIRING,
-        ENEMY_MOVING,
         PLAYER_MOVING,
+        ENEMY_MOVING,
         ENDWAVE
     }
 
@@ -38,11 +47,17 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverPanel;
     public GameObject NextWavePanel;
     public TextMeshProUGUI WaveCountText;
+    public GameObject terrain;
 
     private ShipPlacementUI _shipPlacementUI;
 
     public TMP_Text phaseText;
     public TMP_Text roundNumber;
+
+    public bool IsShipPlacementPhaseOver;
+    
+    private int _roundNumber = 1;
+    public int RoundNumber => _roundNumber;
 
     // set true when we load a snapshot so we can bypass placement UI gating
     private bool _loadedFromSnapshot = false;
@@ -67,7 +82,10 @@ public class GameManager : MonoBehaviour
         phaseText.text = playerData.currentPhase.ToString();
         Init();
 
-        roundNumber.text = playerData.currentRound.ToString();
+        roundNumber.text = _roundNumber.ToString();
+        ShipMovement.ResetEvents();
+        ShipMovement.OnShipMoveStarted += ()=>EnableNextPhaseButton(false);
+        ShipMovement.OnShipMoveEnded += ()=>EnableNextPhaseButton(true);
 
     }
 
@@ -93,10 +111,8 @@ public class GameManager : MonoBehaviour
         _shipPlacementUI = FindOne<ShipPlacementUI>();
         if (_shipPlacementUI != null)
         {
-            _shipPlacementUI.OnAllShipsSpawned += () =>
-            {
-                if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
-            };
+            _shipPlacementUI.OnAllShipsSpawned += (b)=> { IsShipPlacementPhaseOver = b; };
+            _shipPlacementUI.OnAllShipsSpawned += EnableNextPhaseButton;
         }
 
         // ---- Try to load a saved snapshot BEFORE spawning ships ----
@@ -137,6 +153,11 @@ public class GameManager : MonoBehaviour
         */
 
         StartEncounter();
+    }
+
+    private void EnableNextPhaseButton(bool value)
+    {
+        if (nextPhaseBtn != null) nextPhaseBtn.interactable = value;
     }
 
     public void Restart()
@@ -194,11 +215,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case PHASE_STATE.ENEMY_FIRING:
-                phaseState = PHASE_STATE.ENEMY_MOVING;
-                Debug.Log("Phase changed to: ENEMY_MOVING");
-                break;
-
-            case PHASE_STATE.ENEMY_MOVING:
                 phaseState = PHASE_STATE.PLAYER_MOVING;
                 Debug.Log("Phase changed to: PLAYER_MOVING");
                 break;
@@ -207,8 +223,12 @@ public class GameManager : MonoBehaviour
                 if (boardController != null)
                     boardController.ResetGridIndicators();
 
+                phaseState = PHASE_STATE.ENEMY_MOVING;
+                Debug.Log("Phase changed to: ENEMY_MOVING");
+                EnemyMoves();
+            
                 Debug.Log("Player Movement Confirmed");
-
+                boardController.UnfreezeFrozenShips();
                 // Count a turn when player completes movement
                 var scorerB = FindOne<GameManagerScore>();
                 if (scorerB != null) scorerB.RegisterPlayerTurn();
@@ -216,10 +236,13 @@ public class GameManager : MonoBehaviour
                 // Snapshot after player commits movement
                 SaveSnapshot();
 
-                phaseState = PHASE_STATE.PLAYER_FIRING;
-                Debug.Log("Phase changed to: PLAYER_FIRING");
                 if (nextPhaseBtn != null) nextPhaseBtn.interactable = false;
                 StartCoroutine(AttackingPhase());
+                break;
+
+            case PHASE_STATE.ENEMY_MOVING:
+                phaseState = PHASE_STATE.PLAYER_FIRING;
+                Debug.Log("Phase changed to: PLAYER_FIRING");
                 break;
 
             case PHASE_STATE.ENDWAVE:
@@ -236,7 +259,15 @@ public class GameManager : MonoBehaviour
         if (!enemyShipsPlaced)
         {
             Debug.Log("Placing enemy ships...");
-            if (boardController != null) boardController.SpawnEnemyShips();
+            //if the enemy wave spawner exists, spawn the wave
+            if (EnemyWaveSpawner.Instance != null)
+            {
+                EnemyWaveSpawner.Instance.SpawnWave();
+            }
+            else
+            {
+                Debug.LogError("EnemyWaveSpawner instance not found!");
+            }
             enemyShipsPlaced = true;
         }
 
@@ -289,15 +320,16 @@ public class GameManager : MonoBehaviour
             boardController.UpdateBoards();
             foreach (var ship in boardController.playerView.SpawnedShips)
             {
-                ship.Value.SetShipOnGrid(true);
+                ship.SetShipOnGrid(true);
             }
         }
         if (cameraController != null) cameraController.GoToAttackView();
 
-        phaseState = PHASE_STATE.PLAYER_FIRING;
-        Debug.Log("Phase changed to: PLAYER_FIRING");
-        StartCoroutine(AttackingPhase());
-        if (nextPhaseBtn != null) nextPhaseBtn.interactable = false;
+        PlayerMoves();
+
+        if (cameraController != null) cameraController.GoToDefaultView();
+        if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
+        Debug.Log("nextPhaseBtn.interactable = true");
 
         // Snapshot at battle start
         SaveSnapshot();
@@ -331,6 +363,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player Fired!");
 
         yield return new WaitForSeconds(.5f);
+        Debug.Log("Phase changed to: ENEMY_FIRING");
         phaseState = PHASE_STATE.ENEMY_FIRING;
 
         // Enemy fires
@@ -351,8 +384,23 @@ public class GameManager : MonoBehaviour
 
         if (boardController != null)
         {
-            winConditionMet = boardController.enemyView.AllShipsAreDestroyed();
-            loseConditionMet = boardController.playerView.AllShipsAreDestroyed();
+            if (_roundNumber < 10)
+            {
+                winConditionMet = boardController.enemyView.AllShipsAreDestroyed();
+                loseConditionMet = boardController.playerView.AllShipsAreDestroyed();
+            }
+            else
+            {
+                var ratio = boardController.enemyView.ComputeTotalHealth()/boardController.playerView.ComputeTotalHealth();
+                if (ratio > 1)
+                {
+                    loseConditionMet = true;
+                }
+                else
+                {
+                    winConditionMet = true;
+                }
+            }
         }
 
         if (winConditionMet)
@@ -378,16 +426,13 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("Wave end conditions not met, continuing...");
-            phaseState = PHASE_STATE.ENEMY_MOVING;
-            Debug.Log("Phase changed to: ENEMY_MOVING");
+            PlayerMoves();
 
-            EnemyMoves();
             if (cameraController != null) cameraController.GoToDefaultView();
             if (nextPhaseBtn != null) nextPhaseBtn.interactable = true;
             Debug.Log("nextPhaseBtn.interactable = true");
-            var playerData = PlayerData.Instance;
-            playerData.currentRound++;
-            roundNumber.text = playerData.currentRound.ToString();
+            _roundNumber++;
+            roundNumber.text = _roundNumber.ToString();
         }
     }
 
@@ -395,9 +440,6 @@ public class GameManager : MonoBehaviour
     {
         if (boardController != null) boardController.UpdateEnemyShips();
         Debug.Log("Enemy is moving...");
-        phaseState = PHASE_STATE.PLAYER_MOVING;
-        Debug.Log("Phase changed to: PLAYER_MOVING");
-        PlayerMoves();
 
         // Snapshot after enemy movement (optional but useful)
         SaveSnapshot();
@@ -411,7 +453,8 @@ public class GameManager : MonoBehaviour
     {
         boardController.playerView.SaveShipLocations();     // saves all of the ships locations/rotations in case reset button is pressed
         boardController.playerView.BeginMovementPhase();    // resets their ability to move and rotate
-
+        phaseState = PHASE_STATE.PLAYER_MOVING;
+        phaseText.text = nameof(PlayerData.Phase.Movement);
         if (boardController != null) boardController.playerView.SaveShipLocations();
         Debug.Log("Waiting for Player to move...");
     }
@@ -471,10 +514,40 @@ public class GameManager : MonoBehaviour
 
         phaseState = PHASE_STATE.START_ENCOUNTER;
 
+        // Move the terrain when a new wave starts
+        StartCoroutine(MoveTerrain(-5f, 0.5f));
+
         // Persist new wave number; we'll snapshot after spawn
         SaveManager.SaveGame();
 
         // Immediately kick off the new encounter (no scene reload needed)
         StartEncounter();
     }
+
+    private IEnumerator MoveTerrain(float deltaZ, float duration)
+    {
+        if (terrain == null)
+            yield break;
+
+        Vector3 start = terrain.transform.position;
+        Vector3 end = start + new Vector3(0f, 0f, deltaZ);
+
+        if (duration <= 0f)
+        {
+            terrain.transform.position = end;
+            yield break;
+        }
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float frac = Mathf.Clamp01(t / duration);
+            terrain.transform.position = Vector3.Lerp(start, end, frac);
+            yield return null;
+        }
+
+        terrain.transform.position = end;
+    }
+
 }

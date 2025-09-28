@@ -5,6 +5,9 @@ using Core.GridSystem;
 using Core.Ship;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.Serialization;
+using Utility;
 
 
 namespace Core.Board
@@ -19,16 +22,16 @@ namespace Core.Board
         public Action<bool> OnShipSelected;
 
         public List<ShipView> shipPrefabs;
-        public ShipView SelectedShip {get; private set;}
-        
+        public ShipView SelectedShip { get; private set; }
+
         private Camera _camera;
         public LayerMask shipLayer;
-
-
-        private EnemyWaveManager _enemyWaveManager;
-        public static BoardController Instance;
-
+        // exposing this for debugging purposes
        
+        public EnemyWaveManager enemyWaveManager;
+        public static BoardController Instance;
+        //SFX
+
         void Awake()
         {
             _camera = Camera.main;
@@ -42,31 +45,33 @@ namespace Core.Board
             movementCellManager.ClearCells();
             SelectedShip = null;
         }
-
-        private ShipView SpawnShip(ShipType shipType, GridPos pos, Orientation orientation, BoardView board)
+        
+        private ShipView SpawnShip(BoardView board, ShipModel shipModel)
         {
-            var prefab = shipPrefabs.Find(s => s.shipModel.type == shipType);
-            if (prefab == null) { Debug.LogError($"Ship type {shipType} not found"); return null; }
+            var prefab = shipPrefabs.Find(s => s.shipModel.type == shipModel.type);
+            if (prefab == null) { Debug.LogError($"Ship type {shipModel.type} not found"); return null; }
 
-            if (board.TryPlaceShip(prefab, pos, orientation, out var instance))
+            if (board.TryPlaceShip(prefab, shipModel, out var instance))
                 return instance;
 
             Debug.LogError("TryPlaceShip failed");
             return null;
         }
-
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && 
+                (GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_PLACING_SHIPS ||
+                 GameManager.instance.phaseState == GameManager.PHASE_STATE.PLAYER_MOVING))
             {
                 if (TryHitBoard(enemyView, out var eCell))  // left-click fires at enemy
                 {
                     // if (enemyView.Model.TryFire(eCell, out _))
                     //     enemyView.Tint(eCell);
-                    if (SelectedShip != null && SelectedShip.shipModel.type == ShipType.Destroyer)
+                    if (SelectedShip != null && SelectedShip.shipModel.CanTarget())
                     {
                         SelectedShip.shipModel.reserved = eCell;
-                        highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
+                        HighlightAttackArea();
+                        //highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
                     }
                 }
                 if (TrySelectShip(out var shipView)) // right-click to test on player
@@ -79,14 +84,6 @@ namespace Core.Board
             {
                 ClearSelectedShip();
             }
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                foreach (var enemyShip in enemyView.SpawnedShips)
-                {
-                    enemyShip.Value.ApplyDamage(100);
-                }
-            }
-
 
         }
 
@@ -115,22 +112,29 @@ namespace Core.Board
                     if (SelectedShip.UpdatePosition(cell, shipView.shipModel.orientation))
                     {
                         shipView.shipModel.UpdateMovementStatus();
-                        ClearSelectedShip();
+                        UpdatePlayerSelectedShip(SelectedShip);
+                        HighlightAttackArea();
                     }
-                    
+
                 });
             }
-            if(playerView.Model.InBounds(SelectedShip.shipModel.root))
-                highlightAttackArea.SpawnHighlights(SelectedShip.shipModel.GetPossibleAreaOfAttack(enemyView, out var selectedCoords, out var chance), selectedCoords, chance);
-            
+
+            HighlightAttackArea();
+
             OnShipSelected?.Invoke(true);
-
-
-            // enable/disable the rotate buttons
+            
             GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
             GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
         }
 
+        public void HighlightAttackArea()
+        {
+            if (SelectedShip == null)
+            {
+                return;
+            }
+            highlightAttackArea.SpawnHighlights(SelectedShip.shipModel);
+        }
         public void ClearSelectedShip()
         {
             if (SelectedShip != null)
@@ -144,7 +148,12 @@ namespace Core.Board
 
             foreach (var ship in playerView.SpawnedShips)
             {
-                ship.Value.DeselectShip();
+                if (ship == null)
+                {
+                    
+                    continue;
+                }
+                ship.DeselectShip();
             }
         }
 
@@ -171,61 +180,66 @@ namespace Core.Board
             enemyView.BeginMovementPhase();
 
             EnsureEnemyWaveManager();
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            _enemyWaveManager.RandomlyMoveShips(enemyView);
+            // update the enemy ship locations and orientations, and place them on the enemyView board
+            enemyWaveManager.MoveEnemyShips(enemyView, playerView);
 
             // use revealShips for testing purposes to show where the enemy ships are placed
             if (enemyView.revealShips)
                 enemyView.RevealShips();
         }
 
-        public void SpawnEnemyShips()
+        // public void SpawnEnemyShips()
+        // {
+        //     _enemyWaveManager = new EnemyWaveManager();
+
+        //     // DEBUG ONLY: do not check in with the next 2 lines
+        //     _enemyWaveManager.intelligenceLevel = 0;
+        //     Debug.Log("FOR DEBUGGING: _enemyWaveManager.intelligenceLevel set to " + _enemyWaveManager.intelligenceLevel);
+
+        //     List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
+
+        //     // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+        //     _enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
+
+        //     // Note: the designer said not to move intelligently during enemy placement
+        //     // Give the AI a chance to move to "smarter" locations
+        //     //_enemyWaveManager.MoveEnemyShips(enemyView, playerView);
+
+        //     enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
+        //     foreach (ShipModel ship in enemyShips)
+        //         SpawnShip(ship.type, ship.root, ship.orientation, enemyView);
+
+        //     // use revealShips for testing purposes to show where the enemy ships are placed
+        //     if (enemyView.revealShips)
+        //         enemyView.RevealShips();
+        // }
+        
+        public ShipView SpawnPlayerShip(ShipModel shipModel)
         {
-            _enemyWaveManager = new EnemyWaveManager();
-            List<ShipModel> enemyShips = _enemyWaveManager.CreateDefaultWaveOfShips();  // create a default list of enemy ships
-
-            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
-            _enemyWaveManager.RandomlySetShipsLocations(enemyView, enemyShips);
-
-            enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
-            foreach (ShipModel ship in enemyShips)
-                SpawnShip(ship.type, ship.root, ship.orientation, enemyView);
-
-            // use revealShips for testing purposes to show where the enemy ships are placed
-            if (enemyView.revealShips)
-                enemyView.RevealShips();
+            return SpawnShip(playerView, shipModel);
         }
-
-        public ShipView SpawnPlayerShip(ShipType shipType)
-        {
-            return shipType switch
-            {
-                ShipType.Submarine => SpawnShip(ShipType.Submarine, new GridPos(-1, 1), Orientation.North, playerView),
-                ShipType.Cruiser => SpawnShip(ShipType.Cruiser, new GridPos(-1, 3), Orientation.North, playerView),
-                ShipType.Destroyer => SpawnShip(ShipType.Destroyer, new GridPos(-1, 2), Orientation.North, playerView),
-                ShipType.Battleship => SpawnShip(ShipType.Battleship, new GridPos(-1, 4), Orientation.North, playerView),
-                _ => throw new ArgumentOutOfRangeException(nameof(shipType), shipType, null),
-            };
-        }
-
         public IEnumerator PlayerAttack()
         {
             foreach (var ship in playerView.SpawnedShips)
             {
-                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                yield return StartCoroutine(ship.Value.AttackSequence(enemyView));
+                if (ship.shipModel.IsSunk) continue;  // skip sunk ships
+                yield return StartCoroutine(ship.AttackSequence(enemyView));
                 yield return new WaitForSeconds(0.5f);
             }
+            playerView.Model.UpdateScorchedCells();
         }
-        
+
         public IEnumerator EnemyAttack()
         {
-            foreach (var ship in enemyView.SpawnedShips)
+            var randomizedEnemyShipList = enemyView.SpawnedShips;
+            randomizedEnemyShipList.Shuffle();
+            foreach (var ship in randomizedEnemyShipList)
             {
-                if (ship.Value.shipModel.IsSunk) continue;  // skip sunk ships
-                yield return StartCoroutine(ship.Value.AttackSequence(playerView));
+                if (ship.shipModel.IsSunk) continue;  // skip sunk ships
+                yield return StartCoroutine(ship.AttackSequence(playerView));
                 yield return new WaitForSeconds(0.5f);
             }
+            enemyView.Model.UpdateScorchedCells();
         }
 
         public void ResetGridIndicators()
@@ -237,13 +251,13 @@ namespace Core.Board
         public void UpdateBoards()
         {
             playerView.UpdateBoard();
-            
+
         }
 
         public void EnsureEnemyWaveManager()
         {
-            if (_enemyWaveManager == null)
-                _enemyWaveManager = new EnemyWaveManager();
+            if (enemyWaveManager == null)
+                enemyWaveManager = new EnemyWaveManager();
         }
 
 
@@ -251,5 +265,39 @@ namespace Core.Board
         {
             ClearSelectedShip();
         }
+
+        public void UnfreezeFrozenShips()
+        {
+            enemyView.Unfreeze();
+            playerView.Unfreeze();
+        }
+
+        public void SpawnEnemyShipsFromModels(List<ShipModel> ships, bool reveal = false)
+        {
+            if (ships == null || ships.Count == 0)
+            {
+                Debug.LogWarning("SpawnEnemyShipsFromModels: No ships to spawn.");
+                return;
+            }
+
+            // randomly set the enemy ship locations and orientations, and place them on the enemyView board
+            enemyWaveManager.RandomlySetShipsLocations(enemyView, ships);
+            enemyView.Model.ResetAllCells();    // have to clear the previously set BoardModel in order to SpawnShips in those locations
+            foreach (ShipModel ship in ships)
+                SpawnShip(enemyView, ship);
+
+            // use revealShips for testing purposes to show where the enemy ships are placed
+            if (reveal || enemyView.revealShips)
+            {
+                enemyView.RevealShips();
+            }
+        }
+        
+        public void SetIntelligenceLevel(int level)
+        {
+            EnsureEnemyWaveManager();
+            enemyWaveManager.intelligenceLevel = Mathf.Clamp(level, 0, 3);
+        }
+
     }
 }

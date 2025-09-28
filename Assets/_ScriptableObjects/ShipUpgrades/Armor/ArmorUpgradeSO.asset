@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8169a9fc396f245913da75fe89824d, type: 3}
+  m_Name: ArmorUpgradeSO
+  m_EditorClassIdentifier: 
+  Upgrades:
+  - ShipType: 2
+    ArmorUpgrades:
+    - Cost: 1300
+      Icon: {fileID: 0}
+      UpgradeName: Battleship Armor Upgrade I
+      Description: 'Ignore first 2 hits '
+      ArmorPoints: 2
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 1800
+      Icon: {fileID: 0}
+      UpgradeName: Battleship Armor Upgrade II
+      Description: 50% chance to ignore hits from  destroyer always, ignore first
+        3 hits
+      ArmorPoints: 3
+      DestroyerArmorChance: 0.5
+      CruiserArmorChance: 0
+    - Cost: 2300
+      Icon: {fileID: 0}
+      UpgradeName: Battleship Armor Upgrade III
+      Description: 50% chance to ignore hits from cruisers always, 75% chance to
+        ignore hits from destroyers always, ignore the first 3 hits
+      ArmorPoints: 3
+      DestroyerArmorChance: 0.75
+      CruiserArmorChance: 0.5
+  - ShipType: 3
+    ArmorUpgrades:
+    - Cost: 1200
+      Icon: {fileID: 0}
+      UpgradeName: Cruiser Armor Upgrade I
+      Description: Ignores first hit
+      ArmorPoints: 1
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 1700
+      Icon: {fileID: 0}
+      UpgradeName: Cruiser Armor Upgrade II
+      Description: Ignores thr first 2 hits
+      ArmorPoints: 2
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 2200
+      Icon: {fileID: 0}
+      UpgradeName: Cruiser Armor Upgrade III
+      Description: 50% chance to ignore hits from destroyers always, Ignore first
+        2 hits
+      ArmorPoints: 2
+      DestroyerArmorChance: 0.5
+      CruiserArmorChance: 0
+  - ShipType: 1
+    ArmorUpgrades:
+    - Cost: 1100
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Armor Upgrade I
+      Description: 50% chance to ignore first hit
+      ArmorPoints: 0.5
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 1600
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Armor Upgrade II
+      Description: Ignore first hit
+      ArmorPoints: 1
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 2100
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Armor Upgrade III
+      Description: Ignore first 2 hits
+      ArmorPoints: 2
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+  - ShipType: 4
+    ArmorUpgrades:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Sub Armor Upgrade I
+      Description: 50% chance to ignore the first hit
+      ArmorPoints: 0.5
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: Sub Armor Upgrade II
+      Description: Ignores first hit
+      ArmorPoints: 1
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 2000
+      Icon: {fileID: 0}
+      UpgradeName: Sub Armor Upgrade III
+      Description: Ignores first hit, 50% chance to ignore the second hit
+      ArmorPoints: 1.5
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0

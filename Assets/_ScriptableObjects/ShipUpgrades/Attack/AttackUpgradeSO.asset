@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2ab7477753ccfd4aaf9c7604dfe9eac, type: 3}
+  m_Name: AttackUpgradeSO
+  m_EditorClassIdentifier: 
+  attackUpgrades:
+  - ShipType: 1
+    AttackUpgrades:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Attack Upgrade I
+      Description: 'Hits targeted grid, and 1 additional grid within radius 1 (ignoring
+        target point)
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Attack Upgrade II
+      Description: 'Any ship hit on the targeted grid does not fire during the next
+        firing phase
+
+'
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Attack Upgrade III
+      Description: 'Fires a torpedo every 3 rounds 90 degrees clockwise to the bow
+        direction
+
+'
+  - ShipType: 4
+    AttackUpgrades:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Sub Attack Upgrade I
+      Description: '25% chance to deal 2 damage
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: Sub Attack Upgrade II
+      Description: '50% chance to deal 2 damage
+
+'
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Sub Attack Upgrade III
+      Description: 'Fires 2 torpedoes, 1 forward, 1 aft
+
+'
+  - ShipType: 3
+    AttackUpgrades:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Cruiser Attack Upgrade I
+      Description: 'Hits 5/9 in targeted area
+
+
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: Cruiser Attack Upgrade II
+      Description: 'Successful hits prevents those ships from moving in the next
+        round during Movement '
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Cruiser Attack Upgrade III
+      Description: 'Destroyers take 1 additional damage. Hits 7/9 in targeted area
+
+
+
+'
+  - ShipType: 2
+    AttackUpgrades:
+    - Cost: 1000
+      Icon: {fileID: 0}
+      UpgradeName: Battleship Attack Upgrade I
+      Description: 'Fires at 6 random spots
+
+
+
+'
+    - Cost: 1500
+      Icon: {fileID: 0}
+      UpgradeName: Battleship Attack Upgrade II
+      Description: Fires at 8 random spots
+    - Cost: 3000
+      Icon: {fileID: 0}
+      UpgradeName: Battleship Attack Upgrade III
+      Description: 'If the salvo completely missed, fire an additional salvo
+
+'
