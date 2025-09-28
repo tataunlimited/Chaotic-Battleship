@@ -20,6 +20,7 @@ public class SFXManager : MonoBehaviour
     public AudioSource shipSelectMovementPhaseSFX;
     public AudioSource shipGridConfirmMovementPhaseSFX;
     public AudioSource shipConfirmOnGridSFX; 
+    public AudioSource resetButtonSFX; 
 
 
     // Shared PlayerPrefs keys (used by Main Menu & In-Game)
@@ -123,5 +124,10 @@ public class SFXManager : MonoBehaviour
     {
         if (linear <= 0.0001f) return -80f; // floor to avoid -Inf
         return Mathf.Log10(Mathf.Clamp(linear, 0.0001f, 1f)) * 20f;
+    }
+
+    public void PlayResetMovement()
+    {
+        resetButtonSFX.Play();
     }
 }
