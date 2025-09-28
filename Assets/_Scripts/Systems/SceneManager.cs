@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -11,58 +12,77 @@ public class SceneManager : MonoBehaviour
     public static SceneManager Instance { get; private set; }
 
     [System.Serializable]
-    public struct SceneMap { public SceneType type; public string sceneName; }
+    public struct SceneMap
+    {
+        public SceneType type;
+        public string sceneName;
+    }
 
-    [Header("Scene Name Mapping")]
-    [SerializeField]
+    [Header("Scene Name Mapping")] [SerializeField]
     private SceneMap[] scenes =
     {
-        new SceneMap{ type = SceneType.MainMenu,  sceneName = "MainMenu" },
-        new SceneMap{ type = SceneType.Game,      sceneName = "Game" },
-        new SceneMap{ type = SceneType.Credits,   sceneName = "Credits" },
-        new SceneMap{ type = SceneType.Harbor,    sceneName = "Harbor" },
+        new SceneMap { type = SceneType.MainMenu, sceneName = "MainMenu" },
+        new SceneMap { type = SceneType.Game, sceneName = "Game" },
+        new SceneMap { type = SceneType.Credits, sceneName = "Credits" },
+        new SceneMap { type = SceneType.Harbor, sceneName = "Harbor" },
     };
 
-    [Header("Transition UI")]
-    [SerializeField] private RectTransform transitionImage;
+    [Header("Transition UI")] [SerializeField]
+    private RectTransform leftDoor;
+
+    [SerializeField] private RectTransform rightDoor;
     [SerializeField] private float slideDuration = 2.0f;
     [SerializeField] private SlideFrom slideFrom = SlideFrom.Right;
+    
 
-    private Vector2 offscreenPos;
-    private readonly Vector2 centerPos = Vector2.zero;
+    private readonly Vector2 _leftDoorOpenPos = new(-960f, 0f);
+    private readonly Vector2 _leftDoorClosePos = new(0, 0f);
+    private readonly Vector2 _rightDoorOpenPos = new(0, 0f);
+    private readonly Vector2 _rightDoorClosePos = new(-960f, 0f);
 
     public event Action<SceneType> OnSceneLoaded;
-    public enum SlideFrom { Left, Right, Top, Bottom }
+
+    public enum SlideFrom
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
 
     void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        SetupImage();
+        ToggleDoors(true);
     }
 
-    void SetupImage()
+    void Start()
     {
-        if (!transitionImage) { Debug.LogError("[SceneManager] Transition image missing!"); return; }
-
-        var parentRT = transitionImage.parent as RectTransform;
-        var pr = parentRT ? parentRT.rect : new Rect(0, 0, Screen.width, Screen.height);
-        transitionImage.anchorMin = transitionImage.anchorMax = new Vector2(0.5f, 0.5f);
-        transitionImage.pivot = new Vector2(0.5f, 0.5f);
-        transitionImage.sizeDelta = new Vector2(pr.width, pr.height);
-
-        float w = pr.width, h = pr.height;
-        offscreenPos = slideFrom switch
+        if (OnSceneLoaded != null)
+            OnSceneLoaded(GetCurrentScene());
+    }
+    public SceneType GetCurrentScene()
+    {
+        var sceneName = USceneManager.GetActiveScene().name;
+        return GetSceneType(sceneName);
+    }
+    private SceneType GetSceneType(string sceneName)
+    {
+        foreach (var scene in scenes)
         {
-            SlideFrom.Left => new Vector2(-w, 0),
-            SlideFrom.Right => new Vector2(w, 0),
-            SlideFrom.Top => new Vector2(0, h),
-            _ => new Vector2(0, -h),
-        };
-
-        transitionImage.anchoredPosition = offscreenPos;
+            if (scene.sceneName == sceneName)
+            {
+                return scene.type;
+            }
+        }
+        return SceneType.MainMenu;
     }
     public void LoadScene(SceneType type)
     {
@@ -79,11 +99,14 @@ public class SceneManager : MonoBehaviour
         {
             Debug.Log($"[SceneManager] Instant load: {current} ? {target}");
             USceneManager.LoadScene(target, LoadSceneMode.Single);
+            OnSceneLoaded?.Invoke(GetSceneType(target));
+
             return;
         }
 
         StartCoroutine(LoadRoutine(target));
     }
+
     bool ShouldBeInstant(string from, string to)
     {
         if (string.IsNullOrEmpty(from) || string.IsNullOrEmpty(to))
@@ -104,12 +127,18 @@ public class SceneManager : MonoBehaviour
     string GetSceneName(SceneType type)
     {
         for (int i = 0; i < scenes.Length; i++)
-            if (scenes[i].type == type) return scenes[i].sceneName;
+            if (scenes[i].type == type)
+                return scenes[i].sceneName;
 
         Debug.LogError($"[SceneManager] No mapping found for {type}");
         return null;
     }
 
+    private void ToggleDoors(bool open)
+    {
+        leftDoor.DOAnchorPos(open? _leftDoorOpenPos : _leftDoorClosePos, slideDuration);
+        rightDoor.DOAnchorPos(open? _rightDoorOpenPos : _rightDoorClosePos, slideDuration);
+    }
     IEnumerator LoadRoutine(string sceneName)
     {
         if (string.IsNullOrEmpty(sceneName))
@@ -118,7 +147,8 @@ public class SceneManager : MonoBehaviour
             yield break;
         }
 
-        yield return Slide(transitionImage.anchoredPosition, centerPos, slideDuration);
+        ToggleDoors(false);
+        yield return new WaitForSecondsRealtime(slideDuration);
 
         var op = USceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         op.allowSceneActivation = false;
@@ -133,27 +163,13 @@ public class SceneManager : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
         yield return new WaitForEndOfFrame();
+        OnSceneLoaded?.Invoke(GetSceneType(sceneName));
 
-        yield return new WaitForSecondsRealtime(3f);
-
-        yield return Slide(centerPos, offscreenPos, slideDuration);
+        yield return new WaitForSecondsRealtime(2f);
+        ToggleDoors(true);
+        yield return new WaitForSecondsRealtime(slideDuration);
     }
-
-    IEnumerator Slide(Vector2 from, Vector2 to, float dur)
-    {
-        float t = 0f;
-        transitionImage.anchoredPosition = from;
-
-        while (t < dur)
-        {
-            t += Time.unscaledDeltaTime;
-            float u = Mathf.Clamp01(t / dur);
-            transitionImage.anchoredPosition = Vector2.LerpUnclamped(from, to, u);
-            yield return null;
-        }
-
-        transitionImage.anchoredPosition = to;
-    }
+    
 
     public void ReloadActiveScene()
     {

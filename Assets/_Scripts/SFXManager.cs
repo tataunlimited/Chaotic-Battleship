@@ -47,24 +47,32 @@ public class SFXManager : MonoBehaviour
 
     private void PlayLevelMusic(SceneTypes.SceneType sceneType)
     {
-        mainMenuMusic.Stop();
-        battleMusic.Stop();
-        creditScene.Stop();
         switch (sceneType)
         {
             case SceneTypes.SceneType.MainMenu:
-                mainMenuMusic.Play();
+                StopMusic();
+                mainMenuMusic.Play(); 
                 break;
-            case SceneTypes.SceneType.Game:
+            case SceneTypes.SceneType.Game:    
+                StopMusic();
                 battleMusic.Play();
                 break;
             case SceneTypes.SceneType.Credits:
+                StopMusic();
                 creditScene.Play();
                 break;
             case SceneTypes.SceneType.Harbor:
+                StopMusic();
                 break;
 
         }
+    }
+
+    private void StopMusic()
+    {
+        mainMenuMusic.Stop();
+        battleMusic.Stop();
+        creditScene.Stop();
     }
 
     // Called by UI sliders (linear 0..1)
