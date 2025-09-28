@@ -1,5 +1,6 @@
-<align=center>
-<size=56><b>CHAOTIC BATTLESHIPS</b></size>
+<align="center">
+<size=56><b>Waves of War</b></size>
+
 
 
 
@@ -8,126 +9,188 @@
 
 <size=52><b>Credits</b></size>
 
+<size=46><b>Team Members</b></size>
 
+<size=32>
+Connor Moran — Lead Design, Project Manager
 
 
+Andy M. — Project Manager
 
 
+Robert Bridges — QA, Sound
 
-<size=46><b>Leadership / PM</b></size>
 
+Felipe Ramos — UI Art, Terrain Design
 
 
-<size=32>Andy M. — Dev Manager
+Cristina Mateo — Producer, Sound Design
 
-Cristina Mateo — Producer</size>
 
+Jason Mahar — Lead QA, Programmer
 
 
-<size=46><b>Core Programming Team</b></size>
+James Douglas — Level Design, UI, Audio
 
 
+Yang Yang — 3D Modeling, Sculpting
 
-<size=32>Connor Moran — Programmer / Designer
 
-Robert Bridges — Programmer
+Taher Samadi Shal — Lead Programmer
 
-Jason Mahar — Programmer / QA
 
-Taher Samadi Shal — Programmer / System Designer
+Prashanna Kandel — Programmer
 
-Trayvion Coats — Programmer</size>
 
+Ray Humphrey — Programmer
 
 
-<size=46><b>Art Team</b></size>
+Trayvion Coats — QA, Programmer
 
 
-
-<size=32>Felipe Ramos — Artist / Programmer
-
-Yang Yang — Artist
-
-Cristina Mateo — Producer / Artist</size>
-
-
-
-<size=46><b>Design & UX</b></size>
-
-
-
-<size=32>James Douglas — Designer / UI (Lead)
-
-Felipe Ramos — Support (Art)</size>
-
-
-
-<size=46><b>QA & Polish</b></size>
-
-
-
-<size=32>Jason Mahar — Lead QA
-
-All Programmers — Support in cycles</size>
-
-
-
-<size=46><b>Team Members & Skills</b></size>
-
-
-
-<size=32>Connor Moran — Unity, C#
-
-Robert Bridges — Unity, C#, Blueprint
-
-Felipe Ramos — Unity (main), Unreal (secondary), C#, 3D Modeling, 2D Art
-
-Cristina Mateo — Producer, Art (Prop/Environment), Texture/UV, Docs/Research
-
-Jason Mahar — C#/C++, Unity, QA, some Unreal
-
-James Douglas — Level Design, UI/UX, Audio, Unreal, some Unity
-
-Yang Yang — Modeling, Sculpting (ZBrush), Texture, UV, Character Art, Unreal
-
-Taher Samadi Shal — Designer, Unity, Unreal, C#, C++
-
-Prashanna Kandel — C#, C++, Java, Python
-
-Ray Humphrey — Unity, C#, Java, Python, Unreal, Blueprint
-
-Trayvion Coats — C#, C++, Unity, Unreal
-
-Parthan Muralidharan — C++, Java, some Unity</size>
-
-
-
-<size=46><b>Music</b></size>
-
-
-
-<size=32>Main Menu Theme — Robert Bridges
-
-Credits Theme — Robert Bridges</size>
-
-
-
-
+</size>
 
 <size=46><b>Special Thanks</b></size>
 
+<size=56>Roy Papp, Professor</size>
 
 
+<size=56>Gerard Merritt, Professor</size>
 
-
-<size=56>Our Class & Faculty • Friends & Family • Community Playtesters</size>
 
 
 
 
 <size=42><i>Made with dedication. Thanks for playing!</i></size>
 
+<size=42>© 2025 Waves of War Team</size>
 
 
-<size=42>© 2025 Chaotic Battleships Team</size>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </align>
