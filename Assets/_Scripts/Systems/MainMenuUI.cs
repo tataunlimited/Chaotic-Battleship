@@ -6,9 +6,9 @@ using static SceneTypes;
 
 public class MainMenuUI : MonoBehaviour
 {
-    public void OnPlay()
-    {
-        SceneManager.Instance.LoadScene(SceneType.Game);
+    public void OnPlay() 
+    { 
+        SceneManager.Instance.LoadScene(SceneType.Game); 
     }
     public void OnMainMenu()
     {
