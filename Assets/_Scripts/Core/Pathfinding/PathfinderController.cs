@@ -10,10 +10,12 @@ namespace Core.Pathfinding
     /// Manages pathfinding requests by considering the current board state.
     /// This class acts as a bridge between the generic Pathfinder and the game's BoardModel.
     /// </summary>
+    /// 
     public class PathfinderController : MonoBehaviour
     {
         public static PathfinderController Instance { get; private set; }
 
+        //SFX
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -37,9 +39,9 @@ namespace Core.Pathfinding
         public List<GridPos> FindPathForShip(BoardView boardView, ShipModel movingShip, GridPos start, GridPos end)
         {
             var unwalkablePositions = new HashSet<GridPos>();
-            
+            SFXManager.Instance.PlayShipGridConfirmMovementPhaseSFX();
             // Add all currently occupied ship cells to the unwalkable set
-            foreach (var shipView in boardView.SpawnedShips.Values)
+            foreach (var shipView in boardView.SpawnedShips)
             {
                 // IMPORTANT: Ignore the ship that is currently trying to move
                 if (shipView.shipModel.id == movingShip.id)

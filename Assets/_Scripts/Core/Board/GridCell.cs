@@ -9,46 +9,42 @@ namespace Core.Board
         private static readonly int Color1 = Shader.PropertyToID("_BaseColor");
         private static readonly int Color2 = Shader.PropertyToID("_Color");
         private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
-        
+
         public Renderer frame;
         public Renderer center;
 
-        [Header("Default Color")]
-        public Color normalColor;
-        [ColorUsage(true, true)] 
-        public Color normalColorEmission;
-        [Header("Near Miss Color")]
-        public Color nearMissColor;
-        [ColorUsage(true, true)] 
-        public Color nearMissColorEmission;
-        [Header("Hit Color")]
-        public Color hitColor;
-        [ColorUsage(true, true)] 
-        public Color hitColorEmission;
-        [Header("Miss Color")]
-        public Color missColor;
-        [ColorUsage(true, true)] 
-        public Color missColorEmission;
-        
+        [Header("Default Color")] public Color normalColor;
+        [ColorUsage(true, true)] public Color normalColorEmission;
+        [Header("Near Miss Color")] public Color nearMissColor;
+        [ColorUsage(true, true)] public Color nearMissColorEmission;
+        [Header("Hit Color")] public Color hitColor;
+        [ColorUsage(true, true)] public Color hitColorEmission;
+        [Header("Miss Color")] public Color missColor;
+        [ColorUsage(true, true)] public Color missColorEmission;
 
 
-
-        public void SetColor(CellState state)
+        public void SetColor(CellState state, bool isScorched)
         {
             var color = GetColor(state);
-            if(frame.material.HasColor(Color1))
+            if (frame.material.HasColor(Color1))
                 frame.material.SetColor(Color1, color);
-            if(frame.material.HasColor(EmissionColor))
+            if (frame.material.HasColor(EmissionColor))
                 frame.material.SetColor(EmissionColor, GetEmissionColor(state));
             center.gameObject.SetActive(state != CellState.Empty && state != CellState.Ship);
-            color = new Color(color.r, color.g, color.b, 0.5f);
-            center.material.SetColor(Color2,color); 
 
+            if (isScorched)
+            {
+                color = Color.black;
+                center.gameObject.SetActive(true);
+            }
+
+            color = new Color(color.r, color.g, color.b, 0.5f);
+            center.material.SetColor(Color2, color);
         }
-        
+
         private Color GetColor(CellState state)
         {
-           switch (state)
+            switch (state)
             {
                 case CellState.Hit:
                     return hitColor;
@@ -59,12 +55,10 @@ namespace Core.Board
             }
 
             return normalColor;
-
         }
 
         private Color GetEmissionColor(CellState state)
         {
-            
             switch (state)
             {
                 case CellState.Hit:
@@ -74,8 +68,8 @@ namespace Core.Board
                 case CellState.Miss:
                     return missColorEmission;
             }
-            return normalColorEmission;
 
+            return normalColorEmission;
         }
     }
 }

@@ -14,43 +14,66 @@ namespace Core.Board
         public Color chanceColor;
         public Color selectionColor;
         
-        public List<Image> cellImages = new List<Image>();
+        private Dictionary<GridPos, Image> _cellHighlights = new();
         
-        public void SpawnHighlights(List<GridPos> positions, List<GridPos> selectedCoords, bool chance = false)
+
+
+        public void SpawnHighlights(ShipModel shipModel)
         {
+            var aot = shipModel.GetPossibleAreaOfAttack(BoardController.Instance.enemyView);
             ClearHighlight();
 
-            var cColor = BoardController.Instance.SelectedShip.shipModel.type == ShipType.Destroyer
-                ? selectionColor
-                : chanceColor;
-            
-            foreach (var gridPos in positions)
+            foreach (var targetableCell in aot.TargetableCells)
             {
                 var img = Instantiate(cellImage, transform);
-
-                img.color = chance ? cColor : defaultColor;
-                
-                if (selectedCoords.Contains(gridPos))
-                {
-                    img.color = defaultColor;
-                }
-                img.GetComponent<RectTransform>().anchoredPosition = new Vector2(gridPos.x, gridPos.y);
-                cellImages.Add(img);
+                img.color = selectionColor;
+                SetCellPosition(targetableCell, img);
+                _cellHighlights.Add(targetableCell, img);
             }
 
-            foreach (var pos in selectedCoords)
+            foreach (var possibleCell in aot.PossibleCells)
             {
-                
+                if (_cellHighlights.TryGetValue(possibleCell, out var highlight))
+                {
+                    highlight.color = chanceColor;
+                }
+                else
+                {
+                    var img = Instantiate(cellImage, transform);
+                    img.color = chanceColor;
+                    SetCellPosition(possibleCell, img);
+                    _cellHighlights.Add(possibleCell, img);
+                }
+            }
+
+            foreach (var defCell in aot.LineOfFireCells)
+            {
+                if (_cellHighlights.TryGetValue(defCell, out var highlight))
+                {
+                    highlight.color = defaultColor;
+                }
+                else
+                {
+                    var img = Instantiate(cellImage, transform);
+                    img.color = defaultColor;
+                    SetCellPosition(defCell, img);
+                    _cellHighlights.Add(defCell, img);
+                }
             }
         }
 
+        private void SetCellPosition(GridPos pos, Image img)
+        {
+            img.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos.x, pos.y);
+        }
         public void ClearHighlight()
         {
-            foreach (var cell in cellImages)
+
+            foreach (var cell in _cellHighlights)
             {
-                Destroy(cell.gameObject);
+                Destroy(cell.Value.gameObject);
             }
-            cellImages.Clear();
+            _cellHighlights.Clear();
         }
         
         

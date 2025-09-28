@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ShipHealth : MonoBehaviour
 {
     
-    public Slider healthSlider;
+    //public Slider healthSlider;
     public GameObject destroyedShip;
     public ShipView shipView;
 
@@ -20,12 +20,12 @@ public class ShipHealth : MonoBehaviour
         shipView = GetComponent<ShipView>();
         if (shipView.IsPlayer)
         {
-            healthSlider = SliderManager.instance.GetSlider(shipView.shipModel.type);
-            healthSlider.value = 1;
+            //healthSlider = SliderManager.instance.GetSlider(shipView.shipModel.type);
+            //healthSlider.value = 1;
         }
         else
         {
-            destroyedShip = SliderManager.instance.GetDestroyerUI(shipView.shipModel.type);
+            //destroyedShip = SliderManager.instance.GetDestroyerUI(shipView.shipModel.type);
             EnableDestroyedState(false);
         }
 
@@ -34,12 +34,12 @@ public class ShipHealth : MonoBehaviour
     public void UpdateHealthBar()
     {
         // update slider
-        healthSlider.value = (float) shipView.shipModel.hp / shipView.shipModel.MaxHP;
+        //healthSlider.value = (float) shipView.shipModel.hp / shipView.shipModel.MaxHP;
 
-        if (healthSlider.value <= 0)
-        {
-            DestroyShip();
-        }
+        // if (healthSlider.value <= 0)
+        // {
+        //     DestroyShip();
+        // }
         Debug.Log($"shipHP drop {gameObject.name} :: " + shipView.shipModel.hp);
     }
 

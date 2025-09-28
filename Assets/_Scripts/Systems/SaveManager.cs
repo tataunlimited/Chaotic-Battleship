@@ -7,7 +7,11 @@ public static class SaveManager
 {
     private const string KEY_WAVE              = "Wave";
     private const string KEY_SCORE             = "Score";
-    private const string KEY_SCORE_WAVE_START  = "ScoreWaveStart";   // baseline at start of wave
+    private const string KEY_NUM_SUBS_IN_DOCK  = "NumSubsInDock";
+    private const string KEY_NUM_DESTROYERS_IN_DOCK  = "NumDestroyersInDock";
+    private const string KEY_NUM_CRUISERS_IN_DOCK  = "NumCruisersInDock";
+    private const string KEY_NUM_BATTLESHIPS_IN_DOCK  = "NumBattleshipsInDock";
+    private const string KEY_SCORE_WAVE_START = "ScoreWaveStart";   // baseline at start of wave
     private const string KEY_GAMESTATE         = "GameStateJson";    // mid-wave snapshot
 
     // ===== Meta Progress (wave, score, upgrades) =====
@@ -21,6 +25,10 @@ public static class SaveManager
         }
 
         PlayerPrefs.SetInt(KEY_WAVE,             pd.waveNumber);
+        PlayerPrefs.SetInt(KEY_NUM_SUBS_IN_DOCK,  pd.numberSubsInDock);
+        PlayerPrefs.SetInt(KEY_NUM_DESTROYERS_IN_DOCK,  pd.numberDestroyersInDock);
+        PlayerPrefs.SetInt(KEY_NUM_CRUISERS_IN_DOCK,  pd.numberCruisersInDock);
+        PlayerPrefs.SetInt(KEY_NUM_BATTLESHIPS_IN_DOCK,  pd.numberBattleshipsInDock);
         PlayerPrefs.SetInt(KEY_SCORE,            pd.currentScore);
         PlayerPrefs.SetInt(KEY_SCORE_WAVE_START, pd.scoreAtWaveStart);
 
@@ -34,7 +42,7 @@ public static class SaveManager
             PlayerPrefs.SetInt(UpgradeKey(ship, UpgradeType.AttackPattern), Get(UpgradeType.AttackPattern));
             PlayerPrefs.SetInt(UpgradeKey(ship, UpgradeType.Armor),         Get(UpgradeType.Armor));
         }
-
+        Debug.Log("SAVING GAME: " + pd.waveNumber + " " + pd.currentScore + " " + pd.scoreAtWaveStart);
         PlayerPrefs.Save();
         Debug.Log($"[SaveManager] SaveGame() — wave={pd.waveNumber}, score={pd.currentScore}, baseline={pd.scoreAtWaveStart}");
     }
@@ -56,6 +64,14 @@ public static class SaveManager
 
         if (PlayerPrefs.HasKey(KEY_SCORE_WAVE_START))
             pd.scoreAtWaveStart = PlayerPrefs.GetInt(KEY_SCORE_WAVE_START, pd.scoreAtWaveStart);
+        if (PlayerPrefs.HasKey(KEY_NUM_SUBS_IN_DOCK))
+            pd.numberSubsInDock = PlayerPrefs.GetInt(KEY_NUM_SUBS_IN_DOCK, pd.numberSubsInDock);
+        if (PlayerPrefs.HasKey(KEY_NUM_DESTROYERS_IN_DOCK))
+            pd.numberDestroyersInDock = PlayerPrefs.GetInt(KEY_NUM_DESTROYERS_IN_DOCK, pd.numberDestroyersInDock);
+        if (PlayerPrefs.HasKey(KEY_NUM_CRUISERS_IN_DOCK))
+            pd.numberCruisersInDock = PlayerPrefs.GetInt(KEY_NUM_CRUISERS_IN_DOCK, pd.numberCruisersInDock);
+        if (PlayerPrefs.HasKey(KEY_NUM_BATTLESHIPS_IN_DOCK))
+            pd.numberBattleshipsInDock = PlayerPrefs.GetInt(KEY_NUM_BATTLESHIPS_IN_DOCK, pd.numberBattleshipsInDock);
 
         // Load per-ship upgrades
         pd.EnsureUpgradeDefaults();
@@ -160,11 +176,25 @@ public static class SaveManager
     // ===== Full Reset =====
     public static void ResetAllData()
     {
-        // Wipe prefs
+        const string PREF_MASTER = "opt_audio_master";
+        const string PREF_SFX    = "opt_audio_sfx";
+        const string PREF_BGM    = "opt_audio_bgm";
+
+        bool hasM = PlayerPrefs.HasKey(PREF_MASTER);
+        bool hasS = PlayerPrefs.HasKey(PREF_SFX);
+        bool hasB = PlayerPrefs.HasKey(PREF_BGM);
+
+        float vM = PlayerPrefs.GetFloat(PREF_MASTER, 1f);
+        float vS = PlayerPrefs.GetFloat(PREF_SFX,    1f);
+        float vB = PlayerPrefs.GetFloat(PREF_BGM,    1f);
+
         PlayerPrefs.DeleteAll();
+
+        if (hasM) PlayerPrefs.SetFloat(PREF_MASTER, vM);
+        if (hasS) PlayerPrefs.SetFloat(PREF_SFX,    vS);
+        if (hasB) PlayerPrefs.SetFloat(PREF_BGM,    vB);
         PlayerPrefs.Save();
 
-        // Reset runtime data
         var pd = PlayerData.Instance;
         if (pd != null)
         {
@@ -184,6 +214,7 @@ public static class SaveManager
 
         Debug.Log("[SaveManager] ResetAllData()");
     }
+
 
     // ===== Helpers =====
     private static string UpgradeKey(ShipType ship, UpgradeType type) => $"Upgrade_{ship}_{type}";

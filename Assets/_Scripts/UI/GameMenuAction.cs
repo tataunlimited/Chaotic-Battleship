@@ -1,52 +1,129 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
 public class GameMenuActions : MonoBehaviour
 {
-    // Clear ONLY the mid-wave board snapshot so the next load spawns a fresh board.
-    public void ClearSnapshot()
+    [Header("References")]
+    [SerializeField] private GameObject pauseMenuRoot;                  // Pause menu container
+    [SerializeField] private GameObject giveUpConfirmPanel;             // Give Up modal container
+
+    [Header("Auto-Resolve (fallback by name if refs are not assigned)")]
+    [SerializeField] private string pauseMenuRootName = "PauseMenu";    // Sibling under HUD_Pause
+    [SerializeField] private string giveUpPanelName   = "GiveUpConfirm";// Sibling under HUD_Pause
+
+    [Header("Navigation")]
+    [SerializeField] private string mainMenuSceneName = "MainMenu";     // If empty, build index 0 is used
+
+    [Header("Optional Fanfare")]
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip defeatFanfare;
+    [SerializeField] private float fanfareDelay = 0.25f;
+
+    void Awake()
     {
-        SaveManager.ClearBoardState();
-        Debug.Log("[Menu] Cleared board snapshot.");
+        AutoResolveRefs();
+        // Ensure modal starts hidden; Pause menu visible state is controlled elsewhere.
+        if (giveUpConfirmPanel) giveUpConfirmPanel.SetActive(false);
     }
 
-    // Restart the current scene/wave (fresh board), keeping meta (wave number) but
-    // rolling back any points earned during THIS wave to the start-of-wave baseline.
+    void AutoResolveRefs()
+    {
+        if (pauseMenuRoot == null)
+        {
+            var candidate = FindDeep(pauseMenuRootName);
+            if (candidate != null) pauseMenuRoot = candidate;
+        }
+        if (giveUpConfirmPanel == null)
+        {
+            var candidate = FindDeep(giveUpPanelName);
+            if (candidate != null) giveUpConfirmPanel = candidate;
+        }
+    }
+
+    GameObject FindDeep(string targetName)
+    {
+        if (string.IsNullOrWhiteSpace(targetName)) return null;
+        var all = Resources.FindObjectsOfTypeAll<Transform>();
+        for (int i = 0; i < all.Length; i++)
+        {
+            var t = all[i];
+            if (t != null && t.name == targetName && t.gameObject.scene.IsValid())
+                return t.gameObject;
+        }
+        return null;
+    }
+
+    // Open Give Up confirmation: hide pause menu, show modal, remain paused.
+    public void ShowGiveUpConfirm()
+    {
+        Time.timeScale = 0f;
+        if (pauseMenuRoot)      pauseMenuRoot.SetActive(false);
+        if (giveUpConfirmPanel) giveUpConfirmPanel.SetActive(true);
+    }
+
+    // Cancel Give Up: hide modal, restore pause menu, remain paused.
+    public void OnGiveUpNo()
+    {
+        if (giveUpConfirmPanel) giveUpConfirmPanel.SetActive(false);
+        if (pauseMenuRoot)      pauseMenuRoot.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    // Confirm Give Up: unpause, wipe data, optionally play sting, then load Main Menu.
+    public void OnGiveUpYes()
+    {
+        Time.timeScale = 1f;
+        SaveManager.ResetAllData();
+
+        if (sfxSource != null && defeatFanfare != null)
+            StartCoroutine(GiveUpRoutine());
+        else
+            LoadMainMenu();
+    }
+
+    IEnumerator GiveUpRoutine()
+    {
+        sfxSource.PlayOneShot(defeatFanfare);
+        yield return new WaitForSeconds(fanfareDelay);
+        LoadMainMenu();
+    }
+
+    void LoadMainMenu()
+    {
+        if (!string.IsNullOrWhiteSpace(mainMenuSceneName))
+            UnitySceneManager.LoadScene(mainMenuSceneName);
+        else
+            UnitySceneManager.LoadScene(0);
+    }
+
+    // Restart current scene from baseline score; wave number persists. Clears mid-wave snapshot.
     public void RestartWave()
     {
-        // Always unpause before reload to avoid "stuck paused" after scene load.
         Time.timeScale = 1f;
 
-        // Roll back score to baseline captured at the start of this wave.
         var pd = PlayerData.Instance;
         if (pd != null)
         {
             int before = pd.currentScore;
-            pd.currentScore = pd.scoreAtWaveStart;  // <-- core requirement
-            Debug.Log($"[Menu] RestartWave: score {before} → {pd.currentScore} (baseline). Wave stays {pd.waveNumber}.");
+            pd.currentScore = pd.scoreAtWaveStart;
+            Debug.Log($"[Menu] RestartWave: score {before} → {pd.currentScore}. Wave={pd.waveNumber}.");
         }
         else
         {
-            Debug.LogWarning("[Menu] RestartWave: PlayerData.Instance was null; could not roll back score.");
+            Debug.LogWarning("[Menu] RestartWave: PlayerData.Instance is null.");
         }
 
-        // Ensure we don't reload into a stale mid-wave save.
         SaveManager.ClearBoardState();
-
-        // Persist meta (wave number unchanged), restored score, upgrades, and baseline.
         SaveManager.SaveGame();
-
-        // Reload the current scene. Wave number is NOT changed here.
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //had to make it work with mine
-        SceneManager.Instance.ReloadActiveScene();
+        UnitySceneManager.LoadScene(UnitySceneManager.GetActiveScene().buildIndex);
     }
 
-    // Full wipe: PlayerPrefs + PlayerData defaults + snapshot; then reload scene.
+    // Full wipe then reload current scene.
     public void ResetProgress()
     {
-        Time.timeScale = 1f;               // important: unpause before reload
+        Time.timeScale = 1f;
         SaveManager.ResetAllData();
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // same here
-        SceneManager.Instance.ReloadActiveScene();
+        UnitySceneManager.LoadScene(UnitySceneManager.GetActiveScene().buildIndex);
     }
 }
