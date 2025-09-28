@@ -24,6 +24,7 @@ namespace Core.Ship
         [SerializeField]
         public Transform torpedoSpawnPoint;
 
+
         public GameObject defaultState;
         public GameObject brokenState;
 
