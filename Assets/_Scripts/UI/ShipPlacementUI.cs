@@ -244,7 +244,7 @@ public class ShipPlacementUI : MonoBehaviour
         board_controller.UpdatePlayerSelectedShip(newShip);
         battleships_left--;
         StartShipPlacementOnGrid(newShip);
-    }
+    } 
 
     private void StartShipPlacementOnGrid(ShipView shipView)
     {
