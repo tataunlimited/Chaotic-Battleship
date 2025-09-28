@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ships:
   - type: 2
-    count: 1
+    count: 10
     movementLevel: 3
     attackLevel: 3
     armorLevel: 3

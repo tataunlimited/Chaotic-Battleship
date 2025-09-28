@@ -1228,9 +1228,9 @@ MonoBehaviour:
   battleMusic: {fileID: 4670051442580547221}
   creditScene: {fileID: 7048480165841463146}
   MasterVolumeAudioMixer: {fileID: 24100000, guid: 108b3c1be846db3428c16b6f6109de00, type: 2}
-  shipSelectMovementPhaseSFX: {fileID: 1191221061219183255}
+  shipSelectMovementPhaseConfirmSFX: {fileID: 1191221061219183255}
   shipGridConfirmMovementPhaseSFX: {fileID: 318245519825083247}
-  shipConfirmOnGridSFX: {fileID: 8535369737342963921}
+  shipInitialPhaseConfirmOnGridSFX: {fileID: 8535369737342963921}
 --- !u!82 &6680908353702401903
 AudioSource:
   m_ObjectHideFlags: 0

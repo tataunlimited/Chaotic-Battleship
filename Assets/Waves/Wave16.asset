@@ -12,11 +12,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad13fe24e31a11f4a9ff0b87fff3a81b, type: 3}
   m_Name: Wave16
   m_EditorClassIdentifier: 
-  displayName: 
-  notes: 
   ships:
   - type: 2
-    count: 6
+    count: 1
+    movementLevel: 1
+    attackLevel: 2
+    armorLevel: 2
+    specialAbilityLevel: 1
+  - type: 1
+    count: 1
+    movementLevel: 1
+    attackLevel: 1
+    armorLevel: 1
+    specialAbilityLevel: 1
+  - type: 4
+    count: 1
+    movementLevel: 1
+    attackLevel: 1
+    armorLevel: 1
+    specialAbilityLevel: 1
+  - type: 3
+    count: 1
+    movementLevel: 1
+    attackLevel: 2
+    armorLevel: 1
+    specialAbilityLevel: 1
+  - type: 4
+    count: 1
+    movementLevel: 1
+    attackLevel: 1
+    armorLevel: 2
+    specialAbilityLevel: 1
+  - type: 3
+    count: 1
+    movementLevel: 1
+    attackLevel: 2
+    armorLevel: 2
+    specialAbilityLevel: 1
+  - type: 4
+    count: 1
+    movementLevel: 1
+    attackLevel: 2
+    armorLevel: 2
+    specialAbilityLevel: 1
   overrideIntelligence: 1
   intelligenceLevel: 2
   revealOnSpawn: 0

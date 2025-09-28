@@ -122,7 +122,6 @@ namespace Core.Board
             HighlightAttackArea();
 
             OnShipSelected?.Invoke(true);
-            SFXManager.Instance.PlayShipSelectMovementPhaseSFX();
             
             GameManager.instance.rotateLeftButton.interactable = shipView.shipModel.canRotate;
             GameManager.instance.rotateRightButton.interactable = shipView.shipModel.canRotate;
