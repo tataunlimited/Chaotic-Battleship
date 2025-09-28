@@ -248,13 +248,14 @@ public class ShipPlacementUI : MonoBehaviour
 
     private void StartShipPlacementOnGrid(ShipView shipView)
     {
+        SFXManager.Instance.PlayInitialPhaseShipConfirmOnGridSFX();
         _spawnedShip = shipView;
         _spawnedShip.OnBeforeShipPlacedOnGrid += OnShipPlacedOnTheGrid;
     }
 
     private void OnShipPlacedOnTheGrid(ShipView shipView)
     {
-        SFXManager.Instance.PlayShipConfirmOnGridSFX();
+        SFXManager.Instance.PlayShipSelectMovementPhaseSFX();
         shipView.OnBeforeShipPlacedOnGrid -= OnShipPlacedOnTheGrid;
         _spawnedShip = null;
     }

@@ -17,9 +17,9 @@ public class SFXManager : MonoBehaviour
 
     [Header("Mixer (exposed: MasterVolume, SFXVolume, BGMVolume)")]
     [SerializeField] private AudioMixer MasterVolumeAudioMixer;
-    public AudioSource shipSelectMovementPhaseSFX;
+    public AudioSource shipSelectMovementPhaseConfirmSFX;
     public AudioSource shipGridConfirmMovementPhaseSFX;
-    public AudioSource shipConfirmOnGridSFX; 
+    public AudioSource shipInitialPhaseConfirmOnGridSFX; 
 
 
     // Shared PlayerPrefs keys (used by Main Menu & In-Game)
@@ -74,14 +74,14 @@ public class SFXManager : MonoBehaviour
         PlayerPrefs.Save();
     }
     
-    public void PlayShipConfirmOnGridSFX()
+    public void PlayInitialPhaseShipConfirmOnGridSFX()
     {
-        shipConfirmOnGridSFX.Play();
+        shipInitialPhaseConfirmOnGridSFX.Play();
     }
 
     public void PlayShipSelectMovementPhaseSFX()
     {
-        shipSelectMovementPhaseSFX.Play();
+        shipSelectMovementPhaseConfirmSFX.Play();
     }
 
     public void PlayShipGridConfirmMovementPhaseSFX()
