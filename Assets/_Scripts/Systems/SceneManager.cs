@@ -9,6 +9,7 @@ using static SceneTypes;
 
 public class SceneManager : MonoBehaviour
 {
+    
     public static SceneManager Instance { get; private set; }
 
     [System.Serializable]
@@ -40,6 +41,7 @@ public class SceneManager : MonoBehaviour
     private readonly Vector2 _rightDoorOpenPos = new(0, 0f);
     private readonly Vector2 _rightDoorClosePos = new(-960f, 0f);
 
+
     public event Action<SceneType> OnSceneLoaded;
 
     public enum SlideFrom
@@ -65,6 +67,7 @@ public class SceneManager : MonoBehaviour
 
     void Start()
     {
+
         if (OnSceneLoaded != null)
             OnSceneLoaded(GetCurrentScene());
     }
