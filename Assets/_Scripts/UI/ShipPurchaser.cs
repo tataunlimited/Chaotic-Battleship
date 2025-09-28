@@ -175,6 +175,7 @@ public class ShipPurchaser : MonoBehaviour
 
     public void PurchaseSlot1()
     {
+        SFXManager.Instance.PlayPurchaseSFX();
         //add a check that total number of ships in dock is less than max allowed ships in dock (10)
         if (current_number_of_ships_in_dock < max_ships_in_dock && PlayerData.Instance.currentScore >= slot_1_price)
         {
@@ -208,6 +209,7 @@ public class ShipPurchaser : MonoBehaviour
 
     public void PurchaseSlot2()
     {
+        SFXManager.Instance.PlayPurchaseSFX();
         if (current_number_of_ships_in_dock < max_ships_in_dock && PlayerData.Instance.currentScore >= slot_2_price)
         {
 

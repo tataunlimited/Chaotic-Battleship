@@ -20,6 +20,7 @@ public class SFXManager : MonoBehaviour
     public AudioSource shipSelectMovementPhaseConfirmSFX;
     public AudioSource shipGridConfirmMovementPhaseSFX;
     public AudioSource shipInitialPhaseConfirmOnGridSFX; 
+    public AudioSource purchaseSFX;
     public AudioSource resetButtonSFX; 
 
 
@@ -96,6 +97,11 @@ public class SFXManager : MonoBehaviour
     public void PlayShipGridConfirmMovementPhaseSFX()
     {
         shipGridConfirmMovementPhaseSFX.Play();   
+    }
+
+    public void PlayPurchaseSFX()
+    {
+        purchaseSFX.Play();
     }
     public void SetSFXVolume(float sliderValue)
     {
