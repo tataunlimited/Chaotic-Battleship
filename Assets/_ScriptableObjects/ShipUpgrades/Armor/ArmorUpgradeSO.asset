@@ -13,29 +13,6 @@ MonoBehaviour:
   m_Name: ArmorUpgradeSO
   m_EditorClassIdentifier: 
   Upgrades:
-  - ShipType: 1
-    ArmorUpgrades:
-    - Cost: 1100
-      Icon: {fileID: 0}
-      UpgradeName: Destroyer Armor Upgrade I
-      Description: 50% chance to ignore first hit
-      ArmorPoints: 0.5
-      DestroyerArmorChance: 0
-      CruiserArmorChance: 0
-    - Cost: 1600
-      Icon: {fileID: 0}
-      UpgradeName: Destroyer Armor Upgrade II
-      Description: Ignore first hit
-      ArmorPoints: 1
-      DestroyerArmorChance: 0
-      CruiserArmorChance: 0
-    - Cost: 2100
-      Icon: {fileID: 0}
-      UpgradeName: Destroyer Armor Upgrade III
-      Description: Ignore first 2 hits
-      ArmorPoints: 2
-      DestroyerArmorChance: 0
-      CruiserArmorChance: 0
   - ShipType: 2
     ArmorUpgrades:
     - Cost: 1300
@@ -84,6 +61,29 @@ MonoBehaviour:
         2 hits
       ArmorPoints: 2
       DestroyerArmorChance: 0.5
+      CruiserArmorChance: 0
+  - ShipType: 1
+    ArmorUpgrades:
+    - Cost: 1100
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Armor Upgrade I
+      Description: 50% chance to ignore first hit
+      ArmorPoints: 0.5
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 1600
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Armor Upgrade II
+      Description: Ignore first hit
+      ArmorPoints: 1
+      DestroyerArmorChance: 0
+      CruiserArmorChance: 0
+    - Cost: 2100
+      Icon: {fileID: 0}
+      UpgradeName: Destroyer Armor Upgrade III
+      Description: Ignore first 2 hits
+      ArmorPoints: 2
+      DestroyerArmorChance: 0
       CruiserArmorChance: 0
   - ShipType: 4
     ArmorUpgrades:
