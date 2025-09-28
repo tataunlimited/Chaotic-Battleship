@@ -3447,7 +3447,6 @@ MonoBehaviour:
   gridLayer:
     serializedVersion: 2
     m_Bits: 128
-  shipConfirmOnGridSFX: {fileID: 0}
 --- !u!1 &7112687366827307422
 GameObject:
   m_ObjectHideFlags: 0
