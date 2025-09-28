@@ -56,5 +56,5 @@ MonoBehaviour:
     armorLevel: 2
     specialAbilityLevel: 1
   overrideIntelligence: 1
-  intelligenceLevel: 2
+  intelligenceLevel: 3
   revealOnSpawn: 0

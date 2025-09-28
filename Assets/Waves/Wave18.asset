@@ -17,42 +17,42 @@ MonoBehaviour:
     count: 1
     movementLevel: 1
     attackLevel: 2
-    armorLevel: 2
+    armorLevel: 3
     specialAbilityLevel: 1
   - type: 1
     count: 1
     movementLevel: 1
-    attackLevel: 1
-    armorLevel: 1
-    specialAbilityLevel: 1
-  - type: 4
-    count: 1
-    movementLevel: 1
-    attackLevel: 1
-    armorLevel: 1
-    specialAbilityLevel: 1
-  - type: 3
-    count: 1
-    movementLevel: 1
-    attackLevel: 2
-    armorLevel: 1
-    specialAbilityLevel: 1
-  - type: 4
-    count: 1
-    movementLevel: 1
-    attackLevel: 2
-    armorLevel: 2
-    specialAbilityLevel: 1
-  - type: 3
-    count: 1
-    movementLevel: 1
     attackLevel: 2
     armorLevel: 2
     specialAbilityLevel: 1
   - type: 4
     count: 1
     movementLevel: 1
-    attackLevel: 2
+    attackLevel: 3
+    armorLevel: 2
+    specialAbilityLevel: 1
+  - type: 3
+    count: 1
+    movementLevel: 2
+    attackLevel: 3
+    armorLevel: 2
+    specialAbilityLevel: 1
+  - type: 4
+    count: 1
+    movementLevel: 1
+    attackLevel: 3
+    armorLevel: 3
+    specialAbilityLevel: 1
+  - type: 3
+    count: 1
+    movementLevel: 1
+    attackLevel: 3
+    armorLevel: 3
+    specialAbilityLevel: 1
+  - type: 4
+    count: 1
+    movementLevel: 1
+    attackLevel: 3
     armorLevel: 3
     specialAbilityLevel: 2
   - type: 1
@@ -62,5 +62,5 @@ MonoBehaviour:
     armorLevel: 2
     specialAbilityLevel: 1
   overrideIntelligence: 1
-  intelligenceLevel: 2
+  intelligenceLevel: 3
   revealOnSpawn: 0
