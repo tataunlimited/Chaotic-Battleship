@@ -28,6 +28,7 @@ namespace UI
 
             _boardController.ClearSelectedShip();
             _boardController.playerView.ResetMovementPhase();
+            SFXManager.Instance.PlayResetMovement();
         }
 
         public void UpdateShipMovementRemaining(int value)

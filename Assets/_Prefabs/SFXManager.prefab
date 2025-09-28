@@ -1231,6 +1231,7 @@ MonoBehaviour:
   shipSelectMovementPhaseConfirmSFX: {fileID: 1191221061219183255}
   shipGridConfirmMovementPhaseSFX: {fileID: 318245519825083247}
   shipInitialPhaseConfirmOnGridSFX: {fileID: 8535369737342963921}
+  resetButtonSFX: {fileID: 1535707502357828936}
 --- !u!82 &6680908353702401903
 AudioSource:
   m_ObjectHideFlags: 0
